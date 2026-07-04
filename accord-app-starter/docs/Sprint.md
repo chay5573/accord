@@ -29,15 +29,17 @@ The sprint has two sequential phases. Phase 2 must not begin until the Phase 1 g
 
 ## Phase 2 — Mock-data MVP spine
 
-Status: **Not started**
+Status: **In progress — mock spine implemented; build and browser verification pending**
 
-- [ ] Dashboard
-- [ ] Onboarding flow
-- [ ] New transaction flow
-- [ ] Transaction workspace
-- [ ] Transcript input
-- [ ] Extracted terms review
-- [ ] Draft package checklist
+- [x] Dashboard
+- [x] Onboarding flow
+- [x] New transaction flow
+- [x] Transaction workspace
+- [x] Transcript input
+- [x] Extracted terms review
+- [x] Draft package checklist
+
+Implementation uses typed synthetic fixtures and contains no live provider integrations. Phase 2 remains open until the local production build, browser journey, responsive behavior, and baseline checks are verified.
 
 ### Phase 2 constraints
 

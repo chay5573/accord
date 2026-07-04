@@ -1,17 +1,20 @@
+import Link from 'next/link';
 import { Shell } from '@/components/Shell';
 
 export default function NewTransaction() {
   return (
     <Shell active="new">
-      <div className="topbar"><div><div className="eyebrow">New Transaction</div><h1>Create the transaction container.</h1></div></div>
-      <section className="card form-stack" style={{maxWidth: 760}}>
-        <label>Transaction Type<select><option>Buyer Offer</option><option>Listing</option><option>Builder / New Construction</option><option>Investment Purchase</option></select></label>
-        <label>Property Address<input placeholder="2948 E Alderann St, St. George, UT 84790" /></label>
-        <label>Buyer(s)<input placeholder="Buyer legal names" /></label>
-        <label>Seller<input placeholder="Seller legal name or entity" /></label>
-        <label>Representation<select><option>Buyer represented by us</option><option>Seller represented by us / Buyer unrepresented</option><option>Limited agency</option></select></label>
-        <div className="button-row"><a className="btn btn-primary" href="/transactions/txn-demo">Create Transaction</a><button className="btn">Save Draft</button></div>
-      </section>
+      <div className="topbar"><div><div className="eyebrow">New transaction · Mock workflow</div><h1>Open the deal workspace.</h1><p className="page-lead">Capture only the known facts. Missing details can be resolved during review.</p></div><span className="status neutral">Step 1 of 1</span></div>
+      <div className="new-transaction-layout">
+        <form className="card transaction-form">
+          <div className="form-block"><span className="section-kicker">Relationship</span><h2>Who are you representing?</h2><div className="field-grid"><label>Client type<select defaultValue="buyer"><option value="buyer">Buyer</option><option value="seller">Seller</option><option value="builder">Builder</option><option value="investor">Investor</option></select></label><label>Representation<select defaultValue="buyer-agent"><option value="buyer-agent">Buyer represented by us</option><option value="seller-agent">Seller represented by us</option><option value="limited-agency">Limited agency</option><option value="unrepresented">Unrepresented party involved</option></select></label></div></div>
+          <div className="form-block"><span className="section-kicker">Parties</span><h2>Buyer and seller information</h2><div className="field-grid"><label>Buyer legal name(s)<input defaultValue="Brenton Welker; Emily Welker" /></label><label>Seller name or entity<input placeholder="Unknown — add when confirmed" /></label><label>Primary client email<input type="email" defaultValue="brenton.welker@example.test" /></label><label>Client phone<input type="tel" defaultValue="(555) 014-7283" /></label></div></div>
+          <div className="form-block"><span className="section-kicker">Property</span><h2>Property information</h2><div className="field-grid"><label className="field-span-2">Street address<input defaultValue="2948 E Alderann St" /></label><label>City<input defaultValue="St. George" /></label><label>State<select defaultValue="UT"><option value="UT">Utah</option></select></label><label>ZIP code<input defaultValue="84790" /></label><label>Property type<select defaultValue="single-family"><option value="single-family">Single-family</option><option value="condo">Condominium</option><option value="townhome">Townhome</option><option value="land">Land</option><option value="commercial">Commercial</option></select></label></div></div>
+          <div className="form-block"><span className="section-kicker">Deal</span><h2>Transaction and financing</h2><div className="field-grid"><label>Transaction type<select defaultValue="buyer-offer"><option value="buyer-offer">Buyer offer</option><option value="listing">Listing</option><option value="new-construction">Builder / new construction</option><option value="investment">Investment purchase</option></select></label><label>Financing type<select defaultValue="conventional"><option value="unknown">Not confirmed</option><option value="cash">Cash</option><option value="conventional">Conventional</option><option value="fha">FHA</option><option value="va">VA</option><option value="seller-financing">Seller financing</option></select></label></div></div>
+          <div className="form-actions"><Link className="btn btn-quiet" href="/">Cancel</Link><button className="btn btn-secondary" type="button">Save mock draft</button><Link className="btn btn-primary" href="/transactions/txn-demo">Create mock transaction →</Link></div>
+        </form>
+        <aside className="card guidance-card"><span className="section-kicker">Before you continue</span><h2>Start with facts, not assumptions.</h2><p>Accord will keep unknown fields visible. Office defaults and future AI suggestions never become confirmed terms without your review.</p><ul className="plain-list"><li>Mock data stays in this prototype.</li><li>No client account is contacted.</li><li>No storage or AI provider is connected.</li><li>No contract is generated.</li></ul></aside>
+      </div>
     </Shell>
   );
 }

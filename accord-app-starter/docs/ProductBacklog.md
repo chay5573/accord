@@ -14,16 +14,16 @@ This backlog describes ordered product areas, not authorization to implement eve
 
 ## MVP Spine
 
-- [ ] Confirm mock-data domain fixtures and state vocabulary.
-- [ ] Connect the existing dashboard, onboarding, new transaction, and transaction workspace into one coherent mock journey.
-- [ ] Add predictable loading, empty, success, and failure states for the mock journey.
+- [x] Confirm mock-data domain fixtures and state vocabulary.
+- [x] Connect the existing dashboard, onboarding, new transaction, and transaction workspace into one coherent mock journey.
+- [ ] Add predictable loading, empty, success, and failure states beyond the current mock review states.
 - [ ] Add baseline automated tests and accessibility checks.
 - [ ] Keep all Phase 2 work provider-free; no real integrations without a separate explicit task.
 
 ## Onboarding
 
 - [ ] Define agent, team, and brokerage account setup flows.
-- [ ] Capture Office Profile identity, defaults, preferred vendors, and playbook rules.
+- [x] Capture Office Profile identity, defaults, preferred vendors, and playbook rules in the mock flow.
 - [ ] Clarify scope, inheritance, override, and approval of organization defaults.
 - [ ] Support save/resume and review before activation.
 
@@ -38,8 +38,8 @@ This backlog describes ordered product areas, not authorization to implement eve
 ## AI Extraction
 
 - [ ] Define traceable field output: value, confidence, source snippet, source file, timestamp/location, run version, and review state.
-- [ ] Build transcript paste and manual-entry mock flows first.
-- [ ] Present incomplete, low-confidence, and conflicting fields explicitly.
+- [x] Build transcript paste and manual-entry mock flows first.
+- [x] Present incomplete, low-confidence, and conflicting fields explicitly in the mock review.
 - [ ] Add deterministic schema validation and approval invalidation.
 - [ ] Establish synthetic Utah evaluation data and release thresholds.
 - [ ] Select and integrate providers only after privacy and vendor review.
@@ -48,7 +48,7 @@ This backlog describes ordered product areas, not authorization to implement eve
 
 - [ ] Confirm Utah form licensing and exact MVP form set.
 - [ ] Define immutable template versions and canonical field mappings.
-- [ ] Build mock recommended-package checklist with reasons.
+- [x] Build mock recommended-package checklist with reasons.
 - [ ] Require current agent approval before draft package generation.
 - [ ] Add rendered fixture and visual regression tests.
 - [ ] Keep Contract Library administration in Settings.

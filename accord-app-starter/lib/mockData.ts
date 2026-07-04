@@ -1,0 +1,74 @@
+export type TransactionStatus = 'Needs review' | 'In progress' | 'Executed' | 'Draft';
+
+export interface MockTransaction {
+  id: string;
+  address: string;
+  clients: string;
+  type: string;
+  status: TransactionStatus;
+  owner: string;
+  nextStep: string;
+  updatedAt: string;
+}
+
+export interface ExtractedTerm {
+  id: string;
+  label: string;
+  value: string;
+  confidence: number | null;
+  sourceSnippet: string | null;
+  sourceTimestamp: string | null;
+  state: 'suggested' | 'incomplete' | 'conflicted';
+}
+
+export interface PackageForm {
+  id: string;
+  name: string;
+  reason: string;
+  status: 'required' | 'recommended' | 'available';
+  included: boolean;
+}
+
+export const mockTransactions: MockTransaction[] = [
+  { id: 'txn-demo', address: '2948 E Alderann St', clients: 'Brenton & Emily Welker', type: 'Buyer offer', status: 'Needs review', owner: 'Calvin Hayward', nextStep: 'Review extracted terms', updatedAt: '12 minutes ago' },
+  { id: 'txn-homeside', address: '346 E Homeside Rd', clients: 'Maya Chen', type: 'Listing', status: 'In progress', owner: 'Team Deal Desk', nextStep: 'Confirm disclosure package', updatedAt: 'Yesterday' },
+  { id: 'txn-redcliffs', address: '1880 Red Cliffs Dr', clients: 'Red Mesa Holdings LLC', type: 'Investment purchase', status: 'Executed', owner: 'Calvin Hayward', nextStep: 'Track due diligence deadline', updatedAt: 'Jun 29' }
+];
+
+export const mockTasks = [
+  { title: 'Resolve settlement date', transaction: '2948 E Alderann St', due: 'Today', priority: 'High' },
+  { title: 'Review disclosure package', transaction: '346 E Homeside Rd', due: 'Tomorrow', priority: 'Normal' },
+  { title: 'Confirm inspection access', transaction: '1880 Red Cliffs Dr', due: 'Jul 7', priority: 'Normal' }
+] as const;
+
+export const mockTranscript = `Agent: The Welkers are offering $875,000. Earnest money should be $7,500. They are asking the seller for $14,000 toward closing costs.\n\nClient: Let's use two weeks for due diligence and three weeks for financing and appraisal. We'd like a home warranty around $700, paid by the seller.\n\nAgent: I still need to confirm the settlement date and whether the offer is subject to the sale of their current home.`;
+
+export const mockExtractedTerms: ExtractedTerm[] = [
+  { id: 'purchase-price', label: 'Purchase price', value: '$875,000', confidence: 98, sourceSnippet: '“The Welkers are offering $875,000.”', sourceTimestamp: '00:18', state: 'suggested' },
+  { id: 'earnest-money', label: 'Earnest money', value: '$7,500', confidence: 97, sourceSnippet: '“Earnest money should be $7,500.”', sourceTimestamp: '00:25', state: 'suggested' },
+  { id: 'closing-costs', label: 'Seller closing cost contribution', value: '$14,000', confidence: 96, sourceSnippet: '“Asking the seller for $14,000 toward closing costs.”', sourceTimestamp: '00:33', state: 'suggested' },
+  { id: 'due-diligence', label: 'Due diligence deadline', value: 'July 17, 2026', confidence: 76, sourceSnippet: '“Let’s use two weeks for due diligence.”', sourceTimestamp: '01:08', state: 'suggested' },
+  { id: 'financing', label: 'Financing & appraisal deadline', value: 'July 24, 2026', confidence: 74, sourceSnippet: '“Three weeks for financing and appraisal.”', sourceTimestamp: '01:15', state: 'suggested' },
+  { id: 'settlement', label: 'Settlement deadline', value: '', confidence: null, sourceSnippet: '“I still need to confirm the settlement date.”', sourceTimestamp: '01:42', state: 'incomplete' },
+  { id: 'subject-to-sale', label: 'Subject to sale', value: 'Needs clarification', confidence: 41, sourceSnippet: '“Whether the offer is subject to the sale of their current home.”', sourceTimestamp: '01:49', state: 'conflicted' }
+];
+
+export const mockPackageForms: PackageForm[] = [
+  { id: 'repc', name: 'Utah REPC', reason: 'Base agreement for this buyer offer.', status: 'required', included: true },
+  { id: 'addendum', name: 'Addendum', reason: 'Supports seller-paid closing costs and additional terms.', status: 'recommended', included: true },
+  { id: 'counteroffer', name: 'Counteroffer', reason: 'Available if the seller proposes revised terms.', status: 'available', included: false },
+  { id: 'unrepresented', name: 'Unrepresented Buyer Disclosure', reason: 'Not indicated by the current representation facts.', status: 'available', included: false },
+  { id: 'due-diligence-checklist', name: 'Buyer Due Diligence Checklist', reason: 'Required by the mock office playbook.', status: 'required', included: true }
+];
+
+export const mockFiles = [
+  { name: 'Welker buyer notes.txt', type: 'Conversation notes', status: 'Mock file', updated: 'Today, 9:42 AM' },
+  { name: 'Pre-approval placeholder.pdf', type: 'Financing', status: 'Upload placeholder', updated: 'Not uploaded' },
+  { name: 'Property disclosures', type: 'Disclosures', status: 'Awaiting seller', updated: 'Not available' }
+] as const;
+
+export const mockTimeline = [
+  { time: 'Today, 9:45 AM', title: 'Mock extraction prepared', detail: 'Seven terms identified; two require clarification.' },
+  { time: 'Today, 9:42 AM', title: 'Transcript added', detail: 'Pasted transcript saved to this mock transaction.' },
+  { time: 'Today, 9:31 AM', title: 'Transaction created', detail: 'Buyer offer opened by Calvin Hayward.' }
+] as const;

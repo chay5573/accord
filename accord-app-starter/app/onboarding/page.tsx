@@ -3,36 +3,21 @@ import { Shell } from '@/components/Shell';
 export default function Onboarding() {
   return (
     <Shell active="onboarding">
-      <div className="topbar">
-        <div><div className="eyebrow">Office Profile</div><h1>Teach Accord how your business runs.</h1></div>
-      </div>
-      <div className="notice">Onboarding is designed as a 10–20 minute interview. Required basics come first; deeper office playbook rules can be added later and refined from real transactions.</div>
-      <section className="grid grid-2" style={{marginTop: 20}}>
-        <div className="card form-stack">
-          <h2>Brokerage & Identity</h2>
-          <label>Brokerage Name<input defaultValue="ERA Brokers Consolidated SG" /></label>
-          <label>Agent Name<input defaultValue="Calvin Hayward" /></label>
-          <label>License Number<input defaultValue="13760581-SA00" /></label>
-          <label>Team / Brokerage Access Model<select defaultValue="agent-team-brokerage"><option value="agent-team-brokerage">Agent + Team/Brokerage</option></select></label>
+      <div className="topbar"><div><div className="eyebrow">Office Profile · Mock setup</div><h1>Teach Accord how your office works.</h1><p className="page-lead">Set defaults once. Every value remains reviewable inside a transaction.</p></div><span className="status neutral">Draft profile</span></div>
+      <div className="progress-steps" aria-label="Office profile progress"><span className="active">1 Identity</span><span>2 Preferences</span><span>3 Operations</span><span>4 Privacy</span></div>
+      <form className="onboarding-layout">
+        <div className="form-sections">
+          <section className="card form-section"><div className="form-section-title"><span>01</span><div><h2>Brokerage identity</h2><p>Defines the organization shown on mock transaction records.</p></div></div><div className="field-grid"><label>Brokerage name<input defaultValue="Red Rock Realty Group" /></label><label>Primary market<input defaultValue="Southern Utah" /></label><label>Agent name<input defaultValue="Calvin Hayward" /></label><label>Utah license number<input defaultValue="13760581-SA00" /></label></div></section>
+          <section className="card form-section"><div className="form-section-title"><span>02</span><div><h2>Team setup</h2><p>Sets the mock workspace scope and review path.</p></div></div><div className="field-grid"><label>Team name<input defaultValue="Red Rock Group" /></label><label>Account model<select defaultValue="team"><option value="agent">Agent</option><option value="team">Team</option><option value="brokerage">Brokerage</option></select></label><label>Primary broker reviewer<input defaultValue="Morgan Ellis" /></label><label>Transaction coordinator<input defaultValue="Jordan Lee" /></label></div></section>
+          <section className="card form-section"><div className="form-section-title"><span>03</span><div><h2>Contract preferences</h2><p>Defaults guide suggestions; they never replace transaction review.</p></div></div><div className="field-grid"><label>Due diligence period<input defaultValue="14 days" /></label><label>Financing & appraisal period<input defaultValue="21 days" /></label><label>Default possession<select defaultValue="recording"><option value="recording">Upon recording</option><option value="24-hours">24 hours after recording</option><option value="case-by-case">Ask each transaction</option></select></label><label>Home warranty preference<select defaultValue="ask"><option value="ask">Ask each transaction</option><option value="request">Usually request</option><option value="omit">Usually omit</option></select></label></div></section>
+          <section className="card form-section"><div className="form-section-title"><span>04</span><div><h2>Preferred vendors</h2><p>Available as office context, never auto-selected into a contract.</p></div></div><div className="field-grid"><label>Title company<input defaultValue="Southern Utah Title Company" /></label><label>Lender<input defaultValue="Desert First Lending" /></label><label>Inspector<input defaultValue="Red Hills Property Inspections" /></label><label>Home warranty provider<input placeholder="Add optional provider" /></label></div></section>
+          <section className="card form-section"><div className="form-section-title"><span>05</span><div><h2>Required & default forms</h2><p>Mock Utah starter set. Licensing and versions are not asserted.</p></div></div><div className="check-grid"><label className="check-row"><input type="checkbox" defaultChecked />Utah REPC <small>Required</small></label><label className="check-row"><input type="checkbox" defaultChecked />Buyer Due Diligence Checklist <small>Required</small></label><label className="check-row"><input type="checkbox" />Unrepresented Buyer Disclosure <small>When applicable</small></label><label className="check-row"><input type="checkbox" />Addendum <small>Suggested by terms</small></label></div></section>
+          <section className="card form-section"><div className="form-section-title"><span>06</span><div><h2>Transaction folder structure</h2><p>Previews the future Accord Cloud organization without creating files.</p></div></div><div className="folder-preview"><span>01 · Agency & disclosures</span><span>02 · Draft offers</span><span>03 · Executed contracts</span><span>04 · Due diligence</span><span>05 · Closing</span></div></section>
+          <section className="card form-section"><div className="form-section-title"><span>07</span><div><h2>Office playbook</h2><p>Human-approved guidance for future recommendations.</p></div></div><label>Office rules<textarea defaultValue="Always include the Buyer Due Diligence Checklist with a buyer offer. Request broker review when seller concessions exceed the office threshold. Never treat an office default as a confirmed deal term." /></label></section>
+          <section className="card form-section"><div className="form-section-title"><span>08</span><div><h2>Privacy & retention</h2><p>Mock policy choices; no data services are connected.</p></div></div><div className="field-grid"><label>Recordings<select defaultValue="delete"><option value="delete">Delete after transcription</option><option value="30">Keep 30 days</option><option value="90">Keep 90 days</option></select></label><label>Transcripts<select defaultValue="transaction"><option value="transaction">Keep with transaction file</option><option value="closing">Delete after closing</option><option value="90">Delete after 90 days</option></select></label></div><div className="notice compact">Recording remains off until the agent confirms all required parties have consented for that conversation.</div></section>
         </div>
-        <div className="card form-stack">
-          <h2>Contract Defaults</h2>
-          <label>Default Due Diligence Period<input placeholder="e.g. 10–14 days" /></label>
-          <label>Default Financing/Appraisal Period<input placeholder="e.g. 21 days" /></label>
-          <label>Default Possession<select><option>Upon Recording</option><option>24 hours after Recording</option><option>Negotiated</option></select></label>
-          <label>Default Home Warranty<select><option>Ask case-by-case</option><option>Usually request</option><option>Usually omit</option></select></label>
-        </div>
-        <div className="card form-stack">
-          <h2>Preferred Vendors</h2>
-          <label>Preferred Title Company<input placeholder="e.g. Southern Utah Title Company" /></label>
-          <label>Preferred Lender(s)<input placeholder="Names or teams" /></label>
-          <label>Preferred Inspector(s)<input /></label>
-        </div>
-        <div className="card form-stack">
-          <h2>Office Playbook</h2>
-          <label>Unwritten Rules<textarea placeholder="Example: Never send REPC without Buyer Due Diligence Checklist. Use title-held earnest money on unrepresented buyer transactions." /></label>
-        </div>
-      </section>
+        <aside className="onboarding-summary card"><span className="section-kicker">Profile summary</span><h2>Red Rock Group</h2><div className="summary-list"><div><span>Scope</span><strong>Team</strong></div><div><span>Market</span><strong>Utah</strong></div><div><span>Required forms</span><strong>2</strong></div><div><span>Recording</span><strong>Consent required</strong></div></div><div className="notice compact">Mock setup only. Saving does not create an account or connect a provider.</div><button className="btn btn-primary btn-block" type="button">Save mock profile</button><a className="btn btn-quiet btn-block" href="/">Return to Deal Desk</a></aside>
+      </form>
     </Shell>
   );
 }
