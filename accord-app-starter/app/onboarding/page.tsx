@@ -1,4 +1,5 @@
 import { Shell } from '@/components/Shell';
+import Link from 'next/link';
 
 export default function Onboarding() {
   return (
@@ -16,7 +17,7 @@ export default function Onboarding() {
           <section className="card form-section"><div className="form-section-title"><span>07</span><div><h2>Office playbook</h2><p>Human-approved guidance for future recommendations.</p></div></div><label>Office rules<textarea defaultValue="Always include the Buyer Due Diligence Checklist with a buyer offer. Request broker review when seller concessions exceed the office threshold. Never treat an office default as a confirmed deal term." /></label></section>
           <section className="card form-section"><div className="form-section-title"><span>08</span><div><h2>Privacy & retention</h2><p>Mock policy choices; no data services are connected.</p></div></div><div className="field-grid"><label>Recordings<select defaultValue="delete"><option value="delete">Delete after transcription</option><option value="30">Keep 30 days</option><option value="90">Keep 90 days</option></select></label><label>Transcripts<select defaultValue="transaction"><option value="transaction">Keep with transaction file</option><option value="closing">Delete after closing</option><option value="90">Delete after 90 days</option></select></label></div><div className="notice compact">Recording remains off until the agent confirms all required parties have consented for that conversation.</div></section>
         </div>
-        <aside className="onboarding-summary card"><span className="section-kicker">Profile summary</span><h2>Red Rock Group</h2><div className="summary-list"><div><span>Scope</span><strong>Team</strong></div><div><span>Market</span><strong>Utah</strong></div><div><span>Required forms</span><strong>2</strong></div><div><span>Recording</span><strong>Consent required</strong></div></div><div className="notice compact">Mock setup only. Saving does not create an account or connect a provider.</div><button className="btn btn-primary btn-block" type="button">Save mock profile</button><a className="btn btn-quiet btn-block" href="/">Return to Deal Desk</a></aside>
+        <aside className="onboarding-summary card"><span className="section-kicker">Profile summary</span><h2>Red Rock Group</h2><div className="summary-list"><div><span>Scope</span><strong>Team</strong></div><div><span>Market</span><strong>Utah</strong></div><div><span>Required forms</span><strong>2</strong></div><div><span>Recording</span><strong>Consent required</strong></div></div><div className="notice compact">Mock setup only. Saving does not create an account or connect a provider.</div><button className="btn btn-primary btn-block" type="button">Save mock profile</button><Link className="btn btn-quiet btn-block" href="/">Return to Deal Desk</Link></aside>
       </form>
     </Shell>
   );

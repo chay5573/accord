@@ -10,12 +10,16 @@ Accord handles confidential communications, identity data, financial terms, and 
 - Before capture, the agent must affirm that all required parties consent under applicable law and brokerage policy.
 - Record the confirmer, time, method, disclosure version, participants if known, and optional note.
 - A consent record is transaction-scoped and does not automatically cover a later conversation.
+- Consent on file is a reusable evidence record, not blanket consent. It must identify the person, status (`not_obtained`, `obtained`, `expired`, or `revoked`), consent type, date, expiration if any, source, and jurisdiction when known.
+- Before each recording, verify that every required participant has current consent applicable to the recording method and context. Prior consent, an engagement agreement, or consent from only one participant cannot silently authorize the conversation.
 - If consent is absent or withdrawn, stop recording and offer transcript paste or manual entry.
 - Never use silence or continued app use as consent.
 
 ## Human approval
 
 AI output is a suggestion. Before contract generation, the agent must review material fields, resolve required unknowns, and explicitly approve the draft terms. Approval records the user, timestamp, term snapshot, source form versions, and subsequent changes. Any material edit after approval invalidates approval and requires reapproval.
+
+Conversation processing may recommend creating or attaching a transaction. The user must confirm that destination; automatic transaction creation must remain reviewable and auditable. Transaction creation never satisfies the later contract-term approval gate.
 
 Broker review may be required by organization policy, but it does not replace agent approval.
 

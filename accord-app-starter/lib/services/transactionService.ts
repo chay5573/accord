@@ -45,7 +45,7 @@ export class TransactionService {
       transactionId: input.transactionId,
       eventType: 'draft_package_saved',
       eventSummary: 'Draft offer package saved to Accord Cloud.',
-      metadata: saved
+      metadata: { ...saved }
     });
 
     return saved;

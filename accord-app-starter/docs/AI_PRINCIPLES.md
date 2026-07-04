@@ -18,6 +18,7 @@ These principles govern every AI-assisted Accord workflow. They apply regardless
 - When confidence is low or sources conflict, AI must ask for clarification or mark the field incomplete or conflicted.
 - AI must never hide uncertainty behind confident language, formatting, or an aggregate score.
 - Unknown is a valid and often safer output.
+- A conversation may suggest a likely transaction, but AI must not silently create or attach a transaction. A human reviews the suggested match and chooses Create Transaction, Attach to Existing, or Save as Unassigned Note.
 
 ## Field-level traceability
 
@@ -58,6 +59,8 @@ Source snippets are evidence, not authorization. Confidence helps prioritize rev
 ## Privacy, consent, and access
 
 - Respect recording-consent settings before processing captured audio.
+- Treat consent-on-file as evidence to review, not blanket or perpetual permission. Revalidate participant, consent type, scope, status, jurisdiction, and current conversation before recording.
+- Do not infer consent from engagement, prior recordings, silence, or the presence of a consent record whose scope does not match the capture.
 - Respect retention, deletion, legal-hold, sharing, tenant-isolation, and access-control settings for sources and derived AI artifacts.
 - Send providers only the minimum data required for the task.
 - Do not use customer content for model training without explicit, separately documented authorization.

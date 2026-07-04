@@ -29,6 +29,53 @@ export interface PackageForm {
   included: boolean;
 }
 
+export type ConsentStatus = 'not_obtained' | 'obtained' | 'expired' | 'revoked';
+export type ConsentType = 'phone' | 'in_person' | 'ai_transcription';
+export type ConsentSource = 'verbal' | 'written' | 'email' | 'engagement_agreement';
+
+export interface ConsentRecord {
+  id: string;
+  personId: string;
+  personName: string;
+  status: ConsentStatus;
+  consentType: ConsentType;
+  consentDate: string | null;
+  expirationDate: string | null;
+  source: ConsentSource | null;
+  jurisdiction: string | null;
+}
+
+export interface UnassignedConversation {
+  id: string;
+  title: string;
+  conversationType: string;
+  participants: string;
+  capturedAt: string;
+  consentStatus: ConsentStatus;
+  reviewStatus: 'Needs review' | 'Ready to attach';
+}
+
+export const mockConsentRecords: ConsentRecord[] = [
+  { id: 'consent-001', personId: 'person-brenton', personName: 'Brenton Welker', status: 'obtained', consentType: 'phone', consentDate: '2026-06-18', expirationDate: '2026-09-18', source: 'engagement_agreement', jurisdiction: 'UT' },
+  { id: 'consent-002', personId: 'person-emily', personName: 'Emily Welker', status: 'not_obtained', consentType: 'ai_transcription', consentDate: null, expirationDate: null, source: null, jurisdiction: 'UT' },
+  { id: 'consent-003', personId: 'person-maya', personName: 'Maya Chen', status: 'expired', consentType: 'phone', consentDate: '2026-01-10', expirationDate: '2026-04-10', source: 'email', jurisdiction: 'UT' },
+  { id: 'consent-004', personId: 'person-unknown', personName: 'Unidentified caller', status: 'revoked', consentType: 'phone', consentDate: '2026-05-04', expirationDate: null, source: 'verbal', jurisdiction: null }
+];
+
+export const mockUnassignedConversations: UnassignedConversation[] = [
+  { id: 'conversation-001', title: 'Pine Valley buyer consult', conversationType: 'Buyer consult', participants: 'Alex Morgan + 1 unknown', capturedAt: 'Today, 8:34 AM', consentStatus: 'obtained', reviewStatus: 'Needs review' },
+  { id: 'conversation-002', title: 'Title call — unknown property', conversationType: 'Lender/title call', participants: 'Jordan Lee', capturedAt: 'Yesterday, 4:12 PM', consentStatus: 'not_obtained', reviewStatus: 'Ready to attach' }
+];
+
+export const mockCaptureReview = {
+  likelyTransaction: { value: '2948 E Alderann St', confidence: 92, source: '“For the Alderann property, the Welkers want to make an offer.”' },
+  buyer: { value: 'Brenton & Emily Welker', confidence: 96, source: '“Brenton and Emily are ready to move forward.”' },
+  seller: { value: 'Unknown', confidence: null, source: 'No seller name was mentioned.' },
+  property: { value: '2948 E Alderann St, St. George, UT', confidence: 94, source: '“The home at 2948 East Alderann in St. George.”' },
+  transactionType: { value: 'Buyer offer', confidence: 97, source: '“They want to make an offer.”' },
+  missingFacts: ['Seller legal name', 'Settlement deadline', 'Subject-to-sale decision']
+} as const;
+
 export const mockTransactions: MockTransaction[] = [
   { id: 'txn-demo', address: '2948 E Alderann St', clients: 'Brenton & Emily Welker', type: 'Buyer offer', status: 'Needs review', owner: 'Calvin Hayward', nextStep: 'Review extracted terms', updatedAt: '12 minutes ago' },
   { id: 'txn-homeside', address: '346 E Homeside Rd', clients: 'Maya Chen', type: 'Listing', status: 'In progress', owner: 'Team Deal Desk', nextStep: 'Confirm disclosure package', updatedAt: 'Yesterday' },

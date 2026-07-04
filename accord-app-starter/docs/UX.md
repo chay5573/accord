@@ -6,8 +6,9 @@ Accord should feel like a calm command center during high-stakes work. The inter
 
 ## Primary navigation
 
+- Start Conversation: persistent quick-capture entry point for a new, existing, or not-yet-known transaction.
 - Deal Desk: transactions, deadlines, review states, and exceptions.
-- New Transaction: create the canonical container before capture or generation.
+- New Transaction: optional manual creation path when the user already knows the essential deal context.
 - Office Profile: identity, defaults, vendors, and playbook.
 - Settings / Contract Library: forms, versions, mappings, and custom templates.
 - Settings / Privacy & Compliance: consent, access, retention, and audit controls.
@@ -16,14 +17,17 @@ Contract management belongs in Settings, not in the everyday Deal Desk.
 
 ## Core transaction flow
 
-1. Create a transaction and establish ownership, representation, and property context.
-2. Choose conversation capture, transcript paste, or manual entry.
-3. If recording, complete the consent gate before any capture begins.
-4. Review extracted facts beside their source evidence and confidence.
-5. Resolve conflicts and required missing information.
-6. Review the recommended Utah form package and reasons.
-7. Explicitly approve terms; request broker review if needed.
-8. Generate and save a versioned package to Accord Cloud.
+1. Start a conversation and indicate whether it may relate to a new transaction, existing transaction, or an unknown destination.
+2. Select conversation type and choose transcript paste, upload, or consent-gated recording.
+3. For recording, verify consent for every required participant and the current context before capture begins. Consent on file informs the check but is not blanket permission.
+4. Review the likely transaction, suggested parties/property/type, missing facts, confidence, and source evidence.
+5. Explicitly create a transaction, attach to an existing transaction, or save as an unassigned note.
+6. Resolve conflicts and required missing information in the transaction workspace.
+7. Review the recommended Utah form package and reasons.
+8. Explicitly approve terms; request broker review if needed.
+9. Generate and save a versioned package to Accord Cloud.
+
+The Deal Desk should prioritize Start Conversation, Unassigned Conversations, and Needs Review. Manual transaction creation remains available but is secondary to capture.
 
 ## Review interaction
 

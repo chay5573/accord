@@ -29,7 +29,7 @@ The sprint has two sequential phases. Phase 2 must not begin until the Phase 1 g
 
 ## Phase 2 — Mock-data MVP spine
 
-Status: **In progress — mock spine implemented; build and browser verification pending**
+Status: **In progress — mock spine, lint, TypeScript, production build, and local route verification complete; responsive visual checks and baseline automated tests remain**
 
 - [x] Dashboard
 - [x] Onboarding flow
@@ -38,8 +38,13 @@ Status: **In progress — mock spine implemented; build and browser verification
 - [x] Transcript input
 - [x] Extracted terms review
 - [x] Draft package checklist
+- [x] Capture-first dashboard and persistent Start Conversation navigation
+- [x] Mock Start Conversation and post-capture review flow
+- [x] Person-scoped consent-on-file mock model and recording gate
 
-Implementation uses typed synthetic fixtures and contains no live provider integrations. Phase 2 remains open until the local production build, browser journey, responsive behavior, and baseline checks are verified.
+Implementation uses typed synthetic fixtures and contains no live provider integrations. The local production build and six-page route journey have been verified. Phase 2 remains open until responsive visual behavior and baseline automated checks are complete.
+
+The MVP spine is capture-first: a conversation may lead to a human-reviewed transaction creation or attachment decision. Manual New Transaction remains available as a secondary path. Consent on file is contextual evidence and never blanket permission; recording remains blocked until the current participants and context are confirmed.
 
 ### Phase 2 constraints
 

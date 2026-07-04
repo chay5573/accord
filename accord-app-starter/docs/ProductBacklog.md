@@ -15,7 +15,8 @@ This backlog describes ordered product areas, not authorization to implement eve
 ## MVP Spine
 
 - [x] Confirm mock-data domain fixtures and state vocabulary.
-- [x] Connect the existing dashboard, onboarding, new transaction, and transaction workspace into one coherent mock journey.
+- [x] Connect capture, post-capture review, dashboard, onboarding, new transaction, and transaction workspace into one coherent mock journey.
+- [x] Make Start Conversation the primary entry point with unassigned capture and Needs Review queues.
 - [ ] Add predictable loading, empty, success, and failure states beyond the current mock review states.
 - [ ] Add baseline automated tests and accessibility checks.
 - [ ] Keep all Phase 2 work provider-free; no real integrations without a separate explicit task.
@@ -29,6 +30,7 @@ This backlog describes ordered product areas, not authorization to implement eve
 
 ## Transactions
 
+- [x] Add human-reviewed mock transaction creation/attachment suggestions after conversation capture.
 - [ ] Create the canonical transaction container and ownership context.
 - [ ] Define lifecycle and approval state machines.
 - [ ] Support parties, representation, property, terms, deadlines, collaborators, and review status.
@@ -37,6 +39,7 @@ This backlog describes ordered product areas, not authorization to implement eve
 
 ## AI Extraction
 
+- [x] Show likely transaction, suggested parties/property/type, missing facts, confidence, and source snippets in post-capture review.
 - [ ] Define traceable field output: value, confidence, source snippet, source file, timestamp/location, run version, and review state.
 - [x] Build transcript paste and manual-entry mock flows first.
 - [x] Present incomplete, low-confidence, and conflicting fields explicitly in the mock review.
@@ -65,7 +68,8 @@ This backlog describes ordered product areas, not authorization to implement eve
 
 - [ ] Complete threat model and data-flow inventory.
 - [ ] Validate Utah recording-consent workflow with qualified counsel.
-- [ ] Implement consent records and non-recording fallback.
+- [x] Model person-scoped consent status, type, dates, source, and jurisdiction in mock data with a visible non-recording fallback.
+- [ ] Implement server-enforced consent-on-file validation without relying on blanket consent.
 - [ ] Define role/resource authorization matrix and tenant isolation tests.
 - [ ] Implement append-only audit events and administrative review.
 - [ ] Define retention, deletion, legal hold, and data-subject request workflows.

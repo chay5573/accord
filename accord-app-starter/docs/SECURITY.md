@@ -45,6 +45,8 @@ Use synthetic data in local development and automated tests. Production-data acc
 
 Recording is disabled by default. Audio capture cannot start until the required consent affirmation is completed and recorded as defined in `/docs/Compliance.md`. Withdrawal or absence of consent must stop capture and preserve a non-recording path.
 
+Consent records must be person-scoped and include status, consent type, date, optional expiration, source, and jurisdiction when known. A stored record is not a universal authorization token. Before each recording, the server-side policy must evaluate the actual participants, current status, applicable scope, jurisdiction, expiration, and conversation context. Expired, revoked, missing, mismatched, or ambiguous consent blocks recording while transcript paste and manual notes remain available.
+
 ## Audit logs
 
 Security and material workflow events must produce append-only, tenant-scoped audit records with actor, action, target, time, outcome, and correlation ID. Include access and permission changes, sensitive downloads, sharing, AI suggestions, human edits, approvals, generation, export, retention, and deletion events. Do not turn the audit log into a second store of sensitive content.
