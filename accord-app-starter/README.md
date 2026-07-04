@@ -18,7 +18,7 @@ This is the first scalable web-app scaffold for Accord, a transaction intelligen
 - Privacy & Compliance settings
 
 ## Portable Architecture
-See `docs/ARCHITECTURE.md`.
+See `docs/Architecture.md`.
 
 Core rule: UI calls Accord services/API routes, not Supabase business logic directly. Supabase is the first provider implementation, not the permanent architecture.
 
