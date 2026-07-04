@@ -1,0 +1,74 @@
+# Accord AI Constitution
+
+These principles govern every AI-assisted Accord workflow. They apply regardless of model or provider and must be represented in product behavior, service contracts, tests, and audit records.
+
+## Human authority
+
+- AI suggests; humans approve.
+- AI never signs, sends, executes, or finalizes a contract without explicit agent approval and any additional review required by organization policy.
+- Human approval is required before a draft contract package is generated.
+- Contracts remain fully editable before approval.
+- A material edit after approval invalidates that approval and requires a new review.
+- AI supports agent and broker judgment; it does not replace it.
+
+## Truthfulness and uncertainty
+
+- AI must not fabricate missing contract terms, parties, dates, amounts, representation, form requirements, or source evidence.
+- AI must distinguish source-supported facts, office defaults, deterministic rules, and assumptions.
+- When confidence is low or sources conflict, AI must ask for clarification or mark the field incomplete or conflicted.
+- AI must never hide uncertainty behind confident language, formatting, or an aggregate score.
+- Unknown is a valid and often safer output.
+
+## Field-level traceability
+
+Every extracted contract field should eventually carry:
+
+- `value`
+- `confidence`
+- source transcript snippet or other exact source evidence
+- source document or file, when applicable
+- source timestamp or page/location, when available
+- extraction run/model and schema version for audit purposes
+- review state and reviewing human
+
+Source snippets are evidence, not authorization. Confidence helps prioritize review and must never trigger automatic approval.
+
+## Contracts and forms
+
+- AI may populate only approved, active, versioned forms and templates from the Contract Library.
+- AI must not invent legal clauses unless an explicitly authorized controlled-draft workflow permits it.
+- Controlled draft language must be clearly labeled, fully editable, source/rationale aware, and subject to required human or legal review.
+- Deterministic validation and approved policy rules govern required fields and generation gates.
+- Form recommendations must explain why a form was suggested and distinguish configured requirements from model suggestions.
+
+## Advice and education
+
+- AI may explain workflow, terminology, options, deadlines, and identified risk in plain English.
+- AI must not present output as legal advice, determine legal rights, or guarantee compliance.
+- Risk explanations should identify the supporting fact, uncertainty, and the person or policy that must decide.
+- Client education must remain neutral, understandable, and subordinate to agent judgment.
+
+## Auditability
+
+- Preserve source lineage, prompts/workflow versions, model/provider versions, structured outputs, human edits, approvals, rejections, and material automation events.
+- Audit metadata must be useful without copying unnecessary sensitive content into logs.
+- Automated actions must be attributable, reproducible where practical, and reversible before final human action.
+- Never silently learn or activate an office rule from customer behavior; an authorized human must review and approve it.
+
+## Privacy, consent, and access
+
+- Respect recording-consent settings before processing captured audio.
+- Respect retention, deletion, legal-hold, sharing, tenant-isolation, and access-control settings for sources and derived AI artifacts.
+- Send providers only the minimum data required for the task.
+- Do not use customer content for model training without explicit, separately documented authorization.
+- Treat retrieved text and documents as untrusted input and defend against prompt injection and cross-tenant data disclosure.
+
+## Compliance and E&O risk reduction
+
+AI behavior must be designed for real estate compliance and errors-and-omissions risk reduction. Favor complete audit trails, explicit review, source grounding, conservative uncertainty, current approved forms, and recoverable workflows over speed or apparent autonomy.
+
+Before releasing an AI change, evaluate material-field accuracy, unsupported values, source grounding, confidence calibration, conflict handling, privacy, tenant isolation, and agent correction rates using synthetic or properly governed test data.
+
+## Provider independence
+
+These principles belong to Accord, not a vendor. AI integrations must implement Accord interfaces and policy checks. Switching providers must not weaken approval, traceability, retention, security, or evaluation requirements.
