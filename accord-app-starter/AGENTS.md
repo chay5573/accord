@@ -7,17 +7,18 @@ This file is the mandatory entry point for every Codex or AI-assisted developmen
 Before editing code, configuration, schemas, or documentation:
 
 1. Read this `AGENTS.md` file completely.
-2. Read `/docs/Sprint.md` to understand the current goal, phase, and explicit exclusions.
-3. Read `/docs/ProductBacklog.md` to understand priority and scope.
-4. Read `/docs/CODEX_ROLE.md` for role expectations.
-5. Read the relevant domain documents before touching that domain:
+2. Read `/docs/ProductPhilosophy.md` for the product principles that govern every workflow and interaction.
+3. Read `/docs/Sprint.md` to understand the current goal, phase, and explicit exclusions.
+4. Read `/docs/ProductBacklog.md` to understand priority and scope.
+5. Read `/docs/CODEX_ROLE.md` for role expectations.
+6. Read the relevant domain documents before touching that domain:
    - `/docs/Architecture.md` for infrastructure, providers, storage, APIs, services, or the data model.
    - `/docs/Compliance.md` and `/docs/SECURITY.md` for personal information, recording, retention, sharing, permissions, audit logs, secrets, or security controls.
    - `/docs/AI_PRINCIPLES.md` for AI extraction, contract generation, transcript handling, confidence scoring, or automation.
    - `/docs/FormEngine.md` for forms, contract packages, templates, mappings, or state-specific logic.
    - `/docs/UX.md` and `/docs/Brand.md` for user-interface work.
    - `/docs/DevelopmentHandbook.md` for coding, testing, and delivery standards.
-6. Inspect the current implementation and working tree before changing anything. Preserve unrelated work.
+7. Inspect the current implementation and working tree before changing anything. Preserve unrelated work.
 
 If instructions conflict, stop and surface the conflict. Product and architecture decisions recorded in `/docs/Decisions.md` remain in force unless the task explicitly changes them.
 

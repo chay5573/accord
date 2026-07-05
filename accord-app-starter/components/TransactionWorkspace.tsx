@@ -2,8 +2,10 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { mockExtractedTerms, mockFiles, mockPackageForms, mockTimeline, mockTranscript } from '@/lib/mockData';
+import { mockExtractedTerms, mockFiles, mockPackageForms, mockTranscript } from '@/lib/mockData';
 import { mockSignaturePacket, type SignatureStatus } from '@/lib/eSignature';
+import { AITimeline } from '@/components/AITimeline';
+import { mockOpportunityTimeline } from '@/lib/opportunity';
 
 const tabs = ['Overview', 'Conversations', 'Extracted Terms', 'Draft Package', 'Files', 'Timeline'] as const;
 type WorkspaceTab = (typeof tabs)[number];
@@ -77,7 +79,7 @@ export function TransactionWorkspace() {
 
       {activeTab === 'Files' && <section className="card"><div className="section-heading"><div><span className="section-kicker">Accord Cloud preview</span><h2>Transaction files</h2><p>Mock metadata only. No storage provider is connected.</p></div><button className="btn btn-secondary" type="button">Upload placeholder</button></div><div className="file-list">{mockFiles.map((file) => <div className="file-row" key={file.name}><span className="file-icon" aria-hidden="true">□</span><div><strong>{file.name}</strong><span>{file.type}</span></div><span className="status neutral">{file.status}</span><small>{file.updated}</small></div>)}</div></section>}
 
-      {activeTab === 'Timeline' && <section className="card"><div className="section-heading"><div><span className="section-kicker">Audit-aware history</span><h2>Transaction timeline</h2><p>This mock illustrates human and automated events without recording sensitive content in event summaries.</p></div><span className="status neutral">Mock events</span></div><div className="timeline">{mockTimeline.map((event) => <div className="timeline-event" key={event.title}><i aria-hidden="true" /><time>{event.time}</time><div><strong>{event.title}</strong><span>{event.detail}</span></div></div>)}</div></section>}
+      {activeTab === 'Timeline' && <AITimeline events={mockOpportunityTimeline} />}
     </>
   );
 }

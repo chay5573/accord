@@ -1,5 +1,6 @@
 import type { ClientAIAnswer, ClientPortalAccess, ClientQuestion, ClientVisibleDocument, EducationContentItem } from './clientEducation';
-import type { CompletedSignedDocument, ESignatureConnection, ESignatureProviderType, SignatureAuditEntry, SignaturePacket, SignatureStatus } from './eSignature';
+import type { CompletedSignedDocument, ESignatureConnection, ESignatureProviderType, SignatureAuditEntry, SignatureEvent, SignaturePacket, SignatureStatus } from './eSignature';
+import type { InboxAttachment, InboxAuditEntry, InboxConnection, InboxMessageSignal, InboxProviderType, MessageClassification, MonitoredMailboxScope } from './inbox';
 import type { FieldProvenance, LearnedPattern, SensitiveDataFinding, TransactionCase, TransactionMemoryAuditEntry } from './transactionMemory';
 
 /**
@@ -135,6 +136,27 @@ export interface ESignatureProvider {
   importCompletedDocuments(input: { signaturePacketId: string; requestedByUserId: string }): Promise<CompletedSignedDocument[]>;
   voidSignaturePacket(input: { signaturePacketId: string; requestedByUserId: string; reason: string }): Promise<SignaturePacket>;
   getAuditTrail(input: { signaturePacketId: string; requestedByUserId: string }): Promise<SignatureAuditEntry[]>;
+  listSignaturePackets(input: { workspaceId: string; status?: SignatureStatus }): Promise<SignaturePacket[]>;
+  syncSignatureEvents(input: { workspaceId: string; requestedByUserId: string }): Promise<SignatureEvent[]>;
+  classifySignatureSignal(input: { event: SignatureEvent }): Promise<{ classification: string; confidence: number }>;
+  linkSignaturePacketToOpportunity(input: { signaturePacketId: string; opportunityId: string; approvedByUserId: string }): Promise<SignaturePacket>;
+}
+
+export interface InboxProvider {
+  provider: InboxProviderType;
+  listProviders(input: { workspaceId: string }): Promise<InboxProviderType[]>;
+  getConnectionStatus(input: { workspaceId: string }): Promise<InboxConnection>;
+  connectInbox(input: { workspaceId: string; requestedByUserId: string; redirectUri: string }): Promise<{ authorizationUrl: string }>;
+  disconnectInbox(input: { workspaceId: string; requestedByUserId: string }): Promise<void>;
+  listMonitoredFolders(input: { connectionId: string; requestedByUserId: string }): Promise<MonitoredMailboxScope[]>;
+  updateMonitoredFolders(input: { connectionId: string; scopes: MonitoredMailboxScope[]; requestedByUserId: string }): Promise<MonitoredMailboxScope[]>;
+  searchMessages(input: { connectionId: string; query: string; requestedByUserId: string }): Promise<InboxMessageSignal[]>;
+  getMessage(input: { connectionId: string; messageReference: string; requestedByUserId: string }): Promise<InboxMessageSignal>;
+  listAttachments(input: { connectionId: string; messageReference: string; requestedByUserId: string }): Promise<InboxAttachment[]>;
+  importAttachment(input: { attachmentId: string; opportunityId: string; approvedByUserId: string }): Promise<InboxAttachment>;
+  classifyMessageSignal(input: { messageReference: string; requestedByUserId: string }): Promise<{ classification: MessageClassification; confidence: number }>;
+  linkMessageToOpportunity(input: { messageReference: string; opportunityId: string; approvedByUserId: string }): Promise<InboxMessageSignal>;
+  getInboxAuditTrail(input: { connectionId: string; requestedByUserId: string }): Promise<InboxAuditEntry[]>;
 }
 
 export interface ClientEducationProvider {

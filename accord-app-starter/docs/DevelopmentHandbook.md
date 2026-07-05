@@ -4,6 +4,8 @@
 
 Build Accord in small, reviewable slices that preserve trust. Product, design, engineering, compliance, and form operations share responsibility for legally consequential workflows.
 
+Read `/docs/ProductPhilosophy.md` before designing a workflow. Prefer opportunity-first, minimum-click slices that perform safe work before requesting user input and preserve recovery from interruption.
+
 ## Local setup
 
 The starter uses Next.js, React, TypeScript, Zod, and Supabase.

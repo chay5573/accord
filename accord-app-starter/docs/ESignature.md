@@ -47,3 +47,5 @@ Disconnecting a provider does not delete Accord records or completed documents. 
 ## Provider contract
 
 `ESignatureProvider` defines listing and connection status, connect/disconnect, packet creation, provider review, send, status, verified webhook handling, completed-document import, voiding, and audit retrieval. Application services own approval gates, tenant authorization, policy, idempotency, and final-review requirements.
+
+Activity synchronization also lists packets, synchronizes verified provider events, classifies signature signals, and links packets to opportunities. Envelope/loop creation, send, view, recipient signatures, completion, and document import add attributable AI Timeline events. Unlinked packets remain in the Activity Inbox. Completion creates an agent final-review task; it never triggers external sharing by itself.

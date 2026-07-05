@@ -13,12 +13,12 @@ export default function Dashboard() {
     <Shell active="dashboard">
       <div className="topbar">
         <div><div className="eyebrow">Saturday, July 4 · Accord Deal Desk</div><h1>Good morning, Calvin.</h1><p className="page-lead">Capture the conversation first. Accord will help organize what comes next.</p></div>
-        <div className="topbar-actions"><Link className="btn btn-secondary btn-large" href="/transactions/new">New Transaction</Link><Link className="btn btn-primary btn-large" href="/conversations/new">+ Start Conversation</Link></div>
+        <div className="topbar-actions"><Link className="btn btn-secondary btn-large" href="/quick-capture">Quick Capture</Link><Link className="btn btn-primary btn-large" href="/conversations/new">+ Start Listening</Link></div>
       </div>
 
       <section className="capture-hero">
         <div><span className="section-kicker light">Quick Capture</span><h2>Start with what was said.</h2><p>Record with confirmed consent, paste a transcript, or add a conversation note. Decide the transaction after review.</p></div>
-        <Link className="btn capture-hero-button" href="/conversations/new">Start Conversation →</Link>
+        <Link className="btn capture-hero-button" href="/conversations/new">Start Listening →</Link>
       </section>
 
       <section className="metric-grid" aria-label="Deal summary">

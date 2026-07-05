@@ -51,6 +51,10 @@ Status: **In progress — mock spine, lint, TypeScript, production build, and lo
 - [x] Mock E-Signature provider architecture, Settings, package handoff, and Deal Desk return status
 - [x] Signing Explanation Layer contracts and future/off-by-default Client Portal / Education preview
 - [x] Transaction Memory ownership/audit contract expansion
+- [x] Product Philosophy and opportunity-first domain foundation
+- [x] Quick Capture recovery, opportunity review, AI Timeline, and Activity Inbox mocks
+- [x] Inbox provider-neutral architecture and Settings mock
+- [x] E-signature activity synchronization and final-review signal mocks
 
 Implementation uses typed synthetic fixtures and contains no live provider integrations. The local production build and eight-page route journey, including Quick Capture and Deal Desk Review, have been verified. Phase 2 remains open until responsive visual behavior and baseline automated checks are complete.
 
@@ -61,6 +65,8 @@ Deal Desk Review is the required mock bridge from captured facts to draft prepar
 Transaction Memory remains an administrative mock only. Archive inclusion never implies training eligibility; case authority, redaction, retention, provenance, and human approval are explicit gates. The Client Portal and Education Library are future documented concepts and are not implemented in this sprint.
 
 E-signature work is architecture and mock UI only. No packet is transmitted: package approval gates provider review, signed documents return to Deal Desk for final review, and external sharing remains a separate human action. The Client Portal / Education preview is disabled and contains no login, messaging, retrieval, or live AI.
+
+The MVP spine is now opportunity-first. Captures, recaps, and external activity may produce unassigned opportunities and prepared drafts before a transaction exists. The AI Timeline and Activity Inbox preserve signals, provenance, uncertainty, and human decisions. No live inbox, e-signature, calendar, CRM, lookup, AI, or storage provider is connected.
 
 ### Phase 2 constraints
 
@@ -82,5 +88,5 @@ An agent can navigate a coherent mock journey from dashboard through onboarding 
 - Recording capture.
 - PDF generation or licensed form ingestion.
 - OneDrive synchronization.
-- Live e-signature providers, MLS, CRM, email, or transaction-management integrations. Provider-neutral e-signature mocks are permitted by this task.
+- Live e-signature, inbox/email, calendar, CRM, MLS, or transaction-management integrations. Provider-neutral mocks are permitted by this task.
 - Production deployment or compliance certification.

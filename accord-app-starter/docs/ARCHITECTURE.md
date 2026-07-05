@@ -85,6 +85,16 @@ The transaction archive and Training Library are separate stores/logical domains
 
 Application services enforce current package approval, tenant authorization, preferred-provider policy, idempotency, final review, and external-sharing gates. OAuth and provider credentials remain server-side. Webhook handlers verify authenticity and normalize provider events before state changes. UI components use domain statuses and never provider SDKs. The MVP exposes synthetic connection and packet states only.
 
+Activity synchronization extends the same interface with `listSignaturePackets()`, `syncSignatureEvents()`, `classifySignatureSignal()`, and `linkSignaturePacketToOpportunity()`. Provider events become attributable opportunity signals and AI Timeline events; they do not become contract facts. Completed packets create final-review tasks before external sharing.
+
+## Opportunity and inbox boundaries
+
+`Opportunity` is the pre-transaction work container. It can begin from a conversation, recap, transcript, document, inbox signal, e-signature event, calendar event, CRM event, or reconstructed memory. It preserves capture inputs, signals, missing facts, reconstruction, draft readiness, and timeline events without requiring a transaction ID. Deal Desk becomes the canonical tracking layer after drafting or explicit save.
+
+`InboxProvider` normalizes Gmail, Outlook/Microsoft 365, and any approved IMAP fallback. It supports `listProviders()`, `getConnectionStatus()`, `connectInbox()`, `disconnectInbox()`, `listMonitoredFolders()`, `updateMonitoredFolders()`, `searchMessages()`, `getMessage()`, `listAttachments()`, `importAttachment()`, `classifyMessageSignal()`, `linkMessageToOpportunity()`, and `getInboxAuditTrail()`.
+
+Inbox adapters never write contract fields. Application services enforce OAuth scope, mailbox selection, tenant authorization, retention, audit, classification, opportunity matching, and human approval before evidence promotion. MVP fixtures perform no mailbox or provider calls.
+
 ## Client education boundary
 
 `ClientEducationProvider` is a future policy-controlled retrieval boundary. Operations include `listClientVisibleDocuments()`, `askClientQuestion()`, `getEducationRecommendations()`, `listEducationContent()`, `logClientQuestion()`, `approveClientVisibleDocument()`, and `revokeClientPortalAccess()`.

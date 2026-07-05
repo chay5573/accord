@@ -22,6 +22,27 @@ This backlog describes ordered product areas, not authorization to implement eve
 - [ ] Add baseline automated tests and accessibility checks.
 - [ ] Keep all Phase 2 work provider-free; no real integrations without a separate explicit task.
 
+## Opportunity-First Workflow
+
+- [x] Define opportunity, capture, reconstruction, missing-fact, activity-signal, integration, and AI Timeline contracts.
+- [x] Add mock Quick Capture recovery, opportunity review, AI Timeline, and Activity Inbox.
+- [ ] Define service policies for opportunity matching, evidence promotion, draft readiness, interruption recovery, and Deal Desk conversion.
+- [ ] Add automated accessibility and state-transition tests.
+
+## Inbox Integration
+
+- [x] Define provider-neutral inbox contracts, security rules, monitored scopes, message classifications, attachments, and audit records.
+- [x] Add mock Inbox Integrations Settings and synthetic activity signals.
+- [ ] Evaluate Gmail and Microsoft OAuth scopes, webhooks/subscriptions, retention, deletion, and vendor terms.
+- [ ] Evaluate IMAP only as a constrained fallback.
+- [ ] Implement providers only after privacy/security approval and tenant-isolation testing.
+
+## AI Timeline / Activity Inbox
+
+- [x] Add source-, confidence-, evidence-, and action-aware timeline events to opportunity and transaction views.
+- [x] Add external activity triage actions without automatic fact promotion.
+- [ ] Define deduplication, ordering, reconciliation, client visibility approval, and immutable audit behavior.
+
 ## Onboarding
 
 - [ ] Define agent, team, and brokerage account setup flows.
@@ -91,6 +112,7 @@ This backlog describes ordered product areas, not authorization to implement eve
 
 - [x] Define provider-neutral packet, recipient, document, status, event, completed-document, connection, and audit contracts.
 - [x] Add mock preferred-provider Settings and draft-package/Deal Desk status surfaces.
+- [x] Add mock packet activity sync, opportunity linking, timeline events, and final-review task signals.
 - [ ] Validate DocuSign and Dotloop APIs, licensing, OAuth scopes, webhook verification, data regions, retention, and exit behavior.
 - [ ] Implement provider adapters only after security review and approval/send/final-review service policies are tested.
 - [ ] Consider Accord Sign only after external-provider workflow evidence supports an in-house signature product.

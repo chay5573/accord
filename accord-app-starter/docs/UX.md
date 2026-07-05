@@ -6,17 +6,33 @@ Accord should feel like a calm command center during high-stakes work. The inter
 
 ## Primary navigation
 
-- Start Conversation: persistent quick-capture entry point for a new, existing, or not-yet-known transaction.
-- Deal Desk: transactions, deadlines, review states, and exceptions.
-- New Transaction: optional manual creation path when the user already knows the essential deal context.
-- Office Profile: identity, defaults, vendors, and playbook.
+- Start Listening: consent-gated conversation capture and the primary live-work entry point.
+- Quick Capture: recap and recovery when a conversation was not recorded.
+- AI Inbox: review and route external activity signals.
+- Drafts: opportunity-first prepared work that may not yet have a transaction.
+- Deal Desk: tracked transactions, deadlines, review states, and system-of-record history after capture or drafting.
 - Settings / Contract Library: forms, versions, mappings, and custom templates.
 - Settings / Privacy & Compliance: consent, access, retention, and audit controls.
 - Settings / Transaction Memory: secondary administrative surface for training eligibility, redaction, and case review.
 - Settings / E-Signature: preferred provider, send behavior, signed-document return, and connection status.
+- Settings / Inbox Integrations: future provider connections and monitored mailbox scopes.
 - Settings / Client Portal / Education: future, off-by-default administrative preview.
 
 Contract management belongs in Settings, not in the everyday Deal Desk.
+
+Every click must justify its existence. Accord performs safe organization and preparation before asking questions, asks only for facts it cannot determine, and reduces cognitive load before adding controls.
+
+## Opportunity-first workflow
+
+An opportunity can begin from live listening, a pasted transcript, voice or typed recap, uploaded document, email signal, e-signature signal, calendar/CRM signal, or recovered memory. It may remain unassigned while Accord reconstructs the work and prepares a reviewable draft. A full transaction is not required before draft preparation. Deal Desk becomes the tracking/system-of-record layer after drafting or an explicit save.
+
+Recovery mode shows what Accord reconstructed, missing facts, attributable evidence, and the draft that can be prepared. Its primary action is **Prepare Draft**.
+
+## AI Timeline and Activity Inbox
+
+The AI Timeline tells the story of an opportunity or transaction across captures, identified facts, lookup suggestions, form decisions, missing questions, drafts, signatures, imported documents, final review, and deadlines. Every event shows time, source, confidence or deterministic status, linked evidence, and action needed.
+
+The Activity Inbox collects email, e-signature, upload, recap, conversation, calendar, and CRM signals. Each signal offers Link to Opportunity, Create Opportunity, Dismiss, or Needs Review. A suggested match is never an approved fact.
 
 Transaction Memory remains secondary to Start Conversation and Deal Desk. Its Settings UI must make archive/training separation, workspace scope, redaction status, consent/authorization, retention, and disable-learning controls immediately visible.
 

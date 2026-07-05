@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { mockESignatureConnections } from '@/lib/eSignature';
+import { mockESignatureConnections, mockSignatureEvents } from '@/lib/eSignature';
 
 export function ESignatureSettings() {
   const [preferred, setPreferred] = useState('docusign');
@@ -22,5 +22,6 @@ export function ESignatureSettings() {
       <section className="card"><span className="section-kicker">Default send behavior</span><h2>What happens after approval?</h2><div className="setting-options"><label><input type="radio" name="send-behavior" value="review" checked={sendBehavior === 'review'} onChange={(event) => setSendBehavior(event.target.value)} /><span><strong>Open provider review before sending</strong><small>Recommended. Confirm recipients, documents, and signature fields in the provider.</small></span></label><label><input type="radio" name="send-behavior" value="immediate" checked={sendBehavior === 'immediate'} onChange={(event) => setSendBehavior(event.target.value)} /><span><strong>Send immediately after Accord approval</strong><small>Future policy option. Disabled until an administrator explicitly enables it.</small></span></label></div></section>
       <section className="card"><span className="section-kicker">Signed document return</span><h2>Deal Desk handoff</h2><div className="check-list"><label><input type="checkbox" defaultChecked /> Import completed package to Deal Desk</label><label><input type="checkbox" defaultChecked /> Require agent final review</label></div><div className="summary-list"><div><span>Webhook/status sync</span><strong>Mock healthy</strong></div><div><span>External sharing</span><strong>Blocked until final review</strong></div></div></section>
     </div>
+    <section className="card"><div className="section-heading"><div><span className="section-kicker">Activity synchronization</span><h2>Recent e-signature activity</h2><p>Synthetic provider events can suggest timeline updates and final-review tasks.</p></div><span className="status neutral">No live sync</span></div><div className="simple-list">{mockSignatureEvents.map(event => <div key={event.id}><span><strong>{event.safeSummary}</strong><small>{event.type.replaceAll('_',' ')} · {event.opportunityId ? 'Welker buyer offer' : 'Unlinked packet'}</small></span><span className={`status ${event.linked ? 'good' : 'warn'}`}>{event.linked ? 'Linked' : 'Needs match'}</span></div>)}</div><div className="notice compact warning"><strong>1 completed package awaits final review.</strong> Completed documents remain blocked from external sharing until an agent approves them.</div></section>
   </div>;
 }

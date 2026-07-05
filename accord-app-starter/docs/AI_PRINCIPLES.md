@@ -20,6 +20,12 @@ These principles govern every AI-assisted Accord workflow. They apply regardless
 - AI must never hide uncertainty behind confident language, formatting, or an aggregate score.
 - Unknown is a valid and often safer output.
 - A conversation may suggest a likely transaction, but AI must not silently create or attach a transaction. A human reviews the suggested match and chooses Create Transaction, Attach to Existing, or Save as Unassigned Note.
+- Accord may reconstruct an opportunity from recaps and external activity, but must label each input as a signal, preserve provenance and confidence, and ask only for facts it cannot determine.
+- Email, signature, calendar, CRM, upload, and memory signals cannot silently become approved contract facts.
+
+## Opportunity-first assistance
+
+AI should organize, classify, match, and prepare work before asking the agent. It may create a reviewable unassigned opportunity suggestion without requiring transaction setup. Deal Desk tracking follows capture or drafting. Recovery mode must preserve uncertainty and support forgotten recordings, incomplete recaps, interrupted work, and later evidence without fabricating continuity.
 
 ## Field-level traceability
 

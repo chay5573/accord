@@ -37,6 +37,8 @@ export interface SignatureEvent {
   occurredAt: string;
   providerEventId: string | null;
   safeSummary: string;
+  opportunityId: string | null;
+  linked: boolean;
 }
 
 export interface CompletedSignedDocument {
@@ -95,3 +97,10 @@ export const mockSignaturePacket: SignaturePacket = {
     { id: 'signature-doc-002', accordDocumentId: 'doc-dd-checklist', name: 'Buyer Due Diligence Checklist', formVersion: 'Mock 2025.1', signerFieldCount: 2, approvalStatus: 'approved' }
   ]
 };
+
+export const mockSignatureEvents: SignatureEvent[] = [
+  { id:'sig-event-1', signaturePacketId:'packet-demo-001', type:'created', occurredAt:'2026-07-05T16:45:00Z', providerEventId:'mock-provider-1', safeSummary:'Signature packet created.', opportunityId:'opp-001', linked:true },
+  { id:'sig-event-2', signaturePacketId:'packet-demo-001', type:'sent', occurredAt:'2026-07-05T17:00:00Z', providerEventId:'mock-provider-2', safeSummary:'Packet sent to two recipients.', opportunityId:'opp-001', linked:true },
+  { id:'sig-event-3', signaturePacketId:'packet-demo-001', type:'signed', occurredAt:'2026-07-05T17:21:00Z', providerEventId:'mock-provider-3', safeSummary:'Buyer recipient signed.', opportunityId:'opp-001', linked:true },
+  { id:'sig-event-4', signaturePacketId:'packet-unlinked-002', type:'completed', occurredAt:'2026-07-05T18:06:00Z', providerEventId:'mock-provider-4', safeSummary:'Completed packet needs an opportunity match and final review.', opportunityId:null, linked:false }
+];

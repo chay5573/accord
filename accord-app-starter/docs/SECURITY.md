@@ -68,6 +68,16 @@ Use synthetic data in local development and automated tests. Production-data acc
 - Prevent access to internal notes, strategy, playbooks, unapproved drafts, other tenants, and confidential opposing-party information.
 - Record safe question/answer metadata and citations without duplicating unnecessary sensitive content in logs.
 
+## Inbox and external activity
+
+- Gmail and Microsoft connections use OAuth with least-privilege scopes; mailbox passwords, OAuth tokens, client secrets, and provider credentials remain server-side.
+- Users explicitly choose monitored mailboxes, labels, and folders and can revoke access.
+- Encrypt retained message metadata, imported attachments, connection state, and tokens in transit and at rest.
+- Audit every connect, disconnect, scope change, import, view, classification, link, unlink, export, and delete.
+- Treat email, calendar, CRM, document, and signature content as untrusted signals. Defend against prompt injection and malicious attachments.
+- Never use email content for training without separate Transaction Memory authorization.
+- External signals cannot silently modify contract fields, deadlines, approval state, or client-visible information.
+
 ## Recording consent
 
 Recording is disabled by default. Audio capture cannot start until the required consent affirmation is completed and recorded as defined in `/docs/Compliance.md`. Withdrawal or absence of consent must stop capture and preserve a non-recording path.

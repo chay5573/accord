@@ -3,17 +3,18 @@ import type { ReactNode } from 'react';
 
 export function Shell({ children, active = 'dashboard' }: { children: ReactNode; active?: string }) {
   const primaryItems = [
-    ['capture', '/conversations/new', 'Start Conversation'],
-    ['draft', '/transactions/txn-demo/review', 'Auto Draft'],
+    ['capture', '/conversations/new', 'Start Listening'],
+    ['quick', '/quick-capture', 'Quick Capture'],
+    ['inbox', '/activity-inbox', 'AI Inbox'],
+    ['drafts', '/opportunities/opp-001', 'Drafts'],
     ['dashboard', '/', 'Deal Desk'],
-    ['new', '/transactions/new', 'New Transaction'],
-    ['onboarding', '/onboarding', 'Office Profile']
   ];
   const settingsItems = [
-    ['library', '/settings/contract-library', 'Contract Library'],
     ['esign', '/settings/e-signature', 'E-Signature'],
+    ['inbox-settings', '/settings/inbox-integrations', 'Inbox Integrations'],
     ['memory', '/settings/transaction-memory', 'Transaction Memory'],
     ['education', '/settings/client-education', 'Client Portal / Education'],
+    ['library', '/settings/contract-library', 'Contract Library'],
     ['compliance', '/settings/compliance', 'Privacy & Compliance']
   ];
 

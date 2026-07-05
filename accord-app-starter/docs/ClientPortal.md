@@ -39,3 +39,5 @@ Videos are tagged by topic, transaction stage, and form section. The system shou
 Client-visible retrieval requires a dedicated policy layer that filters approved sources before any model call. The portal should use provider-neutral identity, messaging, content, and AI interfaces. Client questions and answers follow documented retention, export, deletion, audit, and incident-response rules.
 
 The Signing Explanation Layer is the portal's signing-time education boundary. See `/docs/SigningExplanationLayer.md` for approved-source rules, citations, agent review, permissions, domain types, and example questions. The mock Settings preview remains off by default and does not create client access.
+
+Future portal views may consume only AI Timeline events explicitly approved for client visibility, transaction-stage education, signed-document status, and client-visible draft or signed documents. Internal opportunity reconstruction, Activity Inbox signals, confidence debates, and unapproved timeline events remain hidden.

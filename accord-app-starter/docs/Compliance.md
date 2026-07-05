@@ -70,6 +70,10 @@ Provider credentials and OAuth tokens remain server-side with least-privilege sc
 
 Future client education uses only agent-approved client-visible documents, fields, and approved Education Library content. It excludes internal notes, strategy, private playbooks, unapproved terms, and confidential third-party information. Answers remain educational, cite their sources, avoid professional advice, and are available for agent review. Client access is explicit, revocable, transaction-scoped, and audited.
 
+## Inbox signals and reconstructed activity
+
+Email, e-signature, calendar, CRM, uploaded-document, recap, and conversation events are evidence signals—not approved contract facts. Preserve provider/source attribution, retrieval time, confidence, classification, and the human link decision. Agent approval is required before an external or reconstructed value affects a contract. Mailbox monitoring is opt-in and scope-controlled. Email content is excluded from training unless separately authorized under Transaction Memory policy.
+
 ## Production readiness checklist
 
 - Threat model and access-control tests.

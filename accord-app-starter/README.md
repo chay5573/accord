@@ -8,14 +8,17 @@ Before making any change, read [`AGENTS.md`](./AGENTS.md). It defines the requir
 
 The [`docs`](./docs) folder is the project source of truth. Begin with:
 
-1. [`docs/Sprint.md`](./docs/Sprint.md) for current scope and phase.
-2. [`docs/ProductBacklog.md`](./docs/ProductBacklog.md) for ordered priorities.
-3. [`docs/CODEX_ROLE.md`](./docs/CODEX_ROLE.md) for AI engineering responsibilities.
+1. [`docs/ProductPhilosophy.md`](./docs/ProductPhilosophy.md) for the opportunity-first, minimum-click product principles.
+2. [`docs/Sprint.md`](./docs/Sprint.md) for current scope and phase.
+3. [`docs/ProductBacklog.md`](./docs/ProductBacklog.md) for ordered priorities.
+4. [`docs/CODEX_ROLE.md`](./docs/CODEX_ROLE.md) for AI engineering responsibilities.
 4. The relevant architecture, compliance, AI, forms, UX, brand, and development documents before changing those domains.
 
 ## Current Status
 
 Accord is at the **mock-data MVP foundation** stage. The project governance foundation is complete, and the mock-data MVP spine is the next eligible phase. No real AI, storage, authentication, OneDrive, transcription, or PDF integration should be added unless explicitly requested.
+
+The active mock direction is opportunity-first: Start Listening, Quick Capture, AI Inbox, Drafts, then Deal Desk. External activity remains a signal until agent review.
 
 ## Stack Direction
 - Next.js + React
@@ -31,6 +34,9 @@ Accord is at the **mock-data MVP foundation** stage. The project governance foun
 - Transaction workspace with transcript intake, extraction review, recommended forms, and approval workflow
 - Contract Library settings
 - Privacy & Compliance settings
+- Quick Capture recovery and opportunity review
+- AI Timeline and Activity Inbox
+- E-Signature and Inbox Integrations settings mocks
 
 ## Portable Architecture
 See `docs/Architecture.md`.
