@@ -45,12 +45,22 @@ Status: **In progress — mock spine, lint, TypeScript, production build, and lo
 - [x] Draft readiness with separate blockers and warnings
 - [x] Recommended MVP forms with reason, missing fields, and approval status
 - [x] Mock Verified Lookup suggestions and provider-neutral contract
+- [x] Transaction Memory architecture, privacy constitution, domain types, and provider-neutral contract
+- [x] Mock Transaction Memory Settings and prior-case review
+- [x] Future Client Portal and Education Library documented without implementation
+- [x] Mock E-Signature provider architecture, Settings, package handoff, and Deal Desk return status
+- [x] Signing Explanation Layer contracts and future/off-by-default Client Portal / Education preview
+- [x] Transaction Memory ownership/audit contract expansion
 
 Implementation uses typed synthetic fixtures and contains no live provider integrations. The local production build and eight-page route journey, including Quick Capture and Deal Desk Review, have been verified. Phase 2 remains open until responsive visual behavior and baseline automated checks are complete.
 
 The MVP spine is capture-first: a conversation may lead to a human-reviewed transaction creation or attachment decision. Manual New Transaction remains available as a secondary path. Consent on file is contextual evidence and never blanket permission; recording remains blocked until the current participants and context are confirmed.
 
 Deal Desk Review is the required mock bridge from captured facts to draft preparation. It prioritizes consent, missing/uncertain facts, form decisions, and readiness while preserving source evidence and human decisions. Verified Lookup remains a mock suggestion only; no external source is queried and no result can enter a contract without agent approval.
+
+Transaction Memory remains an administrative mock only. Archive inclusion never implies training eligibility; case authority, redaction, retention, provenance, and human approval are explicit gates. The Client Portal and Education Library are future documented concepts and are not implemented in this sprint.
+
+E-signature work is architecture and mock UI only. No packet is transmitted: package approval gates provider review, signed documents return to Deal Desk for final review, and external sharing remains a separate human action. The Client Portal / Education preview is disabled and contains no login, messaging, retrieval, or live AI.
 
 ### Phase 2 constraints
 
@@ -72,5 +82,5 @@ An agent can navigate a coherent mock journey from dashboard through onboarding 
 - Recording capture.
 - PDF generation or licensed form ingestion.
 - OneDrive synchronization.
-- E-signature, MLS, CRM, email, or transaction-management integrations.
+- Live e-signature providers, MLS, CRM, email, or transaction-management integrations. Provider-neutral e-signature mocks are permitted by this task.
 - Production deployment or compliance certification.

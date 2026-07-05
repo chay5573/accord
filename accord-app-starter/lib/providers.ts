@@ -1,3 +1,7 @@
+import type { ClientAIAnswer, ClientPortalAccess, ClientQuestion, ClientVisibleDocument, EducationContentItem } from './clientEducation';
+import type { CompletedSignedDocument, ESignatureConnection, ESignatureProviderType, SignatureAuditEntry, SignaturePacket, SignatureStatus } from './eSignature';
+import type { FieldProvenance, LearnedPattern, SensitiveDataFinding, TransactionCase, TransactionMemoryAuditEntry } from './transactionMemory';
+
 /**
  * Provider interfaces keep Accord portable.
  * Supabase is the MVP implementation, but the app should depend on these
@@ -100,4 +104,46 @@ export interface VerifiedLookupResult {
 export interface VerifiedLookupProvider {
   provider: ProviderName | 'county' | 'mls' | 'records';
   lookup(input: VerifiedLookupRequest): Promise<VerifiedLookupResult[]>;
+}
+
+export interface TransactionMemoryProvider {
+  provider: ProviderName;
+  listTrainingCases(input: { workspaceId: string; status?: TransactionCase['status'] }): Promise<TransactionCase[]>;
+  importTransactionCase(input: { workspaceId: string; sourceReference: string; requestedByUserId: string }): Promise<TransactionCase>;
+  analyzeTransactionCase(input: { caseId: string; requestedByUserId: string }): Promise<TransactionCase>;
+  redactTransactionCase(input: { caseId: string; policyVersion: string; requestedByUserId: string }): Promise<TransactionCase>;
+  approveForTraining(input: { caseId: string; approvedByUserId: string; consentReference: string }): Promise<TransactionCase>;
+  removeFromTraining(input: { caseId: string; removedByUserId: string; reason: string }): Promise<void>;
+  getFieldProvenance(input: { caseId: string; fieldPath?: string }): Promise<FieldProvenance[]>;
+  compareDocumentVersions(input: { caseId: string; leftVersionId: string; rightVersionId: string }): Promise<unknown>;
+  buildOfficePatternSummary(input: { workspaceId: string; approvedCaseIds: string[]; requestedByUserId: string }): Promise<LearnedPattern[]>;
+  listSensitiveDataFindings(input: { caseId: string; requestedByUserId: string }): Promise<SensitiveDataFinding[]>;
+  getTrainingAuditTrail(input: { caseId: string; requestedByUserId: string }): Promise<TransactionMemoryAuditEntry[]>;
+}
+
+export interface ESignatureProvider {
+  provider: ESignatureProviderType;
+  listProviders(input: { workspaceId: string }): Promise<ESignatureProviderType[]>;
+  getProviderConnectionStatus(input: { workspaceId: string }): Promise<ESignatureConnection>;
+  connectProvider(input: { workspaceId: string; requestedByUserId: string; redirectUri: string }): Promise<{ authorizationUrl: string }>;
+  disconnectProvider(input: { workspaceId: string; requestedByUserId: string }): Promise<void>;
+  createSignaturePacket(input: { transactionId: string | null; draftPackageId: string; requestedByUserId: string }): Promise<SignaturePacket>;
+  openProviderReview(input: { signaturePacketId: string; requestedByUserId: string }): Promise<{ reviewUrl: string }>;
+  sendSignaturePacket(input: { signaturePacketId: string; approvedByUserId: string }): Promise<SignaturePacket>;
+  getSignatureStatus(input: { signaturePacketId: string }): Promise<SignatureStatus>;
+  handleSignatureWebhook(input: { rawBody: string; headers: Record<string, string> }): Promise<void>;
+  importCompletedDocuments(input: { signaturePacketId: string; requestedByUserId: string }): Promise<CompletedSignedDocument[]>;
+  voidSignaturePacket(input: { signaturePacketId: string; requestedByUserId: string; reason: string }): Promise<SignaturePacket>;
+  getAuditTrail(input: { signaturePacketId: string; requestedByUserId: string }): Promise<SignatureAuditEntry[]>;
+}
+
+export interface ClientEducationProvider {
+  provider: ProviderName;
+  listClientVisibleDocuments(input: { accessId: string; requestedByPersonId: string }): Promise<ClientVisibleDocument[]>;
+  askClientQuestion(input: { accessId: string; question: string; requestedByPersonId: string }): Promise<ClientAIAnswer>;
+  getEducationRecommendations(input: { accessId: string; question?: string; requestedByPersonId: string }): Promise<EducationContentItem[]>;
+  listEducationContent(input: { workspaceId: string; requestedByUserId: string }): Promise<EducationContentItem[]>;
+  logClientQuestion(input: { question: ClientQuestion }): Promise<void>;
+  approveClientVisibleDocument(input: { accessId: string; documentId: string; approvedByUserId: string }): Promise<ClientVisibleDocument>;
+  revokeClientPortalAccess(input: { accessId: string; revokedByUserId: string; reason: string }): Promise<ClientPortalAccess>;
 }

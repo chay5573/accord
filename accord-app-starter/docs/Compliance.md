@@ -23,6 +23,8 @@ Conversation processing may recommend creating or attaching a transaction. The u
 
 Broker review may be required by organization policy, but it does not replace agent approval.
 
+An approved draft package still requires an explicit signature-send action unless an authorized administrator or user has enabled a documented immediate-send policy. Completed signed documents return to Deal Desk for agent final review before they can be sent or shared with the other side.
+
 ## Access control
 
 - Deny by default and enforce least privilege.
@@ -52,9 +54,21 @@ Deletion must cover database records, Accord Cloud objects, derived AI artifacts
 
 Use providers and configurations that do not train on customer content by default. Maintain a data-processing inventory, subprocessors, model/prompt versions, and evaluation results. Preserve source lineage and human decisions. Do not use customer transaction content for product training without explicit, separately documented authorization.
 
+Transaction Memory requires separate human approval before a completed transaction becomes training-eligible. Authorization must reflect client obligations, agent/team/brokerage ownership, intended use, policy version, and jurisdiction where applicable. Redaction should precede learning where practical, and unresolved high-risk findings block approval.
+
+No raw training case or derived pattern may cross team or brokerage boundaries without explicit lawful authority. Audit import, view, redaction, approval, export, removal, and deletion. Removing a case must stop future retrieval and learning eligibility and trigger review of dependent patterns. Archive retention alone does not authorize training use.
+
 ## OneDrive
 
 OneDrive connection requires informed administrator or user authorization and minimum OAuth scopes. Show what is synchronized, its last status, and how disconnect/deletion behaves. Accord Cloud remains canonical unless a future policy explicitly changes this.
+
+## E-signature providers
+
+Provider credentials and OAuth tokens remain server-side with least-privilege scopes. Verify and audit provider webhook events before changing Accord status. Signed documents are confidential transaction records and require encrypted storage, scoped access, retention policy, and agent final review before external sharing. Connection, send, recipient, completion, import, void, error, and sharing events are auditable. Accord avoids silent sending unless an authorized workspace policy explicitly enables it.
+
+## Client education
+
+Future client education uses only agent-approved client-visible documents, fields, and approved Education Library content. It excludes internal notes, strategy, private playbooks, unapproved terms, and confidential third-party information. Answers remain educational, cite their sources, avoid professional advice, and are available for agent review. Client access is explicit, revocable, transaction-scoped, and audited.
 
 ## Production readiness checklist
 

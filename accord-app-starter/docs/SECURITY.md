@@ -41,6 +41,33 @@ Contracts, transcripts, recordings, identity documents, bank statements, wire in
 
 Use synthetic data in local development and automated tests. Production-data access must be explicitly authorized, time-bounded, audited, and limited to the minimum necessary.
 
+## Transaction Memory
+
+- Raw training cases and derived patterns are tenant-scoped and must never be exposed across unrelated teams or brokerages.
+- Use least-privilege roles for import, view, redaction, approval, export, and deletion.
+- Redact sensitive content before learning where practical, and block approval when high-risk findings remain unresolved.
+- Encrypt archive sources, redacted representations, indexes, derived patterns, and backups in transit and at rest.
+- Audit imports, views, analysis, sensitive-data findings, redactions, approvals/denials, exports, removals, and deletions.
+- Removing or deleting a case immediately removes training eligibility and future retrieval; dependent learned patterns require reevaluation.
+- Keep raw sources separate from redacted learning representations and prevent sensitive content from entering logs, analytics, or evaluation reports.
+- Provider credentials and training-service secrets remain server-side and must never appear in client code.
+
+## E-signature providers
+
+- No provider API keys, OAuth tokens, refresh tokens, webhook secrets, or connection credentials may enter client code, logs, fixtures, screenshots, or Git.
+- Store OAuth tokens and secrets server-side using an approved secret store; request least-privilege scopes and audit grants, refresh, revocation, and disconnect.
+- Encrypt signature packets and completed signed documents in transit and at rest with tenant-scoped authorization.
+- Verify webhook signatures, timestamps, replay protection, provider account, packet mapping, and event idempotency before accepting an event.
+- Audit every connection and provider event, including packet creation, review, send, recipient activity, completion, import, void, retry, failure, final review, and external share.
+- Completed documents require agent final review before external sharing. Silent send is prohibited unless explicitly enabled by authorized workspace policy.
+
+## Client education access
+
+- Client portal access is explicit, transaction-scoped, least-privilege, expiring, revocable, and audited.
+- Filter approved client-visible sources server-side before any retrieval or model call.
+- Prevent access to internal notes, strategy, playbooks, unapproved drafts, other tenants, and confidential opposing-party information.
+- Record safe question/answer metadata and citations without duplicating unnecessary sensitive content in logs.
+
 ## Recording consent
 
 Recording is disabled by default. Audio capture cannot start until the required consent affirmation is completed and recorded as defined in `/docs/Compliance.md`. Withdrawal or absence of consent must stop capture and preserve a non-recording path.

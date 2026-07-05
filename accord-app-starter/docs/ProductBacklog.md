@@ -78,6 +78,37 @@ This backlog describes ordered product areas, not authorization to implement eve
 - [ ] Define retention, deletion, legal hold, and data-subject request workflows.
 - [ ] Prepare privacy notice, terms, DPA, subprocessors, and incident procedures.
 
+## Transaction Memory
+
+- [x] Define archive vs Training Library, consent/authority, redaction, provenance, retention, deletion, and audit requirements.
+- [x] Add provider-neutral Transaction Memory domain types and interface.
+- [x] Add mock Transaction Memory Settings and case-review screens.
+- [ ] Validate lawful bases, brokerage ownership, client authorization, and cross-jurisdiction requirements with counsel.
+- [ ] Design production redaction evaluation, re-identification testing, and dependent-pattern withdrawal.
+- [ ] Implement providers only after security, privacy, retention, export, and deletion controls are approved.
+
+## E-Signature Provider Integration
+
+- [x] Define provider-neutral packet, recipient, document, status, event, completed-document, connection, and audit contracts.
+- [x] Add mock preferred-provider Settings and draft-package/Deal Desk status surfaces.
+- [ ] Validate DocuSign and Dotloop APIs, licensing, OAuth scopes, webhook verification, data regions, retention, and exit behavior.
+- [ ] Implement provider adapters only after security review and approval/send/final-review service policies are tested.
+- [ ] Consider Accord Sign only after external-provider workflow evidence supports an in-house signature product.
+
+## Signing Explanation Layer
+
+- [x] Document approved-source retrieval, sourced answers, agent oversight, professional-advice limits, and signing-time education.
+- [x] Define provider-neutral client education and explanation types/contracts.
+- [ ] Design policy enforcement and adversarial tests that prevent internal or cross-tenant source disclosure.
+- [ ] Implement only after client permissions, identity, retention, and AI evaluation requirements are approved.
+
+## Client Portal / Education Library
+
+- [x] Add a future/off-by-default mock administrative preview.
+- [ ] Define client identity, invitations, expiration, revocation, messaging, accessibility, and audit workflows.
+- [ ] Govern versioned articles/videos by topic, stage, form, section, client role, and jurisdiction.
+- [ ] Build client UI only in a separately approved future phase.
+
 ## Supabase Integration
 
 - [ ] Finalize portable Postgres schema and migrations.
@@ -96,7 +127,7 @@ This backlog describes ordered product areas, not authorization to implement eve
 
 ## Future Integrations
 
-- [ ] Evaluate e-signature providers.
+- [x] Establish the mock provider-neutral e-signature foundation; live providers remain unevaluated/unconnected.
 - [ ] Evaluate transaction-management, CRM, MLS, title, lender, calendar, and email integrations.
 - [ ] Require documented permissions, data flows, provider abstraction, security review, and exit plan for each integration.
 
@@ -108,3 +139,5 @@ This backlog describes ordered product areas, not authorization to implement eve
 - [ ] Additional transaction types for builders and investors.
 - [ ] Additional states after licensing, legal review, mapping, and evaluation.
 - [ ] Native mobile experience only if validated usage supports it.
+- [ ] Client Portal with approved transaction summaries, sourced education answers, deadlines, next steps, and agent follow-up.
+- [ ] Approved Education Library with articles/videos tagged by topic, transaction stage, and form section.

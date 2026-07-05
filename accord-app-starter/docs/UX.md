@@ -12,8 +12,13 @@ Accord should feel like a calm command center during high-stakes work. The inter
 - Office Profile: identity, defaults, vendors, and playbook.
 - Settings / Contract Library: forms, versions, mappings, and custom templates.
 - Settings / Privacy & Compliance: consent, access, retention, and audit controls.
+- Settings / Transaction Memory: secondary administrative surface for training eligibility, redaction, and case review.
+- Settings / E-Signature: preferred provider, send behavior, signed-document return, and connection status.
+- Settings / Client Portal / Education: future, off-by-default administrative preview.
 
 Contract management belongs in Settings, not in the everyday Deal Desk.
+
+Transaction Memory remains secondary to Start Conversation and Deal Desk. Its Settings UI must make archive/training separation, workspace scope, redaction status, consent/authorization, retention, and disable-learning controls immediately visible.
 
 ## Core transaction flow
 
@@ -21,13 +26,18 @@ Contract management belongs in Settings, not in the everyday Deal Desk.
 2. Select conversation type and choose transcript paste, upload, or consent-gated recording.
 3. For recording, verify consent for every required participant and the current context before capture begins. Consent on file informs the check but is not blanket permission.
 4. Review the likely transaction, suggested parties/property/type, missing facts, confidence, and source evidence.
-5. Explicitly create a transaction, attach to an existing transaction, or save as an unassigned note.
-6. Resolve conflicts and required missing information in the transaction workspace.
-7. Review the recommended Utah form package and reasons.
-8. Explicitly approve terms; request broker review if needed.
-9. Generate and save a versioned package to Accord Cloud.
+5. Prepare a draft directly from the capture; transaction setup is not a prerequisite.
+6. Complete Auto Draft Review, resolve required facts, and review the recommended Utah form package.
+7. Generate an editable draft package only after explicit agent approval.
+8. Approve the package, then open the preferred provider review before sending for signature.
+9. Return completed signed documents to Deal Desk for agent final review.
+10. Save or track the work as a Deal Desk transaction and explicitly send/share to the other side.
 
 The Deal Desk should prioritize Start Conversation, Unassigned Conversations, and Needs Review. Manual transaction creation remains available but is secondary to capture.
+
+Unassigned captures and unsaved drafts may exist before a canonical transaction is created. Deal Desk becomes the tracking layer after draft creation; it must not force premature setup. The primary product path is `Start Conversation → Prepare Draft → Auto Draft Review → Generate Editable Draft Package → Approve Package → Send for Signature → Import Signed Documents → Agent Final Review → Deal Desk → Send/Share to Other Side`.
+
+Signature send and external sharing are separate consequential actions. Both require clear status, specific confirmation, and a visible recovery path. Client Portal / Education remains secondary and off by default.
 
 ## Deal Desk Review
 

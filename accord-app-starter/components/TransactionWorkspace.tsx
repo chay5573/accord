@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { mockExtractedTerms, mockFiles, mockPackageForms, mockTimeline, mockTranscript } from '@/lib/mockData';
+import { mockSignaturePacket, type SignatureStatus } from '@/lib/eSignature';
 
 const tabs = ['Overview', 'Conversations', 'Extracted Terms', 'Draft Package', 'Files', 'Timeline'] as const;
 type WorkspaceTab = (typeof tabs)[number];
@@ -19,6 +20,8 @@ export function TransactionWorkspace() {
   const [forms, setForms] = useState(mockPackageForms);
   const [transcript, setTranscript] = useState(mockTranscript);
   const [showFutureForms, setShowFutureForms] = useState(false);
+  const [packageApproved] = useState(true);
+  const [signatureStatus, setSignatureStatus] = useState<SignatureStatus>(mockSignaturePacket.status);
   const unresolved = terms.filter((term) => term.state !== 'suggested' || !term.value).length;
   const approved = terms.filter((term) => term.review === 'approved').length;
   const approvalReady = unresolved === 0 && approved === terms.length;
@@ -38,7 +41,7 @@ export function TransactionWorkspace() {
         {tabs.map((tab) => <button className={activeTab === tab ? 'active' : ''} type="button" onClick={() => setActiveTab(tab)} key={tab}>{tab}{tab === 'Extracted Terms' && <span className="tab-count">{unresolved}</span>}</button>)}
       </nav>
 
-      {activeTab === 'Overview' && <Overview approved={approved} unresolved={unresolved} includedForms={includedForms} setActiveTab={setActiveTab} />}
+      {activeTab === 'Overview' && <Overview approved={approved} unresolved={unresolved} includedForms={includedForms} signatureStatus={signatureStatus} setActiveTab={setActiveTab} />}
 
       {activeTab === 'Conversations' && (
         <div className="workspace-grid">
@@ -68,6 +71,7 @@ export function TransactionWorkspace() {
         <div className="workspace-grid">
           <section className="card span-2"><div className="section-heading"><div><span className="section-kicker">Recommended package</span><h2>Utah buyer-offer checklist</h2><p>Mock recommendations only. Form versions and licensing are not represented as verified.</p></div><span className="status warn">Approval locked</span></div><div className="package-list">{forms.map((form) => <label className="package-row" key={form.id}><input type="checkbox" checked={form.included} onChange={() => setForms((current) => current.map((item) => item.id === form.id ? { ...item, included: !item.included } : item))} /><span><strong>{form.name}</strong><small>{form.reason}</small></span><span className={`status ${form.status === 'required' ? 'good' : form.status === 'recommended' ? 'warn' : 'neutral'}`}>{form.status}</span></label>)}</div><button className="future-forms-toggle" type="button" aria-expanded={showFutureForms} onClick={() => setShowFutureForms((value) => !value)}><span>Future library forms<small>Show forms planned beyond this mock Utah starter set</small></span><strong>{showFutureForms ? '−' : '+'}</strong></button>{showFutureForms && <div className="future-forms"><span>Seller Financing Addendum</span><span>FHA/VA Loan Addendum</span><span>Lead-Based Paint Disclosure</span><span>HOA Addendum</span></div>}</section>
           <aside className="card package-summary"><span className="section-kicker">Package status</span><h2>{includedForms} forms selected</h2><div className="summary-list"><div><span>Term review</span><strong>{approved}/{terms.length}</strong></div><div><span>Unresolved</span><strong className={unresolved ? 'text-warning' : 'text-success'}>{unresolved}</strong></div><div><span>Agent approval</span><strong>Required</strong></div><div><span>Output</span><strong>Not generated</strong></div></div><div className="notice compact">Draft generation stays unavailable until all required terms are resolved and explicitly approved by the agent.</div><button className="btn btn-primary btn-block" type="button" disabled>Generate draft package</button><small className="center-note">PDF generation is not connected.</small></aside>
+          <section className="card span-2 signature-workflow"><div className="section-heading"><div><span className="section-kicker">After package approval · Mock workflow</span><h2>Send for signature</h2><p>The approved package opens in the preferred provider for final recipient and field review.</p></div><span className="status warn">{signatureStatus.replaceAll('_', ' ')}</span></div><div className="signature-flow"><span>Package approved</span><i>→</i><span>Provider review</span><i>→</i><span>Signature</span><i>→</i><span>Deal Desk final review</span></div><div className="signature-actions"><label>Provider<select defaultValue="docusign"><option value="docusign">DocuSign · Mock connected</option><option value="dotloop">Dotloop · Not connected</option></select></label><button className="btn btn-secondary" type="button" disabled={!packageApproved} onClick={() => setSignatureStatus('ready_for_provider_review')}>Open Provider Review</button><button className="btn btn-primary" type="button" disabled={!packageApproved}>Send for Signature</button><button className="btn btn-secondary" type="button" disabled={signatureStatus !== 'completed'} onClick={() => setSignatureStatus('imported_for_final_review')}>Import completed signed documents</button></div><small className="center-note">Mock actions only. No provider window opens and no document is sent or imported.</small></section>
         </div>
       )}
 
@@ -78,11 +82,12 @@ export function TransactionWorkspace() {
   );
 }
 
-function Overview({ approved, unresolved, includedForms, setActiveTab }: { approved: number; unresolved: number; includedForms: number; setActiveTab: (tab: WorkspaceTab) => void }) {
+function Overview({ approved, unresolved, includedForms, signatureStatus, setActiveTab }: { approved: number; unresolved: number; includedForms: number; signatureStatus: SignatureStatus; setActiveTab: (tab: WorkspaceTab) => void }) {
   return <div className="workspace-grid">
     <section className="card span-2"><div className="section-heading"><div><span className="section-kicker">Transaction snapshot</span><h2>Buyer offer at a glance</h2></div><button className="text-button" onClick={() => setActiveTab('Extracted Terms')}>Review terms →</button></div><div className="detail-grid"><div><span>Clients</span><strong>Brenton & Emily Welker</strong></div><div><span>Representation</span><strong>Buyer represented by us</strong></div><div><span>Offer price</span><strong>$875,000</strong></div><div><span>Financing</span><strong>Conventional</strong></div><div><span>Agent</span><strong>Calvin Hayward</strong></div><div><span>Team</span><strong>Red Rock Group</strong></div></div></section>
     <section className="card decision-card"><span className="section-kicker">Deal Desk Review</span><h2>Not ready for draft</h2><p>Two blockers and two warnings need agent decisions before draft preparation.</p><Link className="btn btn-primary btn-block" href="/transactions/txn-demo/review">Review & Prepare Draft</Link><button className="btn btn-quiet btn-block" type="button" onClick={() => setActiveTab('Extracted Terms')}>Open extracted terms</button></section>
     <section className="card span-2"><div className="section-heading"><div><span className="section-kicker">Progress</span><h2>Transaction readiness</h2></div><span className="status warn">Needs review</span></div><div className="readiness-list"><div className="complete"><i>✓</i><span><strong>Transaction created</strong><small>Parties, property, and representation captured</small></span></div><div className="complete"><i>✓</i><span><strong>Conversation added</strong><small>Mock transcript available for review</small></span></div><div><i>3</i><span><strong>Review extracted terms</strong><small>{approved} approved · {unresolved} unresolved</small></span></div><div><i>4</i><span><strong>Approve draft package</strong><small>Locked until required terms are resolved</small></span></div></div></section>
     <section className="card"><span className="section-kicker">Package preview</span><h2>{includedForms} forms included</h2><p>Current checklist is based on mock facts and office rules.</p><button className="btn btn-secondary btn-block" type="button" onClick={() => setActiveTab('Draft Package')}>Review checklist</button></section>
+    <section className="card span-2"><div className="section-heading"><div><span className="section-kicker">Signed Documents / E-Signature</span><h2>Provider handoff</h2><p>Completed documents return here for agent final review before external sharing.</p></div><span className="status warn">{signatureStatus.replaceAll('_', ' ')}</span></div><div className="detail-grid"><div><span>Provider</span><strong>DocuSign · Mock</strong></div><div><span>Recipients</span><strong>2 buyers</strong></div><div><span>Completed documents</span><strong>0</strong></div><div><span>Final review</span><strong>Not ready</strong></div><div><span>External sharing</span><strong>Blocked</strong></div><div><span>Status sync</span><strong>Mock only</strong></div></div><div className="form-actions"><button className="btn btn-secondary" type="button" onClick={() => setActiveTab('Draft Package')}>Open signature workflow</button><button className="btn btn-primary" type="button" disabled>Send/share to other side</button></div></section>
   </div>;
 }

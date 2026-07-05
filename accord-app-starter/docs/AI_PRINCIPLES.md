@@ -10,6 +10,7 @@ These principles govern every AI-assisted Accord workflow. They apply regardless
 - Contracts remain fully editable before approval.
 - A material edit after approval invalidates that approval and requires a new review.
 - AI supports agent and broker judgment; it does not replace it.
+- Signature-provider handoff requires approved package state and a human send decision unless an explicit authorized immediate-send policy applies. External sharing requires final review.
 
 ## Truthfulness and uncertainty
 
@@ -55,6 +56,8 @@ Source snippets are evidence, not authorization. Confidence helps prioritize rev
 - Audit metadata must be useful without copying unnecessary sensitive content into logs.
 - Automated actions must be attributable, reproducible where practical, and reversible before final human action.
 - Never silently learn or activate an office rule from customer behavior; an authorized human must review and approve it.
+- A completed transaction does not become training data automatically. Transaction Memory requires authority, redaction review, provenance, and explicit human approval.
+- Memory-derived patterns must cite approved case evidence and cannot silently write or overwrite a transaction or contract field.
 
 ## Verified Lookup
 
@@ -81,6 +84,10 @@ Source snippets are evidence, not authorization. Confidence helps prioritize rev
 AI behavior must be designed for real estate compliance and errors-and-omissions risk reduction. Favor complete audit trails, explicit review, source grounding, conservative uncertainty, current approved forms, and recoverable workflows over speed or apparent autonomy.
 
 Before releasing an AI change, evaluate material-field accuracy, unsupported values, source grounding, confidence calibration, conflict handling, privacy, tenant isolation, and agent correction rates using synthetic or properly governed test data.
+
+## Client signing explanations
+
+Future signing explanations retrieve only approved client-visible sources and approved Education Library content. Every answer cites those sources, remains available for agent review, and cannot change a transaction fact, deadline, contract, signature packet, or approval state.
 
 ## Provider independence
 

@@ -35,6 +35,9 @@ The existing `lib/providers.ts` and `lib/services/transactionService.ts` point i
 - Versioned form mapping and PDF generation engine.
 - Append-only audit event service.
 - Background job boundary for transcription, document generation, and sync.
+- Provider-neutral Transaction Memory boundary for separately authorized, redacted learning cases.
+- Provider-neutral e-signature boundary for approved package handoff, verified events, completed-document import, and final review.
+- Client-education policy boundary that limits future answers to explicitly approved client-visible sources.
 
 ## Tenancy and authorization
 
@@ -67,3 +70,23 @@ Start as a modular monolith. Split services only when security, load, deployment
 ## Verified lookup boundary
 
 Verified Lookup is a future application service, not a UI-side web request. The service receives a user-approved, transaction-scoped lookup request and calls a provider adapter. Results return field path, value, source type/name/reference, retrieval time, and confidence. Application services enforce authorization, approval policy, data minimization, provenance, and audit events before a result can enter review. MVP screens use suggestions and synthetic results only; no live external system is connected.
+
+## Transaction Memory boundary
+
+`TransactionMemoryProvider` separates case listing/import, analysis, redaction, training approval/removal, field provenance, document comparison, and office-pattern summaries from infrastructure. Application services—not UI or provider adapters—enforce tenant ownership, authority, consent, retention, redaction, audit, and approval gates.
+
+The provider contract supports future `listTrainingCases()`, `importTransactionCase()`, `analyzeTransactionCase()`, `redactTransactionCase()`, `approveForTraining()`, `removeFromTraining()`, `getFieldProvenance()`, `compareDocumentVersions()`, `buildOfficePatternSummary()`, `listSensitiveDataFindings()`, and `getTrainingAuditTrail()` operations. These methods define capability boundaries only; the MVP has no implementation.
+
+The transaction archive and Training Library are separate stores/logical domains. Archive objects do not become retrievable learning material by default. Training representations reference immutable source/version identities while keeping raw restricted artifacts behind narrower permissions. No provider implementation exists in the MVP.
+
+## E-signature boundary
+
+`ESignatureProvider` normalizes DocuSign, Dotloop, future providers, and a possible Accord Sign. It supports `listProviders()`, `getProviderConnectionStatus()`, `connectProvider()`, `disconnectProvider()`, `createSignaturePacket()`, `openProviderReview()`, `sendSignaturePacket()`, `getSignatureStatus()`, `handleSignatureWebhook()`, `importCompletedDocuments()`, `voidSignaturePacket()`, and `getAuditTrail()`.
+
+Application services enforce current package approval, tenant authorization, preferred-provider policy, idempotency, final review, and external-sharing gates. OAuth and provider credentials remain server-side. Webhook handlers verify authenticity and normalize provider events before state changes. UI components use domain statuses and never provider SDKs. The MVP exposes synthetic connection and packet states only.
+
+## Client education boundary
+
+`ClientEducationProvider` is a future policy-controlled retrieval boundary. Operations include `listClientVisibleDocuments()`, `askClientQuestion()`, `getEducationRecommendations()`, `listEducationContent()`, `logClientQuestion()`, `approveClientVisibleDocument()`, and `revokeClientPortalAccess()`.
+
+An application policy service filters client-visible documents and approved Education Library material before retrieval. Client questions and answers cannot mutate transaction, contract, or signature state. No client authentication or AI implementation exists in the MVP.
