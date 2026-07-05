@@ -320,6 +320,83 @@ textarea { min-height: 125px; resize: vertical; line-height: 1.5; }
 .missing-facts li::before { content: '?'; position: absolute; left: 0; color: var(--warning); font-weight: 800; }
 .compact-transaction-form .form-block { padding-bottom: 8px; border-bottom: 0; }
 
+.deal-review-page { display: grid; gap: 18px; }
+.readiness-card { display: grid; grid-template-columns: minmax(280px,1fr) auto auto; align-items: center; gap: 28px; padding: 20px 24px; }
+.readiness-score { display: flex; align-items: center; gap: 16px; }
+.readiness-score > div:last-child { display: grid; gap: 3px; }
+.readiness-score h2 { margin: 0; font-size: 21px; }
+.readiness-score p { max-width: 410px; }
+.readiness-ring { --score: 90deg; flex: 0 0 68px; width: 68px; height: 68px; display: grid; place-items: center; align-content: center; border-radius: 50%; background: radial-gradient(circle at center, white 57%, transparent 59%), conic-gradient(var(--danger) var(--score), #e5e9ee 0); }
+.readiness-ring.warn { background: radial-gradient(circle at center, white 57%, transparent 59%), conic-gradient(var(--warning) var(--score), #e5e9ee 0); }
+.readiness-ring.good { background: radial-gradient(circle at center, white 57%, transparent 59%), conic-gradient(var(--success) var(--score), #e5e9ee 0); }
+.readiness-ring span { color: var(--navy); font-size: 18px; font-weight: 800; line-height: 1; }
+.readiness-ring small { color: var(--muted); font-size: 7px; }
+.readiness-counts { display: flex; gap: 22px; padding: 0 26px; border-left: 1px solid var(--line); border-right: 1px solid var(--line); }
+.readiness-counts > div { display: grid; grid-template-columns: 24px auto; gap: 0 7px; align-items: center; }
+.readiness-counts .review-icon { grid-row: span 2; }
+.readiness-counts strong { color: var(--navy); font-size: 16px; }
+.readiness-counts small { color: var(--muted); font-size: 8px; }
+.deal-review-layout { display: grid; grid-template-columns: 310px minmax(0,1fr); gap: 18px; align-items: start; }
+.review-queue-panel { padding: 18px; }
+.deal-review-queue { display: grid; }
+.deal-review-queue button { display: grid; grid-template-columns: 9px 1fr auto; align-items: center; gap: 10px; width: 100%; padding: 13px 7px; border: 0; border-top: 1px solid var(--line); background: transparent; color: var(--ink); text-align: left; cursor: pointer; }
+.deal-review-queue button:hover, .deal-review-queue button.active { background: #f2f6f9; }
+.deal-review-queue button.active { box-shadow: inset 3px 0 var(--navy); }
+.deal-review-queue button > span:nth-child(2) { display: grid; gap: 3px; }
+.deal-review-queue strong { font-size: 10px; }
+.deal-review-queue small { color: var(--muted); font-size: 8px; }
+.review-priority { width: 8px; height: 8px; border-radius: 50%; background: var(--silver); }
+.review-priority.blocker { background: var(--danger); }
+.review-priority.warning { background: var(--warning); }
+.review-priority.ready { background: var(--success); }
+.queue-state { padding: 3px 5px; border-radius: 5px; background: #edf1f5; color: var(--muted); font-size: 7px; text-transform: capitalize; }
+.queue-state.approved, .queue-state.edited { background: var(--success-bg); color: var(--success); }
+.queue-state.unknown, .queue-state.dismissed { background: var(--warning-bg); color: var(--warning); }
+.review-detail-panel { min-height: 440px; }
+.review-detail-header { display: flex; justify-content: space-between; gap: 18px; padding-bottom: 15px; border-bottom: 1px solid var(--line); }
+.review-detail-header h2 { margin: 4px 0; font-size: 22px; }
+.review-detail-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; margin: 15px 0; }
+.review-detail-grid > div { display: grid; gap: 5px; padding: 12px; border: 1px solid var(--line); border-radius: 9px; }
+.review-detail-grid > div > span:first-child { color: var(--muted); font-size: 8px; text-transform: uppercase; letter-spacing: .08em; }
+.review-detail-grid strong { font-size: 11px; }
+.review-evidence { padding: 13px 15px; border-left: 3px solid #879db3; background: #f2f5f8; border-radius: 8px; }
+.review-evidence > span { color: var(--muted); font-size: 8px; font-weight: 750; text-transform: uppercase; letter-spacing: .08em; }
+.review-evidence blockquote { margin: 6px 0 0; color: #35485e; font-size: 11px; line-height: 1.45; }
+.review-explanation { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin: 15px 0; }
+.review-explanation > div { padding: 12px 0; }
+.review-explanation span { color: var(--muted); font-size: 8px; font-weight: 750; text-transform: uppercase; letter-spacing: .08em; }
+.review-explanation p { margin-top: 5px; }
+.review-detail-actions { display: flex; justify-content: flex-end; align-items: center; gap: 7px; padding-top: 14px; border-top: 1px solid var(--line); }
+.review-action-state { margin-right: auto; color: var(--muted); font-size: 9px; font-weight: 700; text-transform: capitalize; }
+.review-action-state.approved, .review-action-state.edited { color: var(--success); }
+.review-action-state.unknown, .review-action-state.dismissed { color: var(--warning); }
+.review-lower-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(340px,.8fr); gap: 18px; align-items: start; }
+.missing-fact-groups { display: grid; grid-template-columns: repeat(3,1fr); gap: 11px; }
+.fact-group { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.fact-group-heading { display: grid; grid-template-columns: 24px 1fr auto; align-items: center; gap: 8px; padding: 10px; background: #f5f7f9; }
+.fact-group-heading strong { font-size: 9px; }
+.fact-group-heading small { color: var(--muted); }
+.fact-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 11px; border-top: 1px solid var(--line); }
+.fact-row > span { display: grid; gap: 3px; }
+.fact-row strong { font-size: 9px; }
+.fact-row small { color: var(--muted); font-size: 8px; }
+.fact-row button { border: 0; background: transparent; color: var(--navy-3); font-size: 8px; font-weight: 700; cursor: pointer; }
+.review-form-list { display: grid; }
+.review-form-list article { padding: 12px 0; border-top: 1px solid var(--line); }
+.review-form-list article > div:first-child { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.review-form-list strong { font-size: 10px; }
+.review-form-list p { margin: 5px 0 8px; font-size: 9px; }
+.form-meta { display: flex; justify-content: space-between; color: var(--muted); font-size: 8px; text-transform: capitalize; }
+.form-meta strong { color: var(--navy-3); font-size: 8px; }
+.verified-lookup-card { margin: 14px 0; padding: 14px; border: 1px solid #b9cbe0; border-radius: 10px; background: #f3f7fb; }
+.verified-lookup-card h3 { margin: 3px 0 5px; color: var(--navy); font-size: 14px; }
+.lookup-options { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-top: 12px; }
+.lookup-options > div { display: grid; gap: 10px; padding: 10px; border: 1px solid #d1dce8; border-radius: 8px; background: white; }
+.lookup-options span { display: grid; gap: 3px; }
+.lookup-options strong { font-size: 9px; }
+.lookup-options small { color: var(--muted); font-size: 8px; line-height: 1.35; }
+.lookup-footnote { display: block; margin-top: 10px; color: var(--muted); font-size: 8px; line-height: 1.4; }
+
 @media (max-width: 1100px) {
   .metric-grid { grid-template-columns: repeat(2, 1fr); }
   .metric-card:nth-child(2) { border-right: 0; }
@@ -330,6 +407,9 @@ textarea { min-height: 125px; resize: vertical; line-height: 1.5; }
   .onboarding-layout { grid-template-columns: 1fr; }
   .onboarding-summary { position: static; }
   .capture-layout, .review-layout { grid-template-columns: 1fr; }
+  .deal-review-layout, .review-lower-grid { grid-template-columns: 1fr; }
+  .readiness-card { grid-template-columns: 1fr; }
+  .readiness-counts { border: 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 15px 0; }
   .capture-sidebar, .missing-facts { position: static; }
   .readiness-list { grid-template-columns: repeat(2, 1fr); gap: 18px; }
   .readiness-list > div::after { display: none; }
@@ -370,4 +450,7 @@ textarea { min-height: 125px; resize: vertical; line-height: 1.5; }
   .choice-grid, .capture-methods, .capture-suggestions article { grid-template-columns: 1fr; }
   .capture-actions { grid-template-columns: 1fr; }
   .capture-actions span { display: none; }
+  .review-detail-grid, .review-explanation, .missing-fact-groups, .lookup-options { grid-template-columns: 1fr; }
+  .review-detail-actions { align-items: stretch; flex-direction: column; }
+  .review-action-state { margin: 0 0 5px; }
 }

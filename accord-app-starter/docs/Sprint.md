@@ -41,10 +41,16 @@ Status: **In progress — mock spine, lint, TypeScript, production build, and lo
 - [x] Capture-first dashboard and persistent Start Conversation navigation
 - [x] Mock Start Conversation and post-capture review flow
 - [x] Person-scoped consent-on-file mock model and recording gate
+- [x] Deal Desk Review queue, item evidence/actions, and Missing Facts workflow
+- [x] Draft readiness with separate blockers and warnings
+- [x] Recommended MVP forms with reason, missing fields, and approval status
+- [x] Mock Verified Lookup suggestions and provider-neutral contract
 
-Implementation uses typed synthetic fixtures and contains no live provider integrations. The local production build and six-page route journey have been verified. Phase 2 remains open until responsive visual behavior and baseline automated checks are complete.
+Implementation uses typed synthetic fixtures and contains no live provider integrations. The local production build and eight-page route journey, including Quick Capture and Deal Desk Review, have been verified. Phase 2 remains open until responsive visual behavior and baseline automated checks are complete.
 
 The MVP spine is capture-first: a conversation may lead to a human-reviewed transaction creation or attachment decision. Manual New Transaction remains available as a secondary path. Consent on file is contextual evidence and never blanket permission; recording remains blocked until the current participants and context are confirmed.
+
+Deal Desk Review is the required mock bridge from captured facts to draft preparation. It prioritizes consent, missing/uncertain facts, form decisions, and readiness while preserving source evidence and human decisions. Verified Lookup remains a mock suggestion only; no external source is queried and no result can enter a contract without agent approval.
 
 ### Phase 2 constraints
 

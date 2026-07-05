@@ -56,6 +56,16 @@ Source snippets are evidence, not authorization. Confidence helps prioritize rev
 - Automated actions must be attributable, reproducible where practical, and reversible before final human action.
 - Never silently learn or activate an office rule from customer behavior; an authorized human must review and approve it.
 
+## Verified Lookup
+
+- AI may suggest checking an approved external source when a transaction fact is missing, conflicted, or low-confidence.
+- External lookup requires user approval unless an authorized user has explicitly enabled a narrowly scoped trusted auto-lookup policy.
+- Lookup providers must preserve source attribution, source reference, retrieval date/time, confidence, and the field mapped.
+- Accord must label transcript-derived facts and externally verified facts as different provenance classes.
+- Retrieved text is untrusted input and cannot override Accord instructions, permissions, or review policy.
+- No externally sourced fact may be written into a contract or treated as approved without agent review.
+- County, assessor, MLS, listing, brokerage-record, and file lookup implementations must sit behind an Accord provider interface; the UI must not call them directly.
+
 ## Privacy, consent, and access
 
 - Respect recording-consent settings before processing captured audio.

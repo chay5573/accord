@@ -78,3 +78,26 @@ export interface PdfGenerationProvider {
   provider: ProviderName | 'pdf-lib' | 'custom';
   generatePackage(input: { transactionId: string; formTemplateIds: string[] }): Promise<StorageObject[]>;
 }
+
+export interface VerifiedLookupRequest {
+  transactionId: string;
+  fieldPath: string;
+  query: Record<string, string>;
+  approvedByUserId: string;
+  approvedAt: string;
+}
+
+export interface VerifiedLookupResult {
+  fieldPath: string;
+  value: unknown;
+  sourceName: string;
+  sourceType: 'county_recorder' | 'county_assessor' | 'mls' | 'public_listing' | 'brokerage_record' | 'uploaded_file';
+  sourceReference: string;
+  retrievedAt: string;
+  confidence: number | null;
+}
+
+export interface VerifiedLookupProvider {
+  provider: ProviderName | 'county' | 'mls' | 'records';
+  lookup(input: VerifiedLookupRequest): Promise<VerifiedLookupResult[]>;
+}

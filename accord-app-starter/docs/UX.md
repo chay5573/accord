@@ -29,6 +29,23 @@ Contract management belongs in Settings, not in the everyday Deal Desk.
 
 The Deal Desk should prioritize Start Conversation, Unassigned Conversations, and Needs Review. Manual transaction creation remains available but is secondary to capture.
 
+## Deal Desk Review
+
+After capture and transaction assignment, Accord provides one prioritized review workflow before draft preparation:
+
+- Queue blockers before warnings and ready-state confirmations.
+- Show issue type, related record, extracted value, confidence, source evidence, flag reason, and recommended action together.
+- Allow the agent to Approve, Edit, Mark Unknown, or Dismiss while preserving the decision in the future audit model.
+- Separate facts required before draft from recommended optional facts and unknown/not-applicable facts.
+- Show draft readiness as Not ready, Needs review, or Ready for draft with blockers distinct from warnings.
+- Show every recommended form with requirement level, reason, missing fields, and approval status.
+
+The readiness score is navigation support, not authority. “Ready for draft” still requires explicit agent approval before any package generation.
+
+## Verified Lookup
+
+When a fact is missing or low-confidence, Accord may suggest a future Verified Lookup using approved county recorder, county assessor, MLS/public listing, brokerage record, or uploaded-file sources. The UI must ask for approval unless trusted auto-lookup is explicitly enabled. Suggestions and results must distinguish transcript-derived facts from externally verified facts and show source, retrieval time, confidence, and mapped field.
+
 ## Review interaction
 
 Each extracted material term should show value, confidence, source excerpt or provenance, and state: suggested, edited, approved, conflicted, or missing. Confidence is supporting evidence, not a substitute for review. High confidence must never auto-approve a legal term.

@@ -53,6 +53,7 @@ Accord Cloud is canonical. Store object metadata and logical document identity i
 - Keep auth claims normalized to Accord roles and memberships.
 - Give stored objects stable logical IDs rather than exposing provider paths as identity.
 - Wrap AI, storage, transcription, PDF, email, and sync vendors.
+- Wrap verified fact sources—including county, assessor, MLS, listing, brokerage-record, and uploaded-file search—behind `VerifiedLookupProvider`.
 - Export tenant data and audit history in documented formats.
 
 ## Observability and reliability
@@ -62,3 +63,7 @@ Every request and background job should carry a correlation ID. Capture structur
 ## Delivery posture
 
 Start as a modular monolith. Split services only when security, load, deployment cadence, or ownership creates a demonstrated need. Portability does not require premature microservices.
+
+## Verified lookup boundary
+
+Verified Lookup is a future application service, not a UI-side web request. The service receives a user-approved, transaction-scoped lookup request and calls a provider adapter. Results return field path, value, source type/name/reference, retrieval time, and confidence. Application services enforce authorization, approval policy, data minimization, provenance, and audit events before a result can enter review. MVP screens use suggestions and synthetic results only; no live external system is connected.

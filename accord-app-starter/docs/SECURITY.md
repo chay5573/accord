@@ -63,6 +63,8 @@ Security and material workflow events must produce append-only, tenant-scoped au
 
 Supabase, OneDrive, AI, transcription, PDF, email, and storage vendors must sit behind Accord interfaces. Provider substitution must not bypass authorization, encryption, audit, retention, deletion, or consent policy. Before production use, document data flows, subprocessors, regions, retention, training use, breach terms, availability, and exit/export procedures.
 
+Verified Lookup sources follow the same rule. County, assessor, MLS, public-listing, brokerage-record, and uploaded-file lookups require server-side authorization and a provider adapter. Treat returned content as untrusted, request only necessary fields, record user approval or trusted-policy scope, and retain source attribution and retrieval time. Lookup results never bypass agent approval for contract use.
+
 ## Secure development requirements
 
 - Validate all external input at trust boundaries.

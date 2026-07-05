@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import Link from 'next/link';
 import { mockExtractedTerms, mockFiles, mockPackageForms, mockTimeline, mockTranscript } from '@/lib/mockData';
 
 const tabs = ['Overview', 'Conversations', 'Extracted Terms', 'Draft Package', 'Files', 'Timeline'] as const;
@@ -80,7 +81,7 @@ export function TransactionWorkspace() {
 function Overview({ approved, unresolved, includedForms, setActiveTab }: { approved: number; unresolved: number; includedForms: number; setActiveTab: (tab: WorkspaceTab) => void }) {
   return <div className="workspace-grid">
     <section className="card span-2"><div className="section-heading"><div><span className="section-kicker">Transaction snapshot</span><h2>Buyer offer at a glance</h2></div><button className="text-button" onClick={() => setActiveTab('Extracted Terms')}>Review terms →</button></div><div className="detail-grid"><div><span>Clients</span><strong>Brenton & Emily Welker</strong></div><div><span>Representation</span><strong>Buyer represented by us</strong></div><div><span>Offer price</span><strong>$875,000</strong></div><div><span>Financing</span><strong>Conventional</strong></div><div><span>Agent</span><strong>Calvin Hayward</strong></div><div><span>Team</span><strong>Red Rock Group</strong></div></div></section>
-    <section className="card decision-card"><span className="section-kicker">Decision required</span><h2>Two terms need attention</h2><p>Settlement is missing and subject-to-sale language is uncertain. Resolve both before approval.</p><button className="btn btn-primary btn-block" type="button" onClick={() => setActiveTab('Extracted Terms')}>Resolve extracted terms</button></section>
+    <section className="card decision-card"><span className="section-kicker">Deal Desk Review</span><h2>Not ready for draft</h2><p>Two blockers and two warnings need agent decisions before draft preparation.</p><Link className="btn btn-primary btn-block" href="/transactions/txn-demo/review">Review & Prepare Draft</Link><button className="btn btn-quiet btn-block" type="button" onClick={() => setActiveTab('Extracted Terms')}>Open extracted terms</button></section>
     <section className="card span-2"><div className="section-heading"><div><span className="section-kicker">Progress</span><h2>Transaction readiness</h2></div><span className="status warn">Needs review</span></div><div className="readiness-list"><div className="complete"><i>✓</i><span><strong>Transaction created</strong><small>Parties, property, and representation captured</small></span></div><div className="complete"><i>✓</i><span><strong>Conversation added</strong><small>Mock transcript available for review</small></span></div><div><i>3</i><span><strong>Review extracted terms</strong><small>{approved} approved · {unresolved} unresolved</small></span></div><div><i>4</i><span><strong>Approve draft package</strong><small>Locked until required terms are resolved</small></span></div></div></section>
     <section className="card"><span className="section-kicker">Package preview</span><h2>{includedForms} forms included</h2><p>Current checklist is based on mock facts and office rules.</p><button className="btn btn-secondary btn-block" type="button" onClick={() => setActiveTab('Draft Package')}>Review checklist</button></section>
   </div>;

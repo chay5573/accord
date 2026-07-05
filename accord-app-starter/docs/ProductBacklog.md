@@ -17,6 +17,7 @@ This backlog describes ordered product areas, not authorization to implement eve
 - [x] Confirm mock-data domain fixtures and state vocabulary.
 - [x] Connect capture, post-capture review, dashboard, onboarding, new transaction, and transaction workspace into one coherent mock journey.
 - [x] Make Start Conversation the primary entry point with unassigned capture and Needs Review queues.
+- [x] Add mock Deal Desk Review with prioritized issues, missing facts, draft readiness, and form approval states.
 - [ ] Add predictable loading, empty, success, and failure states beyond the current mock review states.
 - [ ] Add baseline automated tests and accessibility checks.
 - [ ] Keep all Phase 2 work provider-free; no real integrations without a separate explicit task.
@@ -46,13 +47,15 @@ This backlog describes ordered product areas, not authorization to implement eve
 - [ ] Add deterministic schema validation and approval invalidation.
 - [ ] Establish synthetic Utah evaluation data and release thresholds.
 - [ ] Select and integrate providers only after privacy and vendor review.
+- [x] Add mock Verified Lookup suggestions with provenance and user-approval rules.
+- [ ] Implement `VerifiedLookupProvider` adapters only after source authorization, licensing, privacy, and security review.
 
 ## Contract/Form Engine
 
 - [ ] Confirm Utah form licensing and exact MVP form set.
 - [ ] Define immutable template versions and canonical field mappings.
 - [x] Build mock recommended-package checklist with reasons.
-- [ ] Require current agent approval before draft package generation.
+- [x] Represent agent approval and blocker gates before draft package generation in the mock Deal Desk Review.
 - [ ] Add rendered fixture and visual regression tests.
 - [ ] Keep Contract Library administration in Settings.
 
