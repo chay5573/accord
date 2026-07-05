@@ -55,6 +55,9 @@ Status: **In progress — mock spine, lint, TypeScript, production build, and lo
 - [x] Quick Capture recovery, opportunity review, AI Timeline, and Activity Inbox mocks
 - [x] Inbox provider-neutral architecture and Settings mock
 - [x] E-signature activity synchronization and final-review signal mocks
+- [x] Accord Guide governed domain, agent preview, transaction roadmap, personalized answer, and recommendation mocks
+- [x] Explain This Document mock with inline helpers, citations, video recommendations, and agent escalation
+- [x] Client-visible fact controls, content governance, multilingual readiness, and analytics placeholders
 
 Implementation uses typed synthetic fixtures and contains no live provider integrations. The local production build and eight-page route journey, including Quick Capture and Deal Desk Review, have been verified. Phase 2 remains open until responsive visual behavior and baseline automated checks are complete.
 
@@ -67,6 +70,8 @@ Transaction Memory remains an administrative mock only. Archive inclusion never 
 E-signature work is architecture and mock UI only. No packet is transmitted: package approval gates provider review, signed documents return to Deal Desk for final review, and external sharing remains a separate human action. The Client Portal / Education preview is disabled and contains no login, messaging, retrieval, or live AI.
 
 The MVP spine is now opportunity-first. Captures, recaps, and external activity may produce unassigned opportunities and prepared drafts before a transaction exists. The AI Timeline and Activity Inbox preserve signals, provenance, uncertainty, and human decisions. No live inbox, e-signature, calendar, CRM, lookup, AI, or storage provider is connected.
+
+Accord Guide is a future/off-by-default mock layer. It personalizes education only from approved client-visible facts and governed Accord-produced content, supports agent preview, and escalates advice or judgment questions. No client authentication, live AI, video hosting, analytics, signature, PDF, or storage integration exists.
 
 ### Phase 2 constraints
 

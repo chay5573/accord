@@ -1,4 +1,4 @@
-import type { ClientAIAnswer, ClientPortalAccess, ClientQuestion, ClientVisibleDocument, EducationContentItem } from './clientEducation';
+import type { AccordGuideContentItem, AccordGuideVideo, AgentReviewQueueItem, ClientAIAnswer, ClientPortalAccess, ClientQuestion, ClientVisibleDocument, ClientVisibleFact, ContractSectionExplanation, EducationContentItem, PersonalizedAnswer, TransactionStage } from './clientEducation';
 import type { CompletedSignedDocument, ESignatureConnection, ESignatureProviderType, SignatureAuditEntry, SignatureEvent, SignaturePacket, SignatureStatus } from './eSignature';
 import type { InboxAttachment, InboxAuditEntry, InboxConnection, InboxMessageSignal, InboxProviderType, MessageClassification, MonitoredMailboxScope } from './inbox';
 import type { FieldProvenance, LearnedPattern, SensitiveDataFinding, TransactionCase, TransactionMemoryAuditEntry } from './transactionMemory';
@@ -168,4 +168,12 @@ export interface ClientEducationProvider {
   logClientQuestion(input: { question: ClientQuestion }): Promise<void>;
   approveClientVisibleDocument(input: { accessId: string; documentId: string; approvedByUserId: string }): Promise<ClientVisibleDocument>;
   revokeClientPortalAccess(input: { accessId: string; revokedByUserId: string; reason: string }): Promise<ClientPortalAccess>;
+  getContentForTransactionStage(input: { transactionId: string; stage: TransactionStage; clientPersonId: string }): Promise<AccordGuideContentItem[]>;
+  getInlineContractExplanation(input: { accessId: string; documentId: string; section: string }): Promise<ContractSectionExplanation>;
+  answerClientQuestion(input: { accessId: string; question: string }): Promise<PersonalizedAnswer>;
+  getPersonalizedAnswer(input: { questionId: string; requestedByUserId: string }): Promise<PersonalizedAnswer>;
+  recommendVideos(input: { accessId: string; stage: TransactionStage; question?: string }): Promise<AccordGuideVideo[]>;
+  queueAnswerForAgentReview(input: { answer: PersonalizedAnswer; reason: AgentReviewQueueItem['reason'] }): Promise<AgentReviewQueueItem>;
+  approveClientVisibleFact(input: { factId: string; approvedByUserId: string }): Promise<ClientVisibleFact>;
+  revokeClientVisibleFact(input: { factId: string; revokedByUserId: string; reason: string }): Promise<ClientVisibleFact>;
 }

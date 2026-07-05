@@ -9,6 +9,7 @@ These principles guide every product, design, architecture, and engineering deci
 - Conversations are the primary input. Transactions are a byproduct, not the starting point.
 - Deal Desk is the tracking and system-of-record layer after work is captured or drafted.
 - External systems should feel like extensions of Accord, not separate destinations.
+- Accord Guide is the integrated, transaction-aware client education and contract explanation layer—not a generic FAQ or video page. It keeps the agent central and uses governed Accord-produced content.
 
 ## The agent's time
 

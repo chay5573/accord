@@ -16,7 +16,7 @@ Accord should feel like a calm command center during high-stakes work. The inter
 - Settings / Transaction Memory: secondary administrative surface for training eligibility, redaction, and case review.
 - Settings / E-Signature: preferred provider, send behavior, signed-document return, and connection status.
 - Settings / Inbox Integrations: future provider connections and monitored mailbox scopes.
-- Settings / Client Portal / Education: future, off-by-default administrative preview.
+- Settings / Accord Guide: future, off-by-default content, visibility, escalation, and agent-preview controls.
 
 Contract management belongs in Settings, not in the everyday Deal Desk.
 
@@ -33,6 +33,10 @@ Recovery mode shows what Accord reconstructed, missing facts, attributable evide
 The AI Timeline tells the story of an opportunity or transaction across captures, identified facts, lookup suggestions, form decisions, missing questions, drafts, signatures, imported documents, final review, and deadlines. Every event shows time, source, confidence or deterministic status, linked evidence, and action needed.
 
 The Activity Inbox collects email, e-signature, upload, recap, conversation, calendar, and CRM signals. Each signal offers Link to Opportunity, Create Opportunity, Dismiss, or Needs Review. A suggested match is never an approved fact.
+
+## Accord Guide
+
+Accord Guide is transaction-, stage-, role-, jurisdiction-, and document-aware. The client roadmap, current-stage education, personalized answers, inline document question marks, and video recommendations use only approved client-visible material. Agent preview shows exactly what the client would see before access is shared. It is not a generic FAQ or video page, and judgment questions visibly route to the agent.
 
 Transaction Memory remains secondary to Start Conversation and Deal Desk. Its Settings UI must make archive/training separation, workspace scope, redaction status, consent/authorization, retention, and disable-learning controls immediately visible.
 

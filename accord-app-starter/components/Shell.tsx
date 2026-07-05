@@ -13,7 +13,7 @@ export function Shell({ children, active = 'dashboard' }: { children: ReactNode;
     ['esign', '/settings/e-signature', 'E-Signature'],
     ['inbox-settings', '/settings/inbox-integrations', 'Inbox Integrations'],
     ['memory', '/settings/transaction-memory', 'Transaction Memory'],
-    ['education', '/settings/client-education', 'Client Portal / Education'],
+    ['education', '/settings/client-education', 'Accord Guide'],
     ['library', '/settings/contract-library', 'Contract Library'],
     ['compliance', '/settings/compliance', 'Privacy & Compliance']
   ];

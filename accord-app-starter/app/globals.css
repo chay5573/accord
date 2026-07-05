@@ -523,6 +523,62 @@ textarea { min-height: 125px; resize: vertical; line-height: 1.5; }
 .ai-timeline strong { font-size: 11px; }
 .ai-timeline article > div span, .ai-timeline article > div small { color: var(--muted); font-size: 8px; text-transform: capitalize; }
 
+/* Accord Guide */
+.guide-page { display: grid; gap: 18px; }
+.preview-bar { display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 14px 18px; border-left: 4px solid var(--warning); }
+.preview-bar > div { display: grid; gap: 3px; }
+.preview-bar strong { color: var(--navy); font-size: 11px; }
+.guide-hero { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 26px 28px; border-radius: 15px; color: white; background: linear-gradient(115deg,var(--navy),#164a73); box-shadow: var(--shadow); }
+.guide-hero h2 { margin: 4px 0 6px; color: white; font-size: 24px; }
+.guide-hero p { margin: 0; color: #cbd9e5; font-size: 12px; }
+.guide-hero .btn { background: white; }
+.guide-roadmap { display: grid; grid-template-columns: repeat(12,minmax(85px,1fr)); gap: 0; overflow-x: auto; padding: 10px 0; }
+.guide-roadmap > div { display: grid; justify-items: center; gap: 7px; min-width: 86px; position: relative; color: var(--muted); font-size: 8px; text-align: center; }
+.guide-roadmap > div::after { content:''; position:absolute; top:12px; left:50%; width:100%; height:2px; background:var(--line); z-index:0; }
+.guide-roadmap > div:last-child::after { display:none; }
+.guide-roadmap i { width:25px; height:25px; display:grid; place-items:center; border-radius:50%; background:#edf1f5; font-style:normal; font-weight:800; z-index:1; }
+.guide-roadmap .complete i { background:var(--success-bg); color:var(--success); }
+.guide-roadmap .current i { background:var(--navy); color:white; box-shadow:0 0 0 4px #dce6ef; }
+.guide-roadmap .current span { color:var(--navy); font-weight:800; }
+.guide-answer h2 { font-size:22px; }
+.guide-answer > p { margin:14px 0; }
+.guide-personal { padding:14px; margin:14px 0; border-radius:10px; background:#eef4f8; border-left:3px solid var(--navy-3); }
+.guide-personal strong { color:var(--navy); font-size:10px; }
+.guide-personal p { margin-top:5px; }
+.guide-citation { margin:12px 0; color:var(--muted); font-size:9px; }
+.guide-videos { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+.guide-videos article { display:grid; gap:7px; }
+.guide-videos article > strong { font-size:12px; color:var(--navy); }
+.guide-videos article > small { color:var(--muted); font-size:8px; }
+.video-placeholder { height:110px; display:grid; place-items:center; position:relative; border-radius:11px; background:linear-gradient(135deg,#0b2845,#3d617f); color:white; }
+.video-placeholder span { width:34px; height:34px; display:grid; place-items:center; border-radius:50%; background:rgba(255,255,255,.18); }
+.video-placeholder small { position:absolute; right:9px; bottom:8px; padding:3px 6px; border-radius:5px; background:rgba(0,0,0,.35); }
+.fact-visibility-list { display:grid; }
+.fact-visibility-list > div { display:grid; grid-template-columns:1fr 210px; align-items:center; gap:14px; padding:12px 0; border-top:1px solid var(--line); }
+.fact-visibility-list span { display:grid; gap:3px; }
+.fact-visibility-list strong { font-size:10px; }
+.fact-visibility-list small { color:var(--muted); font-size:8px; }
+.guide-document-layout { display:grid; grid-template-columns:minmax(0,1.45fr) minmax(300px,.65fr); gap:18px; align-items:start; }
+.guide-contract article { display:grid; grid-template-columns:1fr 30px; gap:14px; align-items:center; padding:15px; border-top:1px solid var(--line); }
+.guide-contract article.active { background:#f1f6fa; box-shadow:inset 3px 0 var(--navy-3); }
+.guide-contract article > div { display:grid; grid-template-columns:80px 1fr; gap:4px 12px; }
+.guide-contract article span { color:var(--muted); font-size:8px; }
+.guide-contract article strong { font-size:11px; }
+.guide-contract article p { grid-column:2; font-size:9px; }
+.guide-contract article button { width:28px; height:28px; border:0; border-radius:50%; background:var(--navy); color:white; font-weight:800; cursor:pointer; }
+.document-summary { padding:14px; margin-bottom:10px; border-radius:9px; background:#f7f9fb; }
+.document-summary strong { font-size:10px; }
+.document-summary p { margin-top:4px; }
+.guide-explanation { position:sticky; top:20px; }
+.video-mini { display:flex; align-items:center; gap:10px; padding:11px; margin-top:12px; border:1px solid var(--line); border-radius:9px; }
+.video-mini > span { width:28px; height:28px; display:grid; place-items:center; border-radius:50%; background:var(--navy); color:white; font-size:9px; }
+.video-mini div { display:grid; gap:3px; }
+.video-mini strong { font-size:10px; }
+.video-mini small { color:var(--muted); font-size:8px; }
+.common-questions { display:grid; gap:6px; margin-top:14px; }
+.common-questions > strong { font-size:9px; }
+.common-questions button { border:0; background:transparent; color:var(--navy-3); padding:3px 0; text-align:left; font-size:9px; cursor:pointer; }
+
 @media (max-width: 1100px) {
   .metric-grid { grid-template-columns: repeat(2, 1fr); }
   .metric-card:nth-child(2) { border-right: 0; }
@@ -539,6 +595,8 @@ textarea { min-height: 125px; resize: vertical; line-height: 1.5; }
   .foundation-grid { grid-template-columns: 1fr; }
   .recovery-layout { grid-template-columns: 1fr; }
   .inbox-item { grid-template-columns: 90px minmax(180px,1fr) auto; }
+  .guide-document-layout { grid-template-columns:1fr; }
+  .guide-explanation { position:static; }
   .inbox-actions { grid-column: 2 / -1; }
   .foundation-metrics { grid-template-columns: repeat(2, 1fr); }
   .case-review-sidebar { position: static; }
@@ -611,4 +669,9 @@ textarea { min-height: 125px; resize: vertical; line-height: 1.5; }
   .ai-timeline article > div { grid-column: 2; }
   .ai-timeline article > .status { grid-column: 3; grid-row: 1 / span 2; }
   .ai-timeline article > button { grid-column: 2 / -1; }
+  .guide-hero, .preview-bar { align-items:flex-start; flex-direction:column; }
+  .guide-videos { grid-template-columns:1fr; }
+  .fact-visibility-list > div { grid-template-columns:1fr; }
+  .guide-contract article > div { grid-template-columns:1fr; }
+  .guide-contract article p { grid-column:1; }
 }

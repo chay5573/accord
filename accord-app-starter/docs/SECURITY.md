@@ -67,6 +67,10 @@ Use synthetic data in local development and automated tests. Production-data acc
 - Filter approved client-visible sources server-side before any retrieval or model call.
 - Prevent access to internal notes, strategy, playbooks, unapproved drafts, other tenants, and confidential opposing-party information.
 - Record safe question/answer metadata and citations without duplicating unnecessary sensitive content in logs.
+- Enforce client-visible fact status (`approved_for_client`, `internal_only`, `needs_agent_review`, or `revoked`) server-side before retrieval.
+- Only approved, current, role- and jurisdiction-matched Accord Guide content is client eligible.
+- Audit fact visibility changes, portal previews, document explanations, questions, answers, citations, escalations, content review, and revocation.
+- Analytics are privacy-minimized event placeholders; never store full sensitive questions merely to measure engagement.
 
 ## Inbox and external activity
 

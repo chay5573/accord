@@ -31,6 +31,10 @@ Client portal access is explicit, transaction-scoped, least-privilege, expiring,
 
 Authorized administrators manage approved articles and short explainer videos. Content is versioned, reviewed, accessible, and tagged by topic, transaction stage, form, contract section, client role, and jurisdiction/state where applicable. Videos should include captions and transcripts. Retired or jurisdiction-mismatched content is excluded from recommendations.
 
+## Accord Guide document experience
+
+The Signing Explanation Layer is presented to clients through Accord Guide. A shared document can show its summary, key sections, inline question-mark helpers, recommended videos, common questions, and an Ask Your Agent action. Explanations distinguish general education from approved transaction-specific detail and cite the exact document section or governed content. Full PDF annotation remains future work.
+
 ## Domain boundary
 
 The future client-education service uses `ClientPortalAccess`, `ClientVisibleDocument`, `EducationContentItem`, `EducationVideo`, `ClientQuestion`, `ClientAIAnswer`, `SigningExplanationSession`, and `SigningExplanationCitation`. Provider-neutral operations include listing client-visible documents, asking a question, recommending and listing education content, logging questions, approving document visibility, and revoking portal access.

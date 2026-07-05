@@ -131,6 +131,16 @@ This backlog describes ordered product areas, not authorization to implement eve
 - [ ] Govern versioned articles/videos by topic, stage, form, section, client role, and jurisdiction.
 - [ ] Build client UI only in a separately approved future phase.
 
+## Accord Guide
+
+- [x] Define transaction-, stage-, role-, jurisdiction-, and document-aware education contracts.
+- [x] Add mock client roadmap, personalized sourced answer, governed video recommendations, agent preview, and review queue.
+- [x] Add mock Explain This Document experience with inline help markers and Ask Your Agent escalation.
+- [x] Add client-visible fact controls, content governance, multilingual metadata, unlock rules, and analytics placeholders.
+- [ ] Validate Utah content and scripts with brokerage compliance and qualified counsel.
+- [ ] Define production permission enforcement, recommendation policy tests, translation review, analytics minimization, and AI safety evaluations.
+- [ ] Add live client authentication, AI, video delivery, or analytics only in a separately approved phase.
+
 ## Supabase Integration
 
 - [ ] Finalize portable Postgres schema and migrations.

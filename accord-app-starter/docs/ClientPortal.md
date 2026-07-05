@@ -41,3 +41,11 @@ Client-visible retrieval requires a dedicated policy layer that filters approved
 The Signing Explanation Layer is the portal's signing-time education boundary. See `/docs/SigningExplanationLayer.md` for approved-source rules, citations, agent review, permissions, domain types, and example questions. The mock Settings preview remains off by default and does not create client access.
 
 Future portal views may consume only AI Timeline events explicitly approved for client visibility, transaction-stage education, signed-document status, and client-visible draft or signed documents. Internal opportunity reconstruction, Activity Inbox signals, confidence debates, and unapproved timeline events remain hidden.
+
+## Accord Guide
+
+Accord Guide is the preferred client education concept inside the portal. It is transaction-aware, stage-aware, role-aware, jurisdiction-aware, and document-aware—not a generic FAQ or video library. Recommendations use approved facts, forms, deadlines, client question history, and signature status. Shared documents may show summaries, key sections, inline question-mark helpers, governed Accord-produced videos, common questions, and Ask Your Agent.
+
+Every content item records draft/approved/retired status, reviewer, reviewed date, jurisdiction, client role, compliance notes, version, and replacement content when retired. Multilingual metadata supports future language, locale, translated title/transcript/captions, and translation review; no translation is active now.
+
+Facts are explicitly `approved_for_client`, `internal_only`, `needs_agent_review`, or `revoked`; only approved facts enter personalization. Questions asking what to do, whether to accept/cancel/waive, whether something is legal, whether the client can sue, or whether a deal is good route to the agent. Low confidence, conflicting data, and negotiation-dependent questions also escalate.

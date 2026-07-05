@@ -95,6 +95,10 @@ Before releasing an AI change, evaluate material-field accuracy, unsupported val
 
 Future signing explanations retrieve only approved client-visible sources and approved Education Library content. Every answer cites those sources, remains available for agent review, and cannot change a transaction fact, deadline, contract, signature packet, or approval state.
 
+## Accord Guide
+
+Accord Guide distinguishes general education from transaction-specific detail. It uses only facts marked approved for client visibility and approved, jurisdiction-matched documents, sections, and governed content. Questions such as “what should I do?”, “should I accept or cancel?”, “is this legal?”, “can I sue?”, “should I waive this deadline?”, or “is this a good deal?” route to agent review rather than receive a direct AI answer. Low confidence, conflicting data, and negotiation strategy also require escalation.
+
 ## Provider independence
 
 These principles belong to Accord, not a vendor. AI integrations must implement Accord interfaces and policy checks. Switching providers must not weaken approval, traceability, retention, security, or evaluation requirements.
