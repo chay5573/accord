@@ -4,6 +4,16 @@
 
 Accord should feel like a calm command center during high-stakes work. The interface reduces ambiguity, preserves context, and makes the next professional decision obvious.
 
+## Interaction governance
+
+- One primary action per screen.
+- Use progressive disclosure; show detail when the current decision needs it.
+- Hide advanced controls unless they are required for the user's present task.
+- Never ask users to organize information AI can infer later.
+- Settings are for configuration, not workflow.
+- Features should be sections of existing experiences unless a separate page is clearly justified.
+- Apply the Red Pen Test and Friction Budget from `/docs/ProductPhilosophy.md` before adding a page, control, or field.
+
 ## Primary navigation
 
 - Start Listening: consent-gated conversation capture and the primary live-work entry point.

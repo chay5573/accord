@@ -95,3 +95,18 @@ An agent can navigate a coherent mock journey from dashboard through onboarding 
 - OneDrive synchronization.
 - Live e-signature, inbox/email, calendar, CRM, MLS, or transaction-management integrations. Provider-neutral mocks are permitted by this task.
 - Production deployment or compliance certification.
+
+## Product Philosophy Validation
+
+Every future sprint summary must report:
+
+- Clicks removed or added across Capture → Prepare → Manage.
+- Typing removed or added.
+- Facts Accord now infers safely, plus remaining unnecessary questions.
+- Whether each changed screen has one obvious primary action.
+- Expected impact on the three-minute conversation-to-signature goal.
+- Red Pen Test findings and controls/content removed or deferred.
+- Whether the resulting interface remains calm and uses progressive disclosure.
+- Any required security, consent, compliance, or human-approval friction and how it is offset elsewhere.
+
+Sprint acceptance criteria must use the Friction Budget from `/docs/ProductPhilosophy.md`, not feature count, as the primary UX measure.

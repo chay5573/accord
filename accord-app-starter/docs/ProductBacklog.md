@@ -2,6 +2,22 @@
 
 This backlog describes ordered product areas, not authorization to implement everything listed. Current work is governed by `/docs/Sprint.md`. Within each section, items are roughly ordered by dependency and risk.
 
+Backlog priority is determined by user friction removed across Capture → Prepare → Manage, not by feature count. Every new or reprioritized item must carry one label:
+
+- **Critical friction remover** — directly protects the three-minute conversation-to-signature goal or removes a recurring manual decision, typing step, or workflow break.
+- **Major friction remover** — materially reduces clicks, context switching, review effort, or recovery cost.
+- **Supporting infrastructure** — enables trust, portability, security, reliability, or later friction removal without directly shortening the current journey.
+- **Future enhancement** — useful after the core friction budget is consistently met.
+
+Current emphasis:
+
+- **Critical friction remover:** capture/recovery, AI preparation, unresolved-blocker review, editable package approval, and signature handoff.
+- **Major friction remover:** AI Inbox, AI Timeline, provider activity return, and context-aware client education.
+- **Supporting infrastructure:** provider abstractions, tenant isolation, audit, form governance, retention, and Transaction Memory safeguards.
+- **Future enhancement:** additional jurisdictions, native mobile, broader integrations, and nonessential customization.
+
+Backlog grooming must estimate clicks removed, typing removed, inference gained, and impact on the three-minute North Star before effort or novelty is used as a tiebreaker.
+
 ## Project Constitution / Governance
 
 - [x] Establish repository startup instructions in `/AGENTS.md`.

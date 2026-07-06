@@ -8,11 +8,14 @@ Before making any change, read [`AGENTS.md`](./AGENTS.md). It defines the requir
 
 The [`docs`](./docs) folder is the project source of truth. Begin with:
 
-1. [`docs/ProductPhilosophy.md`](./docs/ProductPhilosophy.md) for the opportunity-first, minimum-click product principles.
-2. [`docs/Sprint.md`](./docs/Sprint.md) for current scope and phase.
-3. [`docs/ProductBacklog.md`](./docs/ProductBacklog.md) for ordered priorities.
-4. [`docs/CODEX_ROLE.md`](./docs/CODEX_ROLE.md) for AI engineering responsibilities.
-4. The relevant architecture, compliance, AI, forms, UX, brand, and development documents before changing those domains.
+1. [`docs/ProductPhilosophy.md`](./docs/ProductPhilosophy.md), Accord's product North Star.
+2. [`docs/IdealUserJourney.md`](./docs/IdealUserJourney.md), the intended Capture → Prepare → Manage workflow.
+3. [`docs/Sprint.md`](./docs/Sprint.md) for current scope and phase.
+4. [`docs/ProductBacklog.md`](./docs/ProductBacklog.md) for friction-prioritized work.
+5. [`docs/CODEX_ROLE.md`](./docs/CODEX_ROLE.md) for AI engineering responsibilities.
+6. The relevant architecture, compliance, AI, forms, UX, brand, and development documents before changing those domains.
+
+Future features must be evaluated against the Product Philosophy's friction budget: at most five manual decisions, 15–20 clicks, three minutes after the conversation, typing near zero, and 90%+ information inferred.
 
 ## Current Status
 

@@ -65,6 +65,21 @@ A change is complete when behavior and failure states are implemented; authoriza
 
 For contract-affecting changes, also require form-version traceability, representative rendering QA, and product/compliance sign-off.
 
+## Product Philosophy Validation
+
+Every implementation must be checked against `/docs/ProductPhilosophy.md` and `/docs/IdealUserJourney.md`. Apply the Red Pen Test before calling a screen complete.
+
+Every implementation summary must state:
+
+- How the work reduced clicks.
+- How it reduced typing.
+- Whether AI could infer more before asking the user.
+- Whether the screen has one obvious next action.
+- Whether it supports the three-minute North Star.
+- Whether it preserves a calm interface.
+
+If the work adds friction, document the required trust, compliance, or correctness reason and identify an offset elsewhere in the journey.
+
 ## Environments and releases
 
 Use separate local, preview, staging, and production projects with no shared credentials or customer data. Apply migrations through automation, run checks before promotion, and deploy risky workflow changes behind flags. Document rollback steps and never roll back a database by deleting customer state.
