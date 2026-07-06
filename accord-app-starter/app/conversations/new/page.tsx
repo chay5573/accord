@@ -1,14 +1,3 @@
 import { Shell } from '@/components/Shell';
 import { StartConversationFlow } from '@/components/StartConversationFlow';
-
-export default function StartConversationPage() {
-  return (
-    <Shell active="capture">
-      <div className="topbar">
-        <div><div className="eyebrow">Start Listening · Mock workflow</div><h1>Start with the conversation.</h1><p className="page-lead">Confirm consent, capture what was said, and let Accord organize the work before asking questions.</p></div>
-        <span className="status neutral">No providers connected</span>
-      </div>
-      <StartConversationFlow />
-    </Shell>
-  );
-}
+export default function CapturePage(){return <Shell active="capture"><header className="topbar"><div><span className="eyebrow">Capture</span><h1>Start with the conversation.</h1><p className="page-lead">No transaction setup. No filing decisions. Accord will infer the structure after capture.</p></div><span className="status neutral">Mock capture</span></header><StartConversationFlow/></Shell>}

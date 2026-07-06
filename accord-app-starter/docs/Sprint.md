@@ -58,6 +58,7 @@ Status: **In progress — mock spine, lint, TypeScript, production build, and lo
 - [x] Accord Guide governed domain, agent preview, transaction roadmap, personalized answer, and recommendation mocks
 - [x] Explain This Document mock with inline helpers, citations, video recommendations, and agent escalation
 - [x] Client-visible fact controls, content governance, multilingual readiness, and analytics placeholders
+- [x] First UX simplification sprint: five-item navigation, inference-first Capture, consolidated Prepare, and attention-first Manage
 
 Implementation uses typed synthetic fixtures and contains no live provider integrations. The local production build and eight-page route journey, including Quick Capture and Deal Desk Review, have been verified. Phase 2 remains open until responsive visual behavior and baseline automated checks are complete.
 
@@ -72,6 +73,8 @@ E-signature work is architecture and mock UI only. No packet is transmitted: pac
 The MVP spine is now opportunity-first. Captures, recaps, and external activity may produce unassigned opportunities and prepared drafts before a transaction exists. The AI Timeline and Activity Inbox preserve signals, provenance, uncertainty, and human decisions. No live inbox, e-signature, calendar, CRM, lookup, AI, or storage provider is connected.
 
 Accord Guide is a future/off-by-default mock layer. It personalizes education only from approved client-visible facts and governed Accord-produced content, supports agent preview, and escalates advice or judgment questions. No client authentication, live AI, video hosting, analytics, signature, PDF, or storage integration exists.
+
+The first simplification sprint reduced the primary information architecture to Capture, Prepare, Manage / Deal Desk, Client Portal, and Settings. Capture no longer asks destination, transaction, or conversation-type questions. Prepare consolidates draft review behind progressive disclosure. Manage leads with one urgent action and collapses new activity and secondary modules.
 
 ### Phase 2 constraints
 

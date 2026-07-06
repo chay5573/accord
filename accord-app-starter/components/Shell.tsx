@@ -1,34 +1,18 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 
-export function Shell({ children, active = 'dashboard' }: { children: ReactNode; active?: string }) {
-  const primaryItems = [
-    ['capture', '/conversations/new', 'Start Listening'],
-    ['quick', '/quick-capture', 'Quick Capture'],
-    ['inbox', '/activity-inbox', 'AI Inbox'],
-    ['drafts', '/opportunities/opp-001', 'Drafts'],
-    ['dashboard', '/', 'Deal Desk'],
-  ];
-  const settingsItems = [
-    ['esign', '/settings/e-signature', 'E-Signature'],
-    ['inbox-settings', '/settings/inbox-integrations', 'Inbox Integrations'],
-    ['memory', '/settings/transaction-memory', 'Transaction Memory'],
-    ['education', '/settings/client-education', 'Accord Guide'],
-    ['library', '/settings/contract-library', 'Contract Library'],
-    ['compliance', '/settings/compliance', 'Privacy & Compliance']
-  ];
+const navigation = [
+  ['capture','/conversations/new','Capture'],
+  ['prepare','/prepare','Prepare'],
+  ['manage','/','Manage / Deal Desk'],
+  ['client','/accord-guide','Client Portal'],
+  ['settings','/settings','Settings']
+] as const;
 
-  return <div className="app-shell">
-    <aside className="sidebar">
-      <div><Link href="/" className="wordmark">ACCORD</Link><div className="side-sub brand-line">From conversation to confident transaction.</div></div>
-      <nav className="nav-list" aria-label="Primary navigation">
-        {primaryItems.map(([key, href, label], index) => <Link key={key} className={`nav-item ${index === 0 ? 'capture-nav' : ''} ${active === key ? 'active' : ''}`} href={href}>{index === 0 && <span aria-hidden="true">+</span>}{label}</Link>)}
-        <span className="nav-section-label">Settings</span>
-        {settingsItems.map(([key, href, label]) => <Link key={key} className={`nav-item settings-nav ${active === key ? 'active' : ''}`} href={href}>{label}</Link>)}
-      </nav>
-      <div className="sidebar-footer"><span className="workspace-dot" aria-hidden="true" /><div><strong>Red Rock Group</strong><span>Mock workspace · Utah</span></div></div>
-      <div className="side-sub">Human-reviewed intelligence. No provider connections active.</div>
-    </aside>
-    <main className="main">{children}</main>
-  </div>;
+const settingsKeys = new Set(['settings','esign','inbox-settings','memory','library','compliance','onboarding']);
+const sectionAliases:Record<string,string>={inbox:'manage',dashboard:'manage',drafts:'prepare',new:'prepare',quick:'capture',education:'client'};
+
+export function Shell({children,active='manage'}:{children:ReactNode;active?:string}){
+  const currentSection=sectionAliases[active]??active;
+  return <div className="app-shell"><aside className="sidebar"><div><Link href="/" className="wordmark">ACCORD</Link><div className="side-sub brand-line">Capture. Prepare. Manage.</div></div><nav className="nav-list" aria-label="Primary navigation">{navigation.map(([key,href,label],index)=>{const selected=currentSection===key||(key==='settings'&&settingsKeys.has(active));return <Link key={key} className={`nav-item ${index===0?'capture-nav':''} ${selected?'active':''}`} href={href}>{index===0&&<span aria-hidden="true">+</span>}{label}</Link>})}</nav><div className="sidebar-footer"><span className="workspace-dot" aria-hidden="true"/><div><strong>Red Rock Group</strong><span>Mock workspace · Utah</span></div></div><div className="side-sub">Human-reviewed intelligence. No provider connections active.</div></aside><main className="main">{children}</main></div>;
 }

@@ -16,17 +16,11 @@ Accord should feel like a calm command center during high-stakes work. The inter
 
 ## Primary navigation
 
-- Start Listening: consent-gated conversation capture and the primary live-work entry point.
-- Quick Capture: recap and recovery when a conversation was not recorded.
-- AI Inbox: review and route external activity signals.
-- Drafts: opportunity-first prepared work that may not yet have a transaction.
-- Deal Desk: tracked transactions, deadlines, review states, and system-of-record history after capture or drafting.
-- Settings / Contract Library: forms, versions, mappings, and custom templates.
-- Settings / Privacy & Compliance: consent, access, retention, and audit controls.
-- Settings / Transaction Memory: secondary administrative surface for training eligibility, redaction, and case review.
-- Settings / E-Signature: preferred provider, send behavior, signed-document return, and connection status.
-- Settings / Inbox Integrations: future provider connections and monitored mailbox scopes.
-- Settings / Accord Guide: future, off-by-default content, visibility, escalation, and agent-preview controls.
+- Capture: live consent-gated capture plus transcript, recap, forgotten-recording, and upload alternatives.
+- Prepare: inferred facts, true blockers, editable package generation, and contextual signature readiness.
+- Manage / Deal Desk: attention, active transactions, deadlines, timeline, documents/signatures, client questions, and new activity.
+- Client Portal: Accord Guide and client-visible transaction education.
+- Settings: Contract Library, E-Signature, Inbox Integrations, Transaction Memory, Accord Guide governance, Privacy & Compliance, and Office Profile.
 
 Contract management belongs in Settings, not in the everyday Deal Desk.
 
@@ -52,22 +46,23 @@ Transaction Memory remains secondary to Start Conversation and Deal Desk. Its Se
 
 ## Core transaction flow
 
-1. Start a conversation and indicate whether it may relate to a new transaction, existing transaction, or an unknown destination.
-2. Select conversation type and choose transcript paste, upload, or consent-gated recording.
-3. For recording, verify consent for every required participant and the current context before capture begins. Consent on file informs the check but is not blanket permission.
-4. Review the likely transaction, suggested parties/property/type, missing facts, confidence, and source evidence.
-5. Prepare a draft directly from the capture; transaction setup is not a prerequisite.
-6. Complete Auto Draft Review, resolve required facts, and review the recommended Utah form package.
-7. Generate an editable draft package only after explicit agent approval.
-8. Approve the package, then open the preferred provider review before sending for signature.
-9. Return completed signed documents to Deal Desk for agent final review.
-10. Save or track the work as a Deal Desk transaction and explicitly send/share to the other side.
+1. Capture the conversation or add a transcript, recap, recovered memory, note, or document. Do not ask the user to classify or file it first.
+2. Accord infers people, property, intent, transaction match, terms, defaults, and package recommendations.
+3. Prepare shows readiness and only true blockers. Evidence, forms, confidence, lookups, and signature detail stay collapsed until requested.
+4. The agent generates and approves an editable draft package, then opens provider review to send for signature.
+5. Signed documents return to Manage / Deal Desk for final review, deadlines, activity, documents, and client questions.
 
 The Deal Desk should prioritize Start Conversation, Unassigned Conversations, and Needs Review. Manual transaction creation remains available but is secondary to capture.
 
 Unassigned captures and unsaved drafts may exist before a canonical transaction is created. Deal Desk becomes the tracking layer after draft creation; it must not force premature setup. The primary product path is `Start Conversation → Prepare Draft → Auto Draft Review → Generate Editable Draft Package → Approve Package → Send for Signature → Import Signed Documents → Agent Final Review → Deal Desk → Send/Share to Other Side`.
 
-Signature send and external sharing are separate consequential actions. Both require clear status, specific confirmation, and a visible recovery path. Client Portal / Education remains secondary and off by default.
+Signature send and external sharing are separate consequential actions. Both require clear status, specific confirmation, and a visible recovery path. Client Portal remains contextual and client-facing; administrative Guide controls remain in Settings.
+
+## Simplified page contracts
+
+- Capture has one primary action: **Capture Conversation**. It asks no destination, conversation type, or transaction-setup questions.
+- Prepare has one primary action: **Generate Editable Draft Package**. It combines review, missing facts, recommended forms, defaults, evidence, lookups, and signature readiness with progressive disclosure.
+- Manage answers **What needs my attention?** with one urgent item, recent captures/drafts, active transactions, and upcoming deadlines. New activity and secondary modules remain collapsed.
 
 ## Deal Desk Review
 

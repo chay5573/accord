@@ -37,6 +37,11 @@ Backlog grooming must estimate clicks removed, typing removed, inference gained,
 - [ ] Add predictable loading, empty, success, and failure states beyond the current mock review states.
 - [ ] Add baseline automated tests and accessibility checks.
 - [ ] Keep all Phase 2 work provider-free; no real integrations without a separate explicit task.
+- [x] **Critical friction remover:** Collapse primary navigation to Capture, Prepare, Manage, Client Portal, and Settings.
+- [x] **Critical friction remover:** Remove destination, transaction, and conversation-type questions before capture.
+- [x] **Critical friction remover:** Consolidate draft review, blockers, forms, defaults, evidence, lookups, and signature readiness into Prepare.
+- [x] **Major friction remover:** Make Manage attention-first and collapse new activity and secondary modules.
+- [ ] **Critical friction remover:** Measure the live Capture → Prepare → Send for Signature path against the 15–20-click and three-minute budgets.
 
 ## Opportunity-First Workflow
 

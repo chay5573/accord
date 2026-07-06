@@ -99,3 +99,7 @@ Before approving work, ask:
 7. Does it preserve trust, evidence, and human authority?
 
 If the answers are unclear, simplify or defer the work.
+
+## First simplification baseline
+
+The primary information architecture is Capture, Prepare, Manage / Deal Desk, Client Portal, and Settings. Capture does not ask the agent to classify or file work before Accord attempts inference. Prepare contains the review and package workflow. Manage begins with tracked work and attention. Secondary capabilities appear contextually or in Settings rather than competing as top-level destinations.
