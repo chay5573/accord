@@ -85,3 +85,9 @@ Email, e-signature, calendar, CRM, uploaded-document, recap, and conversation ev
 - Incident response, breach notification, backup restore, and key rotation drills.
 - Retention, export, deletion, legal hold, and account closure workflows.
 - Dependency scanning, security headers, rate limits, and audit-log monitoring.
+
+## Workflow privacy notes
+
+Record remains consent-gated and must not rely on blanket consent alone. Review & Send can display transcript evidence and Teach Accord defaults only as reviewable support for contract fields; no AI-derived, externally sourced, or preference-derived fact may be sent for signature without agent approval.
+
+Client View / Client Experience appears only inside transaction context and must filter to approved client-visible facts, documents, and education content. Internal strategy, private playbooks, Activity Inbox reconstruction, and unapproved draft terms remain hidden.

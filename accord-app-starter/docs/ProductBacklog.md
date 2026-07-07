@@ -194,3 +194,11 @@ Backlog grooming must estimate clicks removed, typing removed, inference gained,
 - [ ] Native mobile experience only if validated usage supports it.
 - [ ] Client Portal with approved transaction summaries, sourced education answers, deadlines, next steps, and agent follow-up.
 - [ ] Approved Education Library with articles/videos tagged by topic, transaction stage, and form section.
+
+## Workflow simplification backlog update
+
+- [x] **Critical friction remover** — Collapse primary agent navigation to Record, Review & Send, Coordinate, and Settings.
+- [x] **Critical friction remover** — Move Client Portal / Accord Guide out of primary agent navigation and into transaction-level Client View / Client Experience.
+- [x] **Critical friction remover** — Make Review & Send the main generated-paperwork field review surface with transcript evidence links and mock signature handoff.
+- [x] **Major friction remover** — Keep Record free of new/existing transaction choice, conversation type, destination, and setup fields.
+- [ ] **Supporting infrastructure** — Expand Teach Accord rules into a governed provider-backed service when live storage and auth exist.

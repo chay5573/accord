@@ -113,3 +113,11 @@ Every future sprint summary must report:
 - Any required security, consent, compliance, or human-approval friction and how it is offset elsewhere.
 
 Sprint acceptance criteria must use the Friction Budget from `/docs/ProductPhilosophy.md`, not feature count, as the primary UX measure.
+
+## Current workflow simplification result
+
+- [x] Primary navigation now reflects **Record -> Review & Send -> Coordinate -> Settings**.
+- [x] Client Portal / Accord Guide is contextual inside Coordinate and transaction detail as Client View / Client Experience.
+- [x] Review & Send is the main contract-field review surface with field status, confidence, document/section reference, evidence links, transcript, and mock signature progression.
+- [x] Teach Accord is represented as explainable preferences/rules with personal/team/brokerage scope and suggested/approved/disabled status.
+- [x] Accord remains transaction-centric and explicitly not a CRM.

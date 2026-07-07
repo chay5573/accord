@@ -37,3 +37,12 @@ The journey must survive forgotten recordings, incomplete facts, interrupted rev
 - Manage begins after paperwork is prepared or explicitly saved.
 - Settings configure policy; they are never part of the routine journey.
 - Human approval remains mandatory for legal documents, signature sending, and external sharing.
+
+## Agent-facing workflow update
+
+The agent-facing workflow is **Record -> Review & Send -> Coordinate -> Settings**.
+
+1. **Record**: one-click recording, paste transcript, quick recap, forgotten-recording recovery, and upload placeholders. No new/existing transaction choice, conversation type, destination, or setup fields appear before Accord attempts inference.
+2. **Review & Send**: Accord presents all generated contract fields in one review surface with generated value, form/document, section reference, confidence, status, evidence link, and edit placeholder. Transcript evidence sits at the bottom, and evidence links scroll to the relevant snippet.
+3. **Send for Signatures**: the agent confirms provider, recipients, documents, and final approval through a provider-neutral mock status progression. No live DocuSign, Dotloop, PDF, or provider call occurs in the MVP mock.
+4. **Coordinate**: after documents exist or work is explicitly tracked, Accord manages timeline, tasks, dates, signatures, receipts, unresolved items, documents, and the contextual Client View.

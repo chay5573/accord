@@ -102,3 +102,13 @@ Inbox adapters never write contract fields. Application services enforce OAuth s
 An application policy service filters client-visible documents and approved Education Library material before retrieval. Client questions and answers cannot mutate transaction, contract, or signature state. No client authentication or AI implementation exists in the MVP.
 
 Accord Guide expands this boundary with `getContentForTransactionStage()`, `getInlineContractExplanation()`, `answerClientQuestion()`, `getPersonalizedAnswer()`, `recommendVideos()`, `queueAnswerForAgentReview()`, `approveClientVisibleFact()`, and `revokeClientVisibleFact()`. Recommendation policy considers transaction stage, forms, approaching deadlines, client role, question history, jurisdiction, and signature status. Live AI remains a separate provider implementation; the application policy filters approved facts and governed content first.
+
+## Teach Accord provider boundary
+
+Teach Accord stores explainable preferences, rules, and office playbook items. It is not direct model training and must not let agents silently alter AI behavior.
+
+Future `TeachAccordProvider` implementations should support `listRules()`, `suggestRule()`, `approveRule()`, `disableRule()`, and `getRuleAuditTrail()`.
+
+Each rule records category, text, scope (`personal`, `team`, `brokerage`), status (`suggested`, `approved`, `disabled`), source, reviewer, and audit history. Accord may suggest rules based on repeated behavior, but broader application requires authorized approval.
+
+Review & Send uses these rules as attributable defaults only; contract fields still require evidence, visible status, and agent approval before signature.

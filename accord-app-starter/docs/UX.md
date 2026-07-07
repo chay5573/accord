@@ -16,11 +16,12 @@ Accord should feel like a calm command center during high-stakes work. The inter
 
 ## Primary navigation
 
-- Capture: live consent-gated capture plus transcript, recap, forgotten-recording, and upload alternatives.
-- Prepare: inferred facts, true blockers, editable package generation, and contextual signature readiness.
-- Manage / Deal Desk: attention, active transactions, deadlines, timeline, documents/signatures, client questions, and new activity.
-- Client Portal: Accord Guide and client-visible transaction education.
-- Settings: Contract Library, E-Signature, Inbox Integrations, Transaction Memory, Accord Guide governance, Privacy & Compliance, and Office Profile.
+- Record: live consent-gated recording plus transcript, recap, forgotten-recording, and upload alternatives.
+- Review & Send: generated paperwork fields, evidence, editable values, blockers, signature readiness, and provider-neutral send confirmation.
+- Coordinate: active transaction coordination after documents exist, including timeline, tasks, dates, signatures, receipts, unresolved items, documents, and contextual Client View.
+- Settings: Contract Library, E-Signature, Inbox Integrations, Transaction Memory, Accord Guide governance, Teach Accord, Privacy & Compliance, and Office Profile.
+
+Client Portal is not a primary agent navigation item. Accord Guide appears inside Coordinate or transaction detail as Client View / Client Experience.
 
 Contract management belongs in Settings, not in the everyday Deal Desk.
 
@@ -106,3 +107,18 @@ Recording, sharing, downloading, deleting, approving, generating, and changing f
 ## Empty, loading, and failure states
 
 Teach the next step in empty states. Long-running AI, transcription, generation, and sync work should be resumable and show progress without trapping the page. Failures must preserve entered work, identify what did not complete, and offer retry or manual fallback.
+
+## Record -> Review & Send -> Coordinate UX update
+
+Primary navigation is now limited to:
+
+- **Record**: consent-gated recording plus paste transcript, quick voice recap, forgotten-recording recovery, and upload placeholders.
+- **Review & Send**: all generated paperwork fields, transcript evidence, editable values, blockers, signature readiness, and provider-neutral send confirmation.
+- **Coordinate**: active transaction coordination after documents exist, including timeline, tasks, dates, signatures, receipts, unresolved items, documents, and contextual Client View.
+- **Settings**: Contract Library, E-Signature, Inbox Integrations, Transaction Memory, Accord Guide governance, Teach Accord, Privacy & Compliance, and Office Profile.
+
+Client Portal is not a primary agent navigation item. Accord Guide appears inside a transaction or Coordinate view as **Client View** or **Client Experience**.
+
+Review & Send must show generated value, form/document name, section reference, confidence, status, evidence link, and edit placeholder for every contract field. The transcript remains visible at the bottom, and evidence links should scroll/highlight the supporting snippet.
+
+Accord is transaction-centric, not contact-centric. It integrates with CRMs but does not replace them.

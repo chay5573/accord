@@ -103,3 +103,18 @@ If the answers are unclear, simplify or defer the work.
 ## First simplification baseline
 
 The primary information architecture is Capture, Prepare, Manage / Deal Desk, Client Portal, and Settings. Capture does not ask the agent to classify or file work before Accord attempts inference. Prepare contains the review and package workflow. Manage begins with tracked work and attention. Secondary capabilities appear contextually or in Settings rather than competing as top-level destinations.
+
+## Agent-facing workflow baseline
+
+The current primary agent workflow is **Record -> Review & Send -> Coordinate -> Settings**. `Capture -> Prepare -> Manage` remains the conceptual model, but the product should now speak in the agent's natural language:
+
+- **Record** captures or recovers transaction facts without requiring a transaction, destination, contact record, or conversation type first.
+- **Review & Send** is the key contract review surface: all generated paperwork fields, source evidence, editable values, uncertainty, and signature handoff live together.
+- **Coordinate** is transaction management after documents exist or after the agent explicitly chooses to track the work.
+- **Settings** contains configuration, provider setup, contract library, Accord Guide governance, privacy/compliance, and Teach Accord preferences.
+
+Client Portal / Accord Guide is not a primary agent destination. It appears inside transaction and Coordinate contexts as **Client View** or **Client Experience**.
+
+Accord is transaction-centric, not contact-centric. Accord is not a CRM and should not become one. It may integrate with CRMs, but its context should be limited to facts that help create, execute, explain, or coordinate transaction documents.
+
+The labels are still a working product language and may evolve, but any renaming must preserve the low-friction path from conversation to accurate executed documents.

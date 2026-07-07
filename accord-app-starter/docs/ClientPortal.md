@@ -49,3 +49,9 @@ Accord Guide is the preferred client education concept inside the portal. It is 
 Every content item records draft/approved/retired status, reviewer, reviewed date, jurisdiction, client role, compliance notes, version, and replacement content when retired. Multilingual metadata supports future language, locale, translated title/transcript/captions, and translation review; no translation is active now.
 
 Facts are explicitly `approved_for_client`, `internal_only`, `needs_agent_review`, or `revoked`; only approved facts enter personalization. Questions asking what to do, whether to accept/cancel/waive, whether something is legal, whether the client can sue, or whether a deal is good route to the agent. Low confidence, conflicting data, and negotiation-dependent questions also escalate.
+
+## Agent navigation placement
+
+Client Portal / Accord Guide is not a primary agent workflow destination. It appears inside Coordinate and transaction detail as **Client View** or **Client Experience** so agents preview exactly what a client can see before sharing access.
+
+Client-facing AI remains future/off-by-default and can consume only materials approved for client visibility. Internal notes, negotiation strategy, unapproved draft terms, private playbooks, and Activity Inbox reconstruction remain hidden.

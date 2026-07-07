@@ -6,6 +6,8 @@ Build Accord in small, reviewable slices that preserve trust. Product, design, e
 
 Read `/docs/ProductPhilosophy.md` before designing a workflow. Prefer opportunity-first, minimum-click slices that perform safe work before requesting user input and preserve recovery from interruption.
 
+The current agent-facing workflow is **Record -> Review & Send -> Coordinate -> Settings**. Use these labels in new UI unless the product philosophy is explicitly revised. Do not reintroduce contact-centric CRM workflows; Accord integrates with CRMs but remains transaction-centric.
+
 ## Local setup
 
 The starter uses Next.js, React, TypeScript, Zod, and Supabase.

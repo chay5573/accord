@@ -7,7 +7,7 @@ import { mockSignaturePacket, type SignatureStatus } from '@/lib/eSignature';
 import { AITimeline } from '@/components/AITimeline';
 import { mockOpportunityTimeline } from '@/lib/opportunity';
 
-const tabs = ['Overview', 'Conversations', 'Extracted Terms', 'Draft Package', 'Files', 'Timeline'] as const;
+const tabs = ['Overview', 'Conversations', 'Extracted Terms', 'Draft Package', 'Files', 'Timeline', 'Client Experience'] as const;
 type WorkspaceTab = (typeof tabs)[number];
 
 function confidenceTone(confidence: number | null) {
@@ -80,6 +80,28 @@ export function TransactionWorkspace() {
       {activeTab === 'Files' && <section className="card"><div className="section-heading"><div><span className="section-kicker">Accord Cloud preview</span><h2>Transaction files</h2><p>Mock metadata only. No storage provider is connected.</p></div><button className="btn btn-secondary" type="button">Upload placeholder</button></div><div className="file-list">{mockFiles.map((file) => <div className="file-row" key={file.name}><span className="file-icon" aria-hidden="true">□</span><div><strong>{file.name}</strong><span>{file.type}</span></div><span className="status neutral">{file.status}</span><small>{file.updated}</small></div>)}</div></section>}
 
       {activeTab === 'Timeline' && <AITimeline events={mockOpportunityTimeline} />}
+
+      {activeTab === 'Client Experience' && (
+        <section className="card client-experience-card">
+          <div className="section-heading">
+            <div>
+              <span className="section-kicker">Client View / Client Experience</span>
+              <h2>Preview exactly what the client will see</h2>
+              <p>Only approved client-visible facts, documents, education, and signed-document status can appear here.</p>
+            </div>
+            <Link className="btn btn-secondary" href="/accord-guide">Open preview</Link>
+          </div>
+          <div className="detail-grid">
+            <div><span>Client-visible documents</span><strong>REPC draft, Due Diligence Checklist</strong></div>
+            <div><span>Internal notes</span><strong>Hidden</strong></div>
+            <div><span>Question history</span><strong>1 question routed to agent</strong></div>
+            <div><span>Education watched</span><strong>Due diligence overview</strong></div>
+            <div><span>Topics opened</span><strong>Earnest money, inspection deadline</strong></div>
+            <div><span>Access</span><strong>Preview only · not shared</strong></div>
+          </div>
+          <div className="notice compact">Accord Guide remains the governed knowledge source, but client access is contextual to this transaction.</div>
+        </section>
+      )}
     </>
   );
 }
@@ -87,7 +109,7 @@ export function TransactionWorkspace() {
 function Overview({ approved, unresolved, includedForms, signatureStatus, setActiveTab }: { approved: number; unresolved: number; includedForms: number; signatureStatus: SignatureStatus; setActiveTab: (tab: WorkspaceTab) => void }) {
   return <div className="workspace-grid">
     <section className="card span-2"><div className="section-heading"><div><span className="section-kicker">Transaction snapshot</span><h2>Buyer offer at a glance</h2></div><button className="text-button" onClick={() => setActiveTab('Extracted Terms')}>Review terms →</button></div><div className="detail-grid"><div><span>Clients</span><strong>Brenton & Emily Welker</strong></div><div><span>Representation</span><strong>Buyer represented by us</strong></div><div><span>Offer price</span><strong>$875,000</strong></div><div><span>Financing</span><strong>Conventional</strong></div><div><span>Agent</span><strong>Calvin Hayward</strong></div><div><span>Team</span><strong>Red Rock Group</strong></div></div></section>
-    <section className="card decision-card"><span className="section-kicker">Deal Desk Review</span><h2>Not ready for draft</h2><p>Two blockers and two warnings need agent decisions before draft preparation.</p><Link className="btn btn-primary btn-block" href="/transactions/txn-demo/review">Review & Prepare Draft</Link><button className="btn btn-quiet btn-block" type="button" onClick={() => setActiveTab('Extracted Terms')}>Open extracted terms</button></section>
+    <section className="card decision-card"><span className="section-kicker">Review & Send</span><h2>Paperwork needs attention</h2><p>Two blockers and two warnings need agent decisions before signature handoff.</p><Link className="btn btn-primary btn-block" href="/review-send">Review & Send</Link><button className="btn btn-quiet btn-block" type="button" onClick={() => setActiveTab('Extracted Terms')}>Open extracted terms</button></section>
     <section className="card span-2"><div className="section-heading"><div><span className="section-kicker">Progress</span><h2>Transaction readiness</h2></div><span className="status warn">Needs review</span></div><div className="readiness-list"><div className="complete"><i>✓</i><span><strong>Transaction created</strong><small>Parties, property, and representation captured</small></span></div><div className="complete"><i>✓</i><span><strong>Conversation added</strong><small>Mock transcript available for review</small></span></div><div><i>3</i><span><strong>Review extracted terms</strong><small>{approved} approved · {unresolved} unresolved</small></span></div><div><i>4</i><span><strong>Approve draft package</strong><small>Locked until required terms are resolved</small></span></div></div></section>
     <section className="card"><span className="section-kicker">Package preview</span><h2>{includedForms} forms included</h2><p>Current checklist is based on mock facts and office rules.</p><button className="btn btn-secondary btn-block" type="button" onClick={() => setActiveTab('Draft Package')}>Review checklist</button></section>
     <section className="card span-2"><div className="section-heading"><div><span className="section-kicker">Signed Documents / E-Signature</span><h2>Provider handoff</h2><p>Completed documents return here for agent final review before external sharing.</p></div><span className="status warn">{signatureStatus.replaceAll('_', ' ')}</span></div><div className="detail-grid"><div><span>Provider</span><strong>DocuSign · Mock</strong></div><div><span>Recipients</span><strong>2 buyers</strong></div><div><span>Completed documents</span><strong>0</strong></div><div><span>Final review</span><strong>Not ready</strong></div><div><span>External sharing</span><strong>Blocked</strong></div><div><span>Status sync</span><strong>Mock only</strong></div></div><div className="form-actions"><button className="btn btn-secondary" type="button" onClick={() => setActiveTab('Draft Package')}>Open signature workflow</button><button className="btn btn-primary" type="button" disabled>Send/share to other side</button></div></section>

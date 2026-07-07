@@ -1,6 +1,7 @@
 import type { AccordGuideContentItem, AccordGuideVideo, AgentReviewQueueItem, ClientAIAnswer, ClientPortalAccess, ClientQuestion, ClientVisibleDocument, ClientVisibleFact, ContractSectionExplanation, EducationContentItem, PersonalizedAnswer, TransactionStage } from './clientEducation';
 import type { CompletedSignedDocument, ESignatureConnection, ESignatureProviderType, SignatureAuditEntry, SignatureEvent, SignaturePacket, SignatureStatus } from './eSignature';
 import type { InboxAttachment, InboxAuditEntry, InboxConnection, InboxMessageSignal, InboxProviderType, MessageClassification, MonitoredMailboxScope } from './inbox';
+import type { TeachAccordRule, TeachAccordRuleScope, TeachAccordRuleStatus } from './teachAccord';
 import type { FieldProvenance, LearnedPattern, SensitiveDataFinding, TransactionCase, TransactionMemoryAuditEntry } from './transactionMemory';
 
 /**
@@ -176,4 +177,13 @@ export interface ClientEducationProvider {
   queueAnswerForAgentReview(input: { answer: PersonalizedAnswer; reason: AgentReviewQueueItem['reason'] }): Promise<AgentReviewQueueItem>;
   approveClientVisibleFact(input: { factId: string; approvedByUserId: string }): Promise<ClientVisibleFact>;
   revokeClientVisibleFact(input: { factId: string; revokedByUserId: string; reason: string }): Promise<ClientVisibleFact>;
+}
+
+export interface TeachAccordProvider {
+  provider: ProviderName;
+  listRules(input: { workspaceId: string; scope?: TeachAccordRuleScope; status?: TeachAccordRuleStatus }): Promise<TeachAccordRule[]>;
+  suggestRule(input: { workspaceId: string; suggestedByUserId: string; rule: Omit<TeachAccordRule, 'id' | 'status' | 'updatedAt'> }): Promise<TeachAccordRule>;
+  approveRule(input: { ruleId: string; approvedByUserId: string; scope: TeachAccordRuleScope }): Promise<TeachAccordRule>;
+  disableRule(input: { ruleId: string; disabledByUserId: string; reason: string }): Promise<TeachAccordRule>;
+  getRuleAuditTrail(input: { ruleId: string; requestedByUserId: string }): Promise<AuditEventInput[]>;
 }

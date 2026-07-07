@@ -49,3 +49,17 @@ Disconnecting a provider does not delete Accord records or completed documents. 
 `ESignatureProvider` defines listing and connection status, connect/disconnect, packet creation, provider review, send, status, verified webhook handling, completed-document import, voiding, and audit retrieval. Application services own approval gates, tenant authorization, policy, idempotency, and final-review requirements.
 
 Activity synchronization also lists packets, synchronizes verified provider events, classifies signature signals, and links packets to opportunities. Envelope/loop creation, send, view, recipient signatures, completion, and document import add attributable AI Timeline events. Unlinked packets remain in the Activity Inbox. Completion creates an agent final-review task; it never triggers external sharing by itself.
+
+## Review & Send mock handoff
+
+Review & Send is the agent-facing signature handoff surface. It shows the preferred provider if configured, signers/recipients, included documents, and final confirmation before any provider action.
+
+The MVP mock status progression is:
+
+1. Ready for signature
+2. Sent
+3. Waiting on signatures
+4. Completed
+5. Imported to Coordinate
+
+This remains provider-neutral and mock-only. No live provider review, DocuSign, Dotloop, Accord Sign, PDF generation, or signed document import is connected.

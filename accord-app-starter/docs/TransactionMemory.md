@@ -110,3 +110,9 @@ Verified Lookup and Transaction Memory are distinct evidence sources. Lookup ret
 `imported` → `pending_redaction` → `pending_approval` → `approved`
 
 A case may move to `excluded` at any point. Approval requires authority, consent/authorization where applicable, completed redaction review, retention policy, source provenance, and reviewer identity. Material source or policy changes invalidate approval and require re-review.
+
+## Teach Accord relationship
+
+Teach Accord preferences are governed playbook rules, not raw transaction memory and not direct model training. Transaction Memory may suggest recurring patterns for review, but a human or admin must approve any preference before Accord applies it broadly.
+
+Approved Teach Accord rules can appear in Review & Send as default-applied evidence, but they do not replace transcript evidence, external verification, or agent approval for contract fields.

@@ -102,3 +102,11 @@ Accord Guide distinguishes general education from transaction-specific detail. I
 ## Provider independence
 
 These principles belong to Accord, not a vendor. AI integrations must implement Accord interfaces and policy checks. Switching providers must not weaken approval, traceability, retention, security, or evaluation requirements.
+
+## Review & Send evidence rules
+
+Review & Send is the primary place where AI-generated contract fields become human-reviewed paperwork. Every generated field should display value, form/document, section reference, confidence, status, and an evidence link to the transcript, file, verified lookup, or approved office rule that supported it.
+
+Accord must distinguish transcript-derived facts, externally verified facts, approved Teach Accord defaults, missing facts, and assumptions. No missing fact may be fabricated, and no field should be sent for signature without human approval.
+
+Teach Accord preferences can shape suggestions, but they are not model changes and are not authoritative contract facts by themselves.
