@@ -136,3 +136,7 @@ Suspected exposure must be reported through the designated private incident chan
 Client View and Ask Accord must be filtered through a client-visible policy layer before any future retrieval or AI call. Approved client-facing sources are limited to approved transaction facts, approved client-visible documents, and approved education content. Internal notes, negotiation strategy, private brokerage playbooks, unapproved draft terms, Activity Inbox reconstruction, and cross-tenant data must remain inaccessible.
 
 Local export must require explicit user action and safe authorization. No browser or desktop companion workflow may write files, sync providers, or expose local paths without user approval, auditability, and tenant authorization.
+
+## Authentication requirements
+
+Production Accord must use a managed authentication provider. Accord must not store raw passwords or implement custom password hashing/session management in application code. Password hashing, session issuance, rotation, recovery, MFA, and abuse controls should be handled by the managed auth provider. Client portal access requires strict transaction-scoped permissions before production use.

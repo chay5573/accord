@@ -95,6 +95,10 @@ function AskAccord({ placeholder }: { placeholder: string }) {
   );
 }
 
+function MockDocumentActions() {
+  return <div className="mock-document-actions"><button className="btn btn-secondary" type="button">Download</button><button className="btn btn-secondary" type="button">Print</button><small>Mock only</small></div>;
+}
+
 export function AccordGuide({ documentMode = false }: { documentMode?: boolean }) {
   const [selected, setSelected] = useState(sections[1]);
   const contextualVideos = useMemo(() => mockGuideVideos.filter((video) => video.topic === 'earnest_money' || video.topic === 'due_diligence').slice(0, 2), []);
@@ -107,20 +111,18 @@ export function AccordGuide({ documentMode = false }: { documentMode?: boolean }
             <span className="section-kicker">Document Help</span>
             <h2>Purchase contract</h2>
           </div>
-          <Link className="btn btn-secondary" href="/client-view">Back to transaction</Link>
+          <div className="form-actions"><MockDocumentActions /><Link className="btn btn-secondary" href="/client-view">Back to transaction</Link></div>
         </section>
 
         <div className="document-viewer-layout">
           <section className="card pdf-viewer-card" aria-label="Mock document viewer">
             <div className="mock-pdf-page">
-              <div className="pdf-head">Utah Real Estate Purchase Contract</div>
-              <div className="pdf-line wide" />
-              <div className="pdf-line" />
-              <div className="pdf-line short" />
-              <div className="pdf-block" />
-              <div className="pdf-line wide" />
-              <div className="pdf-line" />
-              <div className="pdf-block small" />
+              <div className="pdf-head">Real Estate Purchase Contract</div>
+              <div className="contract-preview-grid"><span>Buyer</span><strong>Brenton & Emily Welker</strong><span>Property</span><strong>2948 E Alderann St</strong><span>Purchase Price</span><strong>$875,000</strong><span>Earnest Money</span><strong>$7,500 due July 7</strong></div>
+              <div className="contract-section"><strong>2. Purchase Price</strong><p>Buyer offers to purchase the Property for the purchase price shown above, subject to the terms of this Contract.</p></div>
+              <div className="contract-section"><strong>3. Earnest Money</strong><p>Earnest money will be delivered according to the deadline and holder identified in the transaction summary.</p></div>
+              <div className="contract-section"><strong>8. Buyer Due Diligence</strong><p>Buyer may conduct inspections and review property information during the due diligence period.</p></div>
+              <div className="contract-section"><strong>24. Settlement</strong><p>Settlement and closing-related timing will follow the agreed contract deadlines.</p></div>
               {sections.map((section) => (
                 <button
                   className={`pdf-marker ${selected.id === section.id ? 'active' : ''}`}
@@ -185,10 +187,12 @@ export function AccordGuide({ documentMode = false }: { documentMode?: boolean }
           <div className="section-heading"><div><span className="section-kicker">Documents</span><h2>Your documents</h2></div></div>
           <div className="client-doc-list">
             {documents.map(([title, detail, status, href]) => (
-              <Link href={href} key={title}>
-                <span><strong>{title}</strong><small>{detail}</small></span>
+              <div className="client-document-row" key={title}>
+                <Link href={href}><span><strong>{title}</strong><small>{detail}</small></span></Link>
                 <span className={`status ${status === 'Needs signature' || status === 'Waiting on other party' ? 'warn' : status === 'Signed' ? 'good' : 'neutral'}`}>{status}</span>
-              </Link>
+                <button className="text-button" type="button">Download</button>
+                <button className="text-button" type="button">Print</button>
+              </div>
             ))}
           </div>
         </section>

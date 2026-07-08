@@ -74,3 +74,5 @@ Approved document statuses include `Ready to view`, `Needs signature`, `Signed`,
 Ask Accord remains mock-only until a future approved implementation. It can use only approved client-visible documents, approved education content, and approved transaction facts. Advice or judgment questions still route to the agent.
 
 Document Help should use a viewer-first layout: document/PDF mock in the center, highlighted sections or question markers on the document, and one plain-English explanation panel. The panel may include transaction-specific detail, one related short video, source/section reference, and an Ask Accord follow-up box.
+
+Approved completed documents, approved contract packets, disclosures, and important uploads should expose Download and Print actions in the client UI. These actions are mock-only until document generation, file access, and client authentication are implemented.

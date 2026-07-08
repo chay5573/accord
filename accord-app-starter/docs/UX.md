@@ -151,3 +151,12 @@ Review & Send should feel like paperwork review, not a dashboard. Field rows kee
 Coordinate is the transaction coordinator command center. It uses a sorted to-do list, transaction-flow statuses, outbound packet/signature follow-up, a monthly calendar mock, prominent AI Timeline, and a lightweight Customize layout placeholder.
 
 Settings includes Storage & Files preferences for Accord Cloud, OneDrive, and Local computer/export folder. Local export is mock-only; browsers may require downloads, user-selected folders, or a future desktop companion for true local saving.
+
+## Latest correction pass
+
+- Record icons and action buttons must be visually centered; the active submit action appears first/left in the mode action area.
+- Review & Send groups required attention above ready fields. Missing, needs-review, low-confidence, or confirmation-required defaults use row-level warning treatment.
+- Source links must open the transcript section and highlight the exact snippet for every generated field.
+- Save as Preference opens a small mock workflow for personal/team/brokerage defaults. It is a rules/preferences system, not direct AI model training.
+- Coordinate answers "What needs attention?" and keeps Customize layout as a small top-right control. Tasks, follow-ups, dates, documents, and timeline affordances should link to the relevant transaction/action.
+- Client documents include mock Download and Print actions while real PDF/download generation remains out of scope.

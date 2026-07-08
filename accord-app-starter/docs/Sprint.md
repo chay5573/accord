@@ -123,3 +123,4 @@ Sprint acceptance criteria must use the Friction Budget from `/docs/ProductPhilo
 - [x] Accord remains transaction-centric and explicitly not a CRM.
 - [x] Client View simplification: transaction-home layout, approved documents, client to-dos, Ask Accord mock chat, viewer-first Document Help, and Coordinate client-activity visibility.
 - [x] UX polish pass: Record mode-specific actions, calmer Review & Send field/source layout, Coordinate command center with monthly calendar and customization placeholder, and mock Storage & Files preferences.
+- [x] UX correction pass: row-level needs-review treatment, Source-to-transcript behavior, Save as Preference mock drawer, Coordinate clickable tasks/follow-ups/calendar, client Download/Print mocks, and managed-auth security note.
