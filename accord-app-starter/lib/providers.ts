@@ -60,6 +60,13 @@ export interface StorageProvider {
   deleteObject(input: { bucket: string; path: string }): Promise<void>;
 }
 
+export interface LocalFileExportProvider {
+  provider: 'local_export';
+  prepareExport(input: { workspaceId: string; transactionId: string; requestedByUserId: string; folderNamingConvention: string }): Promise<{ exportId: string; suggestedFolderName: string; fileCount: number }>;
+  downloadExport(input: { exportId: string; requestedByUserId: string }): Promise<StorageObject>;
+  getDesktopCompanionStatus(input: { workspaceId: string }): Promise<'not_installed' | 'available' | 'not_supported'>;
+}
+
 export interface AuditEventInput {
   actorUserId: string;
   brokerageId?: string;

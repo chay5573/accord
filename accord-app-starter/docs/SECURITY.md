@@ -130,3 +130,9 @@ Before broad production adoption, Accord needs:
 ## Reporting and response
 
 Suspected exposure must be reported through the designated private incident channel. Preserve evidence, contain access, rotate affected credentials, assess scope, follow notification obligations, and document remediation. Never place customer data or exploit details in public issues.
+
+## Client View security notes
+
+Client View and Ask Accord must be filtered through a client-visible policy layer before any future retrieval or AI call. Approved client-facing sources are limited to approved transaction facts, approved client-visible documents, and approved education content. Internal notes, negotiation strategy, private brokerage playbooks, unapproved draft terms, Activity Inbox reconstruction, and cross-tenant data must remain inaccessible.
+
+Local export must require explicit user action and safe authorization. No browser or desktop companion workflow may write files, sync providers, or expose local paths without user approval, auditability, and tenant authorization.

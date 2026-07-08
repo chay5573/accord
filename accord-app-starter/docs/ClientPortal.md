@@ -55,3 +55,22 @@ Facts are explicitly `approved_for_client`, `internal_only`, `needs_agent_review
 Client Portal / Accord Guide is not a primary agent workflow destination. It appears inside Coordinate and transaction detail as **Client View** or **Client Experience** so agents preview exactly what a client can see before sharing access.
 
 Client-facing AI remains future/off-by-default and can consume only materials approved for client visibility. Internal notes, negotiation strategy, unapproved draft terms, private playbooks, and Activity Inbox reconstruction remain hidden.
+
+## Simplified Client View direction
+
+Client View is a transaction home. It should not feel like a generic FAQ, education library, or internal approval portal.
+
+The default client page includes:
+
+- Simple transaction status and progress.
+- Important dates.
+- Approved documents with clear status.
+- Client to-dos.
+- Ask Accord chat.
+- Contextual education only when tied to a stage, document section, upcoming deadline, or client question.
+
+Approved document statuses include `Ready to view`, `Needs signature`, `Signed`, `Updated`, and `Waiting on other party`.
+
+Ask Accord remains mock-only until a future approved implementation. It can use only approved client-visible documents, approved education content, and approved transaction facts. Advice or judgment questions still route to the agent.
+
+Document Help should use a viewer-first layout: document/PDF mock in the center, highlighted sections or question markers on the document, and one plain-English explanation panel. The panel may include transaction-specific detail, one related short video, source/section reference, and an Ask Accord follow-up box.

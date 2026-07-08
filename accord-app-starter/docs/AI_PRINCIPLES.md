@@ -110,3 +110,9 @@ Review & Send is the primary place where AI-generated contract fields become hum
 Accord must distinguish transcript-derived facts, externally verified facts, approved Teach Accord defaults, missing facts, and assumptions. No missing fact may be fabricated, and no field should be sent for signature without human approval.
 
 Teach Accord preferences can shape suggestions, but they are not model changes and are not authoritative contract facts by themselves.
+
+## Client Ask Accord boundary
+
+Client-facing Ask Accord is future/off-by-default and mock-only in the current prototype. It must use only approved client-visible documents, approved transaction facts, and approved education content.
+
+Client answers should be short, educational, sourced, and transaction-aware. Questions asking for legal, tax, financing, inspection, negotiation, cancellation, waiver, or "what should I do" advice must route to the agent rather than receive a direct answer.

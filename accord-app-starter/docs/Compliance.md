@@ -91,3 +91,7 @@ Email, e-signature, calendar, CRM, uploaded-document, recap, and conversation ev
 Record remains consent-gated and must not rely on blanket consent alone. Review & Send can display transcript evidence and Teach Accord defaults only as reviewable support for contract fields; no AI-derived, externally sourced, or preference-derived fact may be sent for signature without agent approval.
 
 Client View / Client Experience appears only inside transaction context and must filter to approved client-visible facts, documents, and education content. Internal strategy, private playbooks, Activity Inbox reconstruction, and unapproved draft terms remain hidden.
+
+Client-facing Ask Accord must not expose internal notes, negotiation strategy, unapproved terms, or private brokerage playbooks. Document Help explanations must cite approved document sections or approved education content and must route professional-judgment questions back to the agent.
+
+Storage destination preferences must preserve retention, deletion, audit, and access-control obligations. Local exports may create records outside Accord's controlled cloud environment, so production workflows need clear user warnings, export audit logs, and deletion/retention limitations.

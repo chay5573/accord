@@ -46,3 +46,20 @@ The agent-facing workflow is **Record -> Review & Send -> Coordinate -> Settings
 2. **Review & Send**: Accord presents all generated contract fields in one review surface with generated value, form/document, section reference, confidence, status, evidence link, and edit placeholder. Transcript evidence sits at the bottom, and evidence links scroll to the relevant snippet.
 3. **Send for Signatures**: the agent confirms provider, recipients, documents, and final approval through a provider-neutral mock status progression. No live DocuSign, Dotloop, PDF, or provider call occurs in the MVP mock.
 4. **Coordinate**: after documents exist or work is explicitly tracked, Accord manages timeline, tasks, dates, signatures, receipts, unresolved items, documents, and the contextual Client View.
+
+## Client journey update
+
+When the agent previews or shares Client View, the client lands in a transaction home:
+
+1. Transaction status and current step.
+2. Important dates.
+3. Approved documents.
+4. Client to-do list.
+5. Ask Accord chat using approved client-visible facts, documents, and education.
+6. Contextual videos or explanations only when tied to a stage, document section, deadline, or question.
+
+Document Help should keep the document/PDF viewer as the focus. Clients click highlighted sections or question markers, then see one simple explanation panel with plain-English help, transaction-specific detail when approved, a relevant short video if useful, source/section reference, and Ask Accord follow-up.
+
+## File destination journey
+
+Workspace Settings may choose a default file destination: Accord Cloud, OneDrive, or Local computer/export folder. These are preferences and placeholders until provider implementations exist. Local export requires explicit user action and must not silently write files.

@@ -1,11 +1,13 @@
 import Link from 'next/link';
 import { Shell } from '@/components/Shell';
+import { mockStoragePreference } from '@/lib/storagePreferences';
 import { mockTeachAccordRules } from '@/lib/teachAccord';
 
 const settings = [
   ['Contract Library', 'Forms, versions, mappings, and active templates.', '/settings/contract-library'],
   ['E-Signature', 'Preferred provider, review behavior, and signed-document return.', '/settings/e-signature'],
   ['Inbox Integrations', 'Mailbox connections and monitored scopes.', '/settings/inbox-integrations'],
+  ['Storage & Files', 'Default destination, folder naming, local export, and sync placeholders.', '/settings#storage-files'],
   ['Transaction Memory', 'Training eligibility, redaction, and case review.', '/settings/transaction-memory'],
   ['Accord Guide', 'Client-visible facts, governed education, and preview controls.', '/settings/client-education'],
   ['Privacy & Compliance', 'Consent, retention, access, and audit controls.', '/settings/compliance'],
@@ -40,6 +42,30 @@ export default function SettingsPage() {
             </div>
           ))}
         </div>
+      </section>
+
+      <section className="card storage-settings-card" id="storage-files">
+        <div className="section-heading">
+          <div>
+            <span className="section-kicker">Storage & Files</span>
+            <h2>File destination</h2>
+          </div>
+          <span className="status neutral">Mock only</span>
+        </div>
+        <div className="storage-options">
+          <label><input type="radio" name="destination" defaultChecked={mockStoragePreference.defaultDestination === 'accord_cloud'} /><span><strong>Accord Cloud</strong><small>Canonical mock workspace storage</small></span></label>
+          <label><input type="radio" name="destination" defaultChecked={mockStoragePreference.defaultDestination === 'onedrive'} /><span><strong>OneDrive</strong><small>Placeholder · not connected</small></span></label>
+          <label><input type="radio" name="destination" defaultChecked={mockStoragePreference.defaultDestination === 'local_export'} /><span><strong>Local computer / export folder</strong><small>Future browser picker, downloads, or desktop companion</small></span></label>
+        </div>
+        <details className="prepare-details">
+          <summary>Advanced file preferences</summary>
+          <div>
+            <p><strong>Folder naming:</strong> {mockStoragePreference.folderNamingConvention}</p>
+            <p><strong>Local export:</strong> Desktop companion placeholder. No local filesystem writes are implemented.</p>
+            <p><strong>Accord Cloud:</strong> {mockStoragePreference.accordCloudStatus.replaceAll('_', ' ')}</p>
+            <p><strong>OneDrive:</strong> {mockStoragePreference.oneDriveStatus.replaceAll('_', ' ')}</p>
+          </div>
+        </details>
       </section>
 
       <section className="settings-index">

@@ -63,3 +63,5 @@ The MVP mock status progression is:
 5. Imported to Coordinate
 
 This remains provider-neutral and mock-only. No live provider review, DocuSign, Dotloop, Accord Sign, PDF generation, or signed document import is connected.
+
+Coordinate treats e-signature activity as outbound packet follow-up: sent, email delivered, not viewed, viewed but not signed, partially signed, completed, overdue, and warnings tied to transaction deadlines. These are status signals until a verified provider integration exists.

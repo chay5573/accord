@@ -89,14 +89,14 @@ export function TransactionWorkspace() {
               <h2>Preview exactly what the client will see</h2>
               <p>Only approved client-visible facts, documents, education, and signed-document status can appear here.</p>
             </div>
-            <Link className="btn btn-secondary" href="/accord-guide">Open preview</Link>
+            <Link className="btn btn-secondary" href="/client-view">Preview Client View</Link>
           </div>
           <div className="detail-grid">
             <div><span>Client-visible documents</span><strong>REPC draft, Due Diligence Checklist</strong></div>
             <div><span>Internal notes</span><strong>Hidden</strong></div>
-            <div><span>Question history</span><strong>1 question routed to agent</strong></div>
-            <div><span>Education watched</span><strong>Due diligence overview</strong></div>
-            <div><span>Topics opened</span><strong>Earnest money, inspection deadline</strong></div>
+            <div><span>Questions asked</span><strong>2 total · 1 unanswered</strong></div>
+            <div><span>Videos watched</span><strong>Earnest money overview</strong></div>
+            <div><span>Open client to-dos</span><strong>Earnest money, inspection</strong></div>
             <div><span>Access</span><strong>Preview only · not shared</strong></div>
           </div>
           <div className="notice compact">Accord Guide remains the governed knowledge source, but client access is contextual to this transaction.</div>

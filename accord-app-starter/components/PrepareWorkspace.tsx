@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { mockSignaturePacket } from '@/lib/eSignature';
 import { mockTeachAccordRules } from '@/lib/teachAccord';
@@ -77,7 +78,7 @@ export function PrepareWorkspace() {
         <div>
           <span className="section-kicker">Review & Send</span>
           <h2>Welker buyer offer package</h2>
-          <p>Accord filled the paperwork from the conversation, office defaults, and approved mock rules. Review the fields, then send through the preferred signature provider.</p>
+          <p>Review the fields, check sources, then send.</p>
         </div>
         <span className="status warn">{attentionCount} need review</span>
       </section>
@@ -85,9 +86,8 @@ export function PrepareWorkspace() {
       <section className="card field-review-card">
         <div className="section-heading">
           <div>
-            <span className="section-kicker">Generated paperwork fields</span>
-            <h2>One review surface</h2>
-            <p>Every mock contract field stays editable and traceable before anything can be sent.</p>
+            <span className="section-kicker">Paperwork fields</span>
+            <h2>Review fields</h2>
           </div>
           <button className="btn btn-secondary" type="button" onClick={() => setShowDetails((value) => !value)}>{showDetails ? 'Hide Details' : 'Show Details'}</button>
         </div>
@@ -99,56 +99,39 @@ export function PrepareWorkspace() {
                 <strong>{field.label}</strong>
                 <span>{field.document} · {field.section}</span>
               </div>
-              <label>
+              <label className="review-value-cell">
                 <span className="sr-only">{field.label}</span>
-                <input value={field.value} readOnly aria-label={`${field.label} generated value`} />
+                <input defaultValue={field.value} aria-label={`${field.label} generated value`} title="Click to edit mock value" />
               </label>
               <span className={`status ${statusClass[field.status]}`}>{field.status}</span>
               <span className="confidence-mini">{field.confidence === null ? 'No confidence' : `${field.confidence}%`}</span>
-              <button className="text-button" type="button" onClick={() => jumpToEvidence(field.evidenceId)}>Evidence</button>
-              <button className="btn btn-quiet" type="button">Edit</button>
-              {showDetails && <small className="field-detail">Mock edit placeholder · approval would be invalidated after material change.</small>}
+              <button className="text-button" type="button" onClick={() => jumpToEvidence(field.evidenceId)}>Source</button>
+              {showDetails && <small className="field-detail">Editing a material value would require reapproval.</small>}
             </article>
           ))}
         </div>
       </section>
 
-      <section className="card teach-accord-inline">
-        <div className="section-heading">
-          <div>
-            <span className="section-kicker">Teach Accord influences</span>
-            <h2>Office preferences used as explainable rules</h2>
-            <p>These rules inform suggestions only. They do not alter an AI model and do not replace agent review.</p>
-          </div>
+      <details className="prepare-details preference-details">
+        <summary>Save as Preference</summary>
+        <div>
+          <p>Use this when a repeated choice should become an office or personal default.</p>
+          {mockTeachAccordRules.slice(0, 2).map((rule) => <p key={rule.id}><strong>{rule.title}</strong> — {rule.ruleText}</p>)}
         </div>
-        <div className="calm-list">
-          {mockTeachAccordRules.slice(0, 3).map((rule) => (
-            <div className="calm-row" key={rule.id}>
-              <span><strong>{rule.title}</strong><small>{rule.ruleText}</small></span>
-              <span className={`status ${rule.status === 'approved' ? 'good' : 'warn'}`}>{rule.scope} · {rule.status}</span>
-            </div>
-          ))}
-        </div>
-      </section>
+      </details>
 
       <section className="card signature-preview-card">
-        <div>
-          <span className="section-kicker">Mock e-signature handoff</span>
-          <h2>Preferred provider: DocuSign mock</h2>
-          <p>Provider review is provider-neutral and mock-only. No document is generated, sent, or imported.</p>
-        </div>
-        <button className="btn btn-primary btn-large" type="button" onClick={() => setSignatureOpen(true)}>Send for Signatures</button>
         <button className="btn btn-secondary" type="button">Save Draft</button>
-        <button className="btn btn-secondary" type="button">Regenerate Suggestions</button>
+        <button className="btn btn-primary btn-large" type="button" onClick={() => setSignatureOpen(true)}>Send for Signatures</button>
+        <Link className="btn btn-secondary" href="/coordinate">Move to Coordinate</Link>
       </section>
 
       {signatureOpen && (
         <section className="card signature-confirmation">
           <div className="section-heading">
             <div>
-              <span className="section-kicker">Final confirmation · mock only</span>
+              <span className="section-kicker">Final confirmation</span>
               <h2>Send signature packet</h2>
-              <p>Confirm recipients and documents before the provider handoff. Human approval remains the gate.</p>
             </div>
             <span className="status warn">{signatureSteps[signatureStep]}</span>
           </div>
@@ -163,9 +146,7 @@ export function PrepareWorkspace() {
             </div>
           </div>
           <div className="signature-flow">
-            {signatureSteps.map((step, index) => (
-              <span className={index <= signatureStep ? 'active' : ''} key={step}>{step}</span>
-            ))}
+            {signatureSteps.map((step, index) => <span className={index <= signatureStep ? 'active' : ''} key={step}>{step}</span>)}
           </div>
           <div className="form-actions">
             <button className="btn btn-secondary" type="button" onClick={() => setSignatureOpen(false)}>Cancel</button>
@@ -179,8 +160,8 @@ export function PrepareWorkspace() {
       <section className="card transcript-card">
         <div className="section-heading">
           <div>
-            <span className="section-kicker">Transcript evidence</span>
-            <h2>Source transcript</h2>
+            <span className="section-kicker">Transcript</span>
+            <h2>Sources</h2>
           </div>
         </div>
         <div className="transcript-snippets">

@@ -121,3 +121,5 @@ Sprint acceptance criteria must use the Friction Budget from `/docs/ProductPhilo
 - [x] Review & Send is the main contract-field review surface with field status, confidence, document/section reference, evidence links, transcript, and mock signature progression.
 - [x] Teach Accord is represented as explainable preferences/rules with personal/team/brokerage scope and suggested/approved/disabled status.
 - [x] Accord remains transaction-centric and explicitly not a CRM.
+- [x] Client View simplification: transaction-home layout, approved documents, client to-dos, Ask Accord mock chat, viewer-first Document Help, and Coordinate client-activity visibility.
+- [x] UX polish pass: Record mode-specific actions, calmer Review & Send field/source layout, Coordinate command center with monthly calendar and customization placeholder, and mock Storage & Files preferences.

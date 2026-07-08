@@ -202,3 +202,17 @@ Backlog grooming must estimate clicks removed, typing removed, inference gained,
 - [x] **Critical friction remover** — Make Review & Send the main generated-paperwork field review surface with transcript evidence links and mock signature handoff.
 - [x] **Major friction remover** — Keep Record free of new/existing transaction choice, conversation type, destination, and setup fields.
 - [ ] **Supporting infrastructure** — Expand Teach Accord rules into a governed provider-backed service when live storage and auth exist.
+
+## Client View simplification backlog update
+
+- [x] **Critical friction remover** — Reframe Client Portal as Client View: a transaction home with status, dates, documents, to-dos, and Ask Accord.
+- [x] **Major friction remover** — Replace education-dashboard language with client-friendly labels and contextual learning.
+- [x] **Major friction remover** — Add a viewer-first Document Help mock with clickable document markers and one explanation panel.
+- [x] **Supporting infrastructure** — Surface client activity inside Coordinate for agent visibility.
+
+## UX polish backlog update
+
+- [x] **Major friction remover** — Add Record mode-specific submit behavior and cleaner record/checkbox alignment.
+- [x] **Major friction remover** — Reduce Review & Send visual busyness and rename field evidence links to Source.
+- [x] **Major friction remover** — Refactor Coordinate as a transaction coordinator command center with sorted to-dos, monthly calendar, statuses, signature follow-up, and layout customization mock.
+- [x] **Supporting infrastructure** — Add mock Storage & Files settings with Accord Cloud, OneDrive, and local export preferences plus provider-neutral local export contract.

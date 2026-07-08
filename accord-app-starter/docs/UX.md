@@ -122,3 +122,32 @@ Client Portal is not a primary agent navigation item. Accord Guide appears insid
 Review & Send must show generated value, form/document name, section reference, confidence, status, evidence link, and edit placeholder for every contract field. The transcript remains visible at the bottom, and evidence links should scroll/highlight the supporting snippet.
 
 Accord is transaction-centric, not contact-centric. It integrates with CRMs but does not replace them.
+
+## Client View simplification
+
+Client View should feel like the client's transaction home, not an education dashboard. Use client-friendly titles and short copy.
+
+The client home should prioritize:
+
+- Transaction status.
+- Important dates.
+- Documents.
+- To-do list.
+- Ask Accord chat.
+- Education/videos only when relevant.
+
+Avoid exposing internal labels such as Accord Guide, Agent Review Mode, Why these recommendations, or Client approval portal. Hide recommendation logic and source policy language unless an agent/admin debug context requires it.
+
+Document Help should use a document/PDF-viewer style mock. The document remains central; clients click highlighted sections or question markers to open one explanation panel. Do not show multiple education panels or large recommendation grids by default.
+
+Agent-facing Coordinate views should show client activity: documents viewed, questions asked, videos watched, open to-dos, unanswered/escalated questions, and a Client View preview link.
+
+## UX polish baseline
+
+Record supports four modes with mode-specific submit behavior: Record Conversation, Paste Transcript -> Submit Transcript, Quick Voice Recap -> Record Recap then Submit Recap, and Upload Notes / Documents -> Submit Upload. Keep copy minimal; the core line is "Accord will organize everything afterward."
+
+Review & Send should feel like paperwork review, not a dashboard. Field rows keep document name, section reference, generated value, confidence/status, and a **Source** link. Source links scroll to and highlight the transcript snippet. Per-field editing should be inline or subtle, not a loud button on every row.
+
+Coordinate is the transaction coordinator command center. It uses a sorted to-do list, transaction-flow statuses, outbound packet/signature follow-up, a monthly calendar mock, prominent AI Timeline, and a lightweight Customize layout placeholder.
+
+Settings includes Storage & Files preferences for Accord Cloud, OneDrive, and Local computer/export folder. Local export is mock-only; browsers may require downloads, user-selected folders, or a future desktop companion for true local saving.

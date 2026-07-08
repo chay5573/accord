@@ -1,28 +1,223 @@
 'use client';
+
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
-import { mockClientVisibleFacts, mockGuideVideos, type ClientFactVisibility } from '@/lib/clientEducation';
+import { mockGuideVideos } from '@/lib/clientEducation';
 
-const roadmap=['Offer drafted','Offer signed','Offer submitted','Offer accepted','Earnest money','Seller disclosures','Due diligence','Inspection objection','Appraisal','Loan approval','Settlement','Closing'];
-const sections=[
- {id:'earnest',title:'Earnest Money',section:'Section 3',explanation:'Earnest money is a deposit connected to the offer and the deadlines in the agreement.',detail:'Your approved transaction summary shows $7,500 due July 7, held by Red Rock Title.',video:'Earnest Money in 90 Seconds'},
- {id:'price',title:'Purchase Price',section:'Section 2',explanation:'This section states the price offered for the property.',detail:'The client-visible approved purchase price is $875,000.',video:'What Happens After Signing?'},
- {id:'dd',title:'Due Diligence',section:'Section 8',explanation:'This section describes the buyer due diligence period and applicable deadline.',detail:'Your due diligence deadline is July 17, subject to agent confirmation.',video:'What Due Diligence Means'},
- {id:'appraisal',title:'Appraisal',section:'Section 8.2',explanation:'This section describes the appraisal-related condition in the agreement.',detail:'Your financing and appraisal deadline is shown as July 24.',video:'Financing and Appraisal Basics'},
- {id:'financing',title:'Financing',section:'Section 8.3',explanation:'This section describes the financing condition and deadline.',detail:'The approved summary identifies conventional financing.',video:'Financing and Appraisal Basics'},
- {id:'settlement',title:'Settlement',section:'Section 24',explanation:'Settlement is the process described in the agreement before closing is complete.',detail:'The settlement date still needs agent review and is not shown as final.',video:'Understanding Settlement'},
- {id:'possession',title:'Possession',section:'Section 25',explanation:'This section states when possession is delivered.',detail:'No client-visible possession fact has been approved yet.',video:'Understanding Settlement'},
- {id:'disclosures',title:'Seller Disclosures',section:'Section 7',explanation:'This section covers delivery and review of seller disclosures.',detail:'Seller disclosures are the next roadmap item after earnest money.',video:'Seller Disclosures Explained'},
- {id:'warranty',title:'Home Warranty',section:'Addendum',explanation:'A home warranty term may allocate cost for a selected warranty plan.',detail:'The draft mentions a seller-paid warranty up to $700; it is not yet client-approved.',video:'Offer Basics'}
+type DocumentStatus = 'Ready to view' | 'Needs signature' | 'Signed' | 'Updated' | 'Waiting on other party';
+
+const progress = [
+  ['Signed offer', 'complete', 'Jul 5'],
+  ['Earnest money', 'current', 'Due Jul 7'],
+  ['Inspection', 'upcoming', 'By Jul 17'],
+  ['Appraisal', 'upcoming', 'By Jul 24'],
+  ['Closing', 'upcoming', 'Jul 31']
+] as const;
+
+const todos = [
+  ['Sign documents', 'Done'],
+  ['Deliver earnest money', 'Due soon'],
+  ['Schedule inspection', 'Next'],
+  ['Review disclosures', 'Waiting'],
+  ['Confirm wire instructions with title company', 'Safety'],
+  ['Upload requested documents', 'Later'],
+  ['Complete final walkthrough', 'Before closing']
 ];
 
-export function AccordGuide({ documentMode=false }: { documentMode?: boolean }){
- const [agentPreview,setAgentPreview]=useState(true); const [selected,setSelected]=useState(sections[0]); const [facts,setFacts]=useState(mockClientVisibleFacts); const approvedFacts=facts.filter(f=>f.visibility==='approved_for_client');
- const recommended=useMemo(()=>mockGuideVideos.filter(v=>v.transactionStages.includes('earnest_money')||v.topic==='due_diligence').slice(0,3),[]);
- function setVisibility(id:string,visibility:ClientFactVisibility){setFacts(current=>current.map(f=>f.id===id?{...f,visibility}:f));}
- if(documentMode) return <div className="guide-page"><PreviewBar agentPreview={agentPreview} setAgentPreview={setAgentPreview}/><div className="guide-document-layout"><section className="card guide-contract"><div className="section-heading"><div><span className="section-kicker">Explain this document</span><h2>Utah REPC · Client-visible preview</h2><p>Simplified mock—not a PDF or complete legal form.</p></div><span className="status good">Approved to preview</span></div><div className="document-summary"><strong>Document summary</strong><p>A buyer offer describing price, earnest money, deadlines, conditions, settlement, and possession.</p></div>{sections.map(s=><article className={selected.id===s.id?'active':''} key={s.id}><div><span>{s.section}</span><strong>{s.title}</strong><p>{s.explanation}</p></div><button type="button" aria-label={`Explain ${s.title}`} onClick={()=>setSelected(s)}>?</button></article>)}</section><aside className="card guide-explanation"><span className="section-kicker">{selected.section}</span><h2>{selected.title}</h2><p>{selected.explanation}</p><div className="guide-personal"><strong>Your transaction</strong><p>{selected.detail}</p></div><div className="guide-citation">Source: Utah REPC {selected.section} · Approved Accord Guide content</div><div className="video-mini"><span aria-hidden="true">▶</span><div><strong>{selected.video}</strong><small>Accord-produced · Mock preview</small></div></div><div className="common-questions"><strong>Common questions</strong><button type="button">What deadline applies to me?</button><button type="button">Where is this in my document?</button></div><div className="notice compact">Educational only. Ask your agent for advice or judgment about your transaction.</div><button className="btn btn-primary btn-block" type="button">Ask your agent</button></aside></div></div>;
- return <div className="guide-page"><PreviewBar agentPreview={agentPreview} setAgentPreview={setAgentPreview}/><section className="guide-hero"><div><span className="section-kicker light">Accord Guide · Buyer · Utah</span><h2>Your Alderann Street purchase</h2><p>Transaction-aware education using only materials your agent approved for you.</p></div><Link className="btn" href="/accord-guide/documents/repc">Explain my REPC →</Link></section><section className="card"><div className="section-heading"><div><span className="section-kicker">Transaction roadmap</span><h2>Where you are now</h2></div><span className="status warn">Earnest money</span></div><div className="guide-roadmap">{roadmap.map((stage,i)=><div className={i<4?'complete':i===4?'current':''} key={stage}><i>{i<4?'✓':i+1}</i><span>{stage}</span></div>)}</div></section><div className="foundation-grid"><section className="card guide-answer"><span className="section-kicker">Personalized answer · Approved sources only</span><h2>“What happens to my earnest money?”</h2><p><strong>General explanation:</strong> Earnest money is a deposit connected to your offer. What happens to it depends on the agreement, deadlines, and decisions made with your agent.</p><div className="guide-personal"><strong>Your transaction</strong><p>{approvedFacts.find(f=>f.id==='fact-earnest')?.valuePreview}. This detail is approved for client visibility.</p></div><div className="guide-citation">Cites: Utah REPC Section 3 · Earnest Money in 90 Seconds v1.2</div><button className="btn btn-primary" type="button">Ask your agent</button></section><aside className="card"><span className="section-kicker">Why these recommendations</span><h2>Current-stage education</h2><ul className="plain-list"><li>Stage: Earnest money</li><li>Role: Buyer</li><li>Jurisdiction: Utah</li><li>Form: Utah REPC</li><li>Deadline: Due within 2 days</li><li>Signing status: Completed</li></ul></aside></div><section className="card"><div className="section-heading"><div><span className="section-kicker">Accord-produced education</span><h2>Recommended for this stage</h2></div><span className="status good">Governed content</span></div><div className="guide-videos">{recommended.map(v=><article key={v.id}><div className="video-placeholder"><span>▶</span><small>{Math.round(v.durationSeconds/60)} min</small></div><strong>{v.title}</strong><p>{v.summary}</p><small>{v.contractSection} · {v.jurisdiction} · v{v.version}</small></article>)}</div></section>{agentPreview&&<AgentControls facts={facts} setVisibility={setVisibility}/>}</div>;
+const documents: Array<[string, string, DocumentStatus, string]> = [
+  ['Purchase contract', 'Utah REPC', 'Signed', '/client-view/documents/purchase-contract'],
+  ['Addenda', 'Personal property addendum', 'Ready to view', '/client-view/documents/purchase-contract'],
+  ['Disclosures', 'Wire fraud disclosure', 'Ready to view', '/client-view/documents/purchase-contract'],
+  ['Signed documents', 'Signature packet', 'Waiting on other party', '/client-view/documents/purchase-contract'],
+  ['Important uploads', 'Inspection invoice placeholder', 'Updated', '/client-view/documents/purchase-contract']
+];
+
+const dates = [
+  ['Jul 7', 'Earnest money due'],
+  ['Jul 17', 'Inspection deadline'],
+  ['Jul 24', 'Financing & appraisal'],
+  ['Jul 31', 'Settlement target']
+];
+
+const sections = [
+  {
+    id: 'price',
+    label: 'Purchase price',
+    section: 'REPC Section 2',
+    x: 62,
+    y: 22,
+    explanation: 'This is the price offered for the home.',
+    detail: 'Your approved purchase price is $875,000.',
+    video: 'What Happens After Signing?'
+  },
+  {
+    id: 'earnest',
+    label: 'Earnest money',
+    section: 'REPC Section 3',
+    x: 40,
+    y: 38,
+    explanation: 'Earnest money is a deposit tied to the offer and deadlines.',
+    detail: 'Your earnest money is $7,500, due July 7, held by Red Rock Title.',
+    video: 'Earnest Money in 90 Seconds'
+  },
+  {
+    id: 'dd',
+    label: 'Due diligence',
+    section: 'REPC Section 8',
+    x: 70,
+    y: 58,
+    explanation: 'This is the period for inspections and buyer review.',
+    detail: 'Your inspection deadline is July 17.',
+    video: 'What Due Diligence Means'
+  },
+  {
+    id: 'settlement',
+    label: 'Settlement',
+    section: 'REPC Section 24',
+    x: 48,
+    y: 78,
+    explanation: 'Settlement is when the closing paperwork and funds are handled.',
+    detail: 'Your target settlement date is July 31, pending final confirmation.',
+    video: 'Understanding Settlement'
+  }
+];
+
+function AskAccord({ placeholder }: { placeholder: string }) {
+  return (
+    <form className="ask-accord" aria-label="Ask Accord mock chat">
+      <label>
+        <span>Ask Accord</span>
+        <textarea placeholder={placeholder} />
+      </label>
+      <button className="btn btn-primary" type="button">Ask</button>
+      <small>Mock only. Uses approved client-visible documents, facts, and education.</small>
+    </form>
+  );
 }
 
-function PreviewBar({agentPreview,setAgentPreview}:{agentPreview:boolean;setAgentPreview:(v:boolean)=>void}){return <section className="card preview-bar"><div><span className="section-kicker">Agent preview mode</span><strong>{agentPreview?'You are previewing exactly what the client will see.':'Client view mock'}</strong></div><button className="btn btn-secondary" type="button" onClick={()=>setAgentPreview(!agentPreview)}>{agentPreview?'Hide agent controls':'Return to agent preview'}</button></section>}
-function AgentControls({facts,setVisibility}:{facts:typeof mockClientVisibleFacts;setVisibility:(id:string,v:ClientFactVisibility)=>void}){return <><section className="card"><div className="section-heading"><div><span className="section-kicker">Client-visible fact controls</span><h2>Sharing boundaries</h2></div><span className="status warn">Agent governed</span></div><div className="fact-visibility-list">{facts.map(f=><div key={f.id}><span><strong>{f.label}</strong><small>{f.valuePreview} · {f.sourceReference}</small></span><select aria-label={`${f.label} visibility`} value={f.visibility} onChange={e=>setVisibility(f.id,e.target.value as ClientFactVisibility)}><option value="approved_for_client">Approved for client</option><option value="internal_only">Internal only</option><option value="needs_agent_review">Needs agent review</option><option value="revoked">Revoked</option></select></div>)}</div></section><div className="foundation-grid"><section className="card"><span className="section-kicker">Agent review queue</span><h2>Client questions</h2><div className="simple-list"><div><span><strong>“Should I waive this deadline?”</strong><small>Escalated · judgment request</small></span><span className="status danger">Needs agent</span></div><div><span><strong>“What happens to my earnest money?”</strong><small>Proposed sourced answer available</small></span><span className="status warn">Optional review</span></div></div></section><section className="card"><span className="section-kicker">Future analytics · Placeholders</span><h2>Client clarity signals</h2><div className="summary-list"><div><span>Videos viewed</span><strong>3</strong></div><div><span>Questions asked</span><strong>2</strong></div><div><span>Sections clicked</span><strong>6</strong></div><div><span>Unanswered</span><strong>1</strong></div><div><span>Agent escalations</span><strong>1</strong></div><div><span>Confusion topic</span><strong>Deadlines</strong></div></div></section></div></>}
+export function AccordGuide({ documentMode = false }: { documentMode?: boolean }) {
+  const [selected, setSelected] = useState(sections[1]);
+  const contextualVideos = useMemo(() => mockGuideVideos.filter((video) => video.topic === 'earnest_money' || video.topic === 'due_diligence').slice(0, 2), []);
+
+  if (documentMode) {
+    return (
+      <div className="client-page">
+        <section className="client-doc-toolbar card">
+          <div>
+            <span className="section-kicker">Document Help</span>
+            <h2>Purchase contract</h2>
+          </div>
+          <Link className="btn btn-secondary" href="/client-view">Back to transaction</Link>
+        </section>
+
+        <div className="document-viewer-layout">
+          <section className="card pdf-viewer-card" aria-label="Mock document viewer">
+            <div className="mock-pdf-page">
+              <div className="pdf-head">Utah Real Estate Purchase Contract</div>
+              <div className="pdf-line wide" />
+              <div className="pdf-line" />
+              <div className="pdf-line short" />
+              <div className="pdf-block" />
+              <div className="pdf-line wide" />
+              <div className="pdf-line" />
+              <div className="pdf-block small" />
+              {sections.map((section) => (
+                <button
+                  className={`pdf-marker ${selected.id === section.id ? 'active' : ''}`}
+                  style={{ left: `${section.x}%`, top: `${section.y}%` }}
+                  type="button"
+                  onClick={() => setSelected(section)}
+                  aria-label={`Explain ${section.label}`}
+                  key={section.id}
+                >
+                  ?
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <aside className="card document-help-panel">
+            <span className="section-kicker">{selected.section}</span>
+            <h2>{selected.label}</h2>
+            <p>{selected.explanation}</p>
+            <div className="client-detail"><strong>Your transaction</strong><span>{selected.detail}</span></div>
+            <div className="video-mini"><span aria-hidden="true">▶</span><div><strong>{selected.video}</strong><small>Short video · Mock</small></div></div>
+            <small className="source-line">Source: {selected.section}</small>
+            <AskAccord placeholder="Ask what this document means..." />
+          </aside>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="client-page">
+      <section className="client-home-hero">
+        <div>
+          <span className="section-kicker light">Client View</span>
+          <h2>Your Home Purchase</h2>
+          <p>2948 E Alderann St · Offer signed</p>
+        </div>
+        <Link className="btn" href="/client-view/documents/purchase-contract">Open documents</Link>
+      </section>
+
+      <div className="client-home-grid">
+        <section className="card">
+          <div className="section-heading"><div><span className="section-kicker">Status</span><h2>Your Progress</h2></div><span className="status warn">Earnest money</span></div>
+          <div className="client-progress">
+            {progress.map(([label, state, date]) => (
+              <div className={state} key={label}><i>{state === 'complete' ? '✓' : ''}</i><span><strong>{label}</strong><small>{date}</small></span></div>
+            ))}
+          </div>
+        </section>
+
+        <section className="card">
+          <span className="section-kicker">Important dates</span>
+          <h2>Coming up</h2>
+          <div className="deadline-list">
+            {dates.map(([date, label]) => <div key={label}><time>{date}</time><span><strong>{label}</strong><small>Ask your agent before making decisions.</small></span></div>)}
+          </div>
+        </section>
+      </div>
+
+      <div className="client-home-grid">
+        <section className="card">
+          <div className="section-heading"><div><span className="section-kicker">Documents</span><h2>Your documents</h2></div></div>
+          <div className="client-doc-list">
+            {documents.map(([title, detail, status, href]) => (
+              <Link href={href} key={title}>
+                <span><strong>{title}</strong><small>{detail}</small></span>
+                <span className={`status ${status === 'Needs signature' || status === 'Waiting on other party' ? 'warn' : status === 'Signed' ? 'good' : 'neutral'}`}>{status}</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="card">
+          <span className="section-kicker">To-do list</span>
+          <h2>Next steps</h2>
+          <div className="client-todo-list">
+            {todos.map(([todo, status]) => <label key={todo}><input type="checkbox" defaultChecked={status === 'Done'} /><span><strong>{todo}</strong><small>{status}</small></span></label>)}
+          </div>
+        </section>
+      </div>
+
+      <section className="card chat-card">
+        <AskAccord placeholder="Ask a question about your transaction..." />
+      </section>
+
+      <section className="card learn-strip">
+        <div className="section-heading"><div><span className="section-kicker">Learn</span><h2>Helpful right now</h2></div></div>
+        <div className="guide-videos">
+          {contextualVideos.map((video) => (
+            <article key={video.id}>
+              <div className="video-placeholder"><span>▶</span><small>{Math.round(video.durationSeconds / 60)} min</small></div>
+              <strong>{video.title}</strong>
+              <small>{video.contractSection} · {video.jurisdiction}</small>
+            </article>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}

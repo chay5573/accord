@@ -112,3 +112,11 @@ Future `TeachAccordProvider` implementations should support `listRules()`, `sugg
 Each rule records category, text, scope (`personal`, `team`, `brokerage`), status (`suggested`, `approved`, `disabled`), source, reviewer, and audit history. Accord may suggest rules based on repeated behavior, but broader application requires authorized approval.
 
 Review & Send uses these rules as attributable defaults only; contract fields still require evidence, visible status, and agent approval before signature.
+
+## Storage destinations and local export
+
+Accord storage remains provider-neutral. Future implementations may support Accord Cloud, OneDrive sync, and local computer/export folder workflows behind provider interfaces.
+
+`StorageProvider` continues to represent managed object storage. A future `LocalFileExportProvider` may prepare downloadable exports, suggest folder names, and check whether a desktop companion is available. Browser-only apps generally cannot silently write to arbitrary local folders; local saving may require downloads, the File System Access API with user-selected folders where supported, or a desktop companion.
+
+No MVP mock writes to the local filesystem, connects OneDrive, or changes the canonical Accord Cloud storage model.

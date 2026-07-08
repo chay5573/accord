@@ -118,3 +118,15 @@ Client Portal / Accord Guide is not a primary agent destination. It appears insi
 Accord is transaction-centric, not contact-centric. Accord is not a CRM and should not become one. It may integrate with CRMs, but its context should be limited to facts that help create, execute, explain, or coordinate transaction documents.
 
 The labels are still a working product language and may evolve, but any renaming must preserve the low-friction path from conversation to accurate executed documents.
+
+## Client View philosophy
+
+Client View is the client's transaction home, not an education dashboard. The client should first understand status, dates, documents, to-dos, and how to ask a simple question. Education appears only when it is useful to the current stage, document section, deadline, or question.
+
+Avoid internal product labels in client-facing screens. Do not show labels such as Accord Guide, Agent Review Mode, Why these recommendations, or Client approval portal to the client. Keep copy short, calm, and plain-English.
+
+The client-facing product principle is: **transaction first, education supported**.
+
+## Calm interface polish
+
+Polish should remove words before adding panels. Record, Review & Send, Coordinate, and Settings each need one obvious next action, compact supporting controls, and progressive disclosure for details. Coordinate may be customizable, but customization should support the transaction coordinator workflow rather than become another destination.
