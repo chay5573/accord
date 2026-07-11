@@ -580,23 +580,27 @@ textarea { min-height: 125px; resize: vertical; line-height: 1.5; }
 
 /* Capture → Prepare → Manage simplification */
 .simple-capture { max-width:860px; margin:clamp(18px,4vw,46px) auto 0; display:grid; gap:14px; }
-.capture-focus { min-height:360px; text-align:center; padding:30px clamp(20px,5vw,52px); display:grid; place-items:center; }
-.record-mode-panel { width:min(640px,100%); display:grid; justify-items:center; gap:16px; }
+.capture-focus { min-height:320px; text-align:center; padding:26px clamp(20px,5vw,52px); display:grid; place-items:center; }
+.record-mode-panel { width:min(640px,100%); display:grid; justify-items:center; align-content:center; gap:13px; }
 .record-textarea { width:100%; text-align:left; }
 .record-textarea textarea { min-height:230px; font-size:13px; }
 .record-status { display:inline-flex; min-height:28px; align-items:center; justify-content:center; padding:6px 10px; border-radius:999px; background:#f2f5f8; color:var(--muted); font-size:10px; font-weight:750; }
+.preparing-state { min-height:120px; display:grid; place-items:center; align-content:center; gap:12px; color:var(--navy); }
+.preparing-state strong { font-size:13px; letter-spacing:-.01em; }
+.preparing-spinner { width:28px; height:28px; border:3px solid #e3e9ef; border-top-color:var(--navy); border-radius:50%; animation:accord-spin .75s linear infinite; }
+@keyframes accord-spin { to { transform:rotate(360deg); } }
 .record-upload-zone { width:min(520px,100%); min-height:168px; display:grid; place-items:center; gap:12px; padding:24px; border:1.5px dashed var(--line-dark); border-radius:14px; background:#fafbfc; color:var(--navy); text-align:center; cursor:pointer; }
 .record-upload-zone > span { font-size:12px; font-weight:800; }
 .record-upload-zone input { max-width:260px; border:0; padding:0; background:transparent; color:var(--muted); }
-.simple-consent { grid-template-columns:auto 1fr; align-items:center; gap:10px; width:min(420px,100%); margin:0; padding:12px; border:1px solid var(--line); border-radius:10px; text-align:left; background:#fafbfc; }
+.simple-consent { grid-template-columns:auto 1fr; align-items:center; gap:10px; width:min(470px,100%); margin:0; padding:12px; border:1px solid var(--line); border-radius:10px; text-align:left; background:#fafbfc; }
 .simple-consent input { width:17px; height:17px; }
 .simple-consent span { display:grid; gap:3px; }
 .simple-consent strong { color:var(--ink); font-size:10px; }
 .simple-consent small { color:var(--muted); font-size:8px; font-weight:500; line-height:1.4; }
-.capture-primary { min-width:220px; justify-self:center; }
+.capture-primary { min-width:250px; min-height:52px; justify-self:center; padding-inline:20px; font-size:13px; }
 .upload-submit { margin-top:2px; }
 .capture-alternatives { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:6px; padding:5px; border:1px solid var(--line); border-radius:13px; background:rgba(255,255,255,.72); box-shadow:0 12px 30px rgba(7,27,51,.04); }
-.capture-alternatives button { min-height:44px; display:grid; place-items:center; padding:10px 12px; border:1px solid transparent; border-radius:9px; background:transparent; color:var(--muted); text-align:center; font-size:10px; font-weight:800; cursor:pointer; }
+.capture-alternatives button { min-height:50px; display:grid; place-items:center; padding:11px 12px; border:1px solid transparent; border-radius:9px; background:transparent; color:var(--muted); text-align:center; font-size:10px; font-weight:800; cursor:pointer; }
 .capture-alternatives button.active, .capture-alternatives button[aria-selected="true"] { border-color:var(--line-dark); background:white; color:var(--navy); box-shadow:0 7px 18px rgba(7,27,51,.07); }
 .prepare-page { display:grid; gap:16px; max-width:1050px; }
 .prepare-summary { display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:18px; padding:20px; }
@@ -719,7 +723,7 @@ textarea { min-height: 125px; resize: vertical; line-height: 1.5; }
 .client-todo-list label span { display:grid; gap:3px; }
 input[type="checkbox"], input[type="radio"] { width:16px; height:16px; min-width:16px; accent-color:var(--navy); vertical-align:middle; }
 .simple-consent input, .client-todo-list input, .task-row input, .storage-options input { margin-top:1px; }
-.recap-actions { display:grid; justify-items:center; gap:10px; margin:18px 0; }
+.recap-actions { display:grid; justify-items:center; gap:13px; margin:0; }
 .ask-accord { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:end; }
 .ask-accord label { margin:0; }
 .ask-accord label span { display:block; margin-bottom:6px; color:var(--navy); font-size:11px; font-weight:800; }

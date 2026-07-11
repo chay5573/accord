@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type RecordMode = 'live' | 'transcript' | 'voice' | 'upload';
 type MockFile = { name: string; size: number };
@@ -20,16 +20,29 @@ export function StartConversationFlow() {
   const [text, setText] = useState('');
   const [recapRecorded, setRecapRecorded] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [isPreparing, setIsPreparing] = useState(false);
   const [selectedFile, setSelectedFile] = useState<MockFile | null>(null);
 
-  function finishRecord() {
-    router.push('/review-send');
+  useEffect(() => {
+    if (!isPreparing) return;
+
+    const timer = window.setTimeout(() => {
+      router.push('/review-send');
+    }, 850);
+
+    return () => window.clearTimeout(timer);
+  }, [isPreparing, router]);
+
+  function preparePaperwork() {
+    setIsRecording(false);
+    setIsPreparing(true);
   }
 
   function selectMode(nextMode: RecordMode) {
     setMode(nextMode);
     setRecapRecorded(false);
     setIsRecording(false);
+    setIsPreparing(false);
   }
 
   return (
@@ -53,31 +66,41 @@ export function StartConversationFlow() {
 
       <section className="card capture-focus">
         <div id={`record-panel-${mode}`} role="tabpanel" aria-labelledby={`record-tab-${mode}`} className="record-mode-panel">
-          {mode === 'live' && (
+          {isPreparing && (
+            <div className="preparing-state" aria-live="polite">
+              <span className="preparing-spinner" aria-hidden="true" />
+              <strong>Preparing paperwork...</strong>
+            </div>
+          )}
+
+          {mode === 'live' && !isPreparing && (
             <>
               <label className="simple-consent">
                 <input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} />
-                <span><strong>Consent confirmed</strong></span>
+                <span>
+                  <strong>Recording consent has been obtained from all participants.</strong>
+                  <small>Required before recording begins.</small>
+                </span>
               </label>
               {isRecording && <span className="record-status" aria-live="polite">Recording · 00:12</span>}
               <button
                 className="btn btn-primary btn-large capture-primary"
                 type="button"
                 disabled={!consent}
-                onClick={() => (isRecording ? finishRecord() : setIsRecording(true))}
+                onClick={() => (isRecording ? preparePaperwork() : setIsRecording(true))}
               >
                 {isRecording ? 'Stop Recording' : 'Record Conversation'}
               </button>
             </>
           )}
 
-          {mode === 'transcript' && (
+          {mode === 'transcript' && !isPreparing && (
             <>
               <label className="record-textarea">
                 <span className="sr-only">Transcript</span>
                 <textarea value={text} onChange={(event) => setText(event.target.value)} placeholder="Paste transcript..." />
               </label>
-              <button className="btn btn-primary btn-large capture-primary" type="button" onClick={finishRecord}>
+              <button className="btn btn-primary btn-large capture-primary" type="button" onClick={preparePaperwork}>
                 Submit Transcript
               </button>
             </>
@@ -85,12 +108,12 @@ export function StartConversationFlow() {
 
           {mode === 'voice' && (
             <div className="recap-actions">
-              {!recapRecorded && !isRecording && (
+              {!recapRecorded && !isRecording && !isPreparing && (
                 <button className="btn btn-primary btn-large capture-primary" type="button" onClick={() => setIsRecording(true)}>
                   Record Recap
                 </button>
               )}
-              {isRecording && (
+              {isRecording && !isPreparing && (
                 <>
                   <span className="record-status" aria-live="polite">Recording recap · 00:08</span>
                   <button className="btn btn-secondary btn-large capture-primary" type="button" onClick={() => { setIsRecording(false); setRecapRecorded(true); }}>
@@ -98,10 +121,10 @@ export function StartConversationFlow() {
                   </button>
                 </>
               )}
-              {recapRecorded && (
+              {recapRecorded && !isPreparing && (
                 <>
                   <span className="record-status" aria-live="polite">Recap ready</span>
-                  <button className="btn btn-primary btn-large capture-primary" type="button" onClick={finishRecord}>
+                  <button className="btn btn-primary btn-large capture-primary" type="button" onClick={preparePaperwork}>
                     Submit Recap
                   </button>
                 </>
@@ -109,7 +132,7 @@ export function StartConversationFlow() {
             </div>
           )}
 
-          {mode === 'upload' && (
+          {mode === 'upload' && !isPreparing && (
             <>
               <label className="record-upload-zone">
                 <span>Choose Files</span>
@@ -122,7 +145,7 @@ export function StartConversationFlow() {
                 />
               </label>
               {selectedFile && <span className="record-status">{selectedFile.name}</span>}
-              <button className="btn btn-primary btn-large capture-primary upload-submit" type="button" onClick={finishRecord}>
+              <button className="btn btn-primary btn-large capture-primary upload-submit" type="button" onClick={preparePaperwork}>
                 Submit Upload
               </button>
             </>
