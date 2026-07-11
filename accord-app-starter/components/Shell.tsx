@@ -28,15 +28,13 @@ export function Shell({ children, active = 'coordinate' }: { children: ReactNode
     <div className="app-shell">
       <aside className="sidebar">
         <div>
-          <Link href="/coordinate" className="wordmark">ACCORD</Link>
-          <div className="side-sub brand-line">Record. Review & Send. Coordinate.</div>
+          <Link href="/coordinate" className="wordmark" aria-label="Accord home">Accord</Link>
         </div>
         <nav className="nav-list" aria-label="Primary navigation">
           {navigation.map(([key, href, label], index) => {
             const selected = currentSection === key || (key === 'settings' && settingsKeys.has(active));
             return (
               <Link key={key} className={`nav-item ${index === 0 ? 'capture-nav' : ''} ${selected ? 'active' : ''}`} href={href}>
-                {index === 0 && <span aria-hidden="true">●</span>}
                 {label}
               </Link>
             );

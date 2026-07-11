@@ -40,6 +40,10 @@ Each screen has one clear primary action. Secondary actions remain subordinate, 
 
 Accord should be composed, predictable, and quiet under pressure. It should not celebrate consequential actions, flood the agent with controls, or make uncertainty feel like failure.
 
+### Silence is a feature
+
+Never explain what the interface already makes obvious. If a button, field, tab, or status label communicates the action, supporting copy should earn its place or be removed.
+
 ### Deal Desk begins after the paperwork
 
 Capture and preparation may happen before a transaction record exists. Deal Desk becomes the tracking and system-of-record layer after documents are drafted or the work is explicitly saved for management.
@@ -108,7 +112,7 @@ The primary information architecture is Capture, Prepare, Manage / Deal Desk, Cl
 
 The current primary agent workflow is **Record -> Review & Send -> Coordinate -> Settings**. `Capture -> Prepare -> Manage` remains the conceptual model, but the product should now speak in the agent's natural language:
 
-- **Record** captures or recovers transaction facts without requiring a transaction, destination, contact record, or conversation type first.
+- **Record** is the simplest page in Accord. Input modes are variations of one workflow, not separate destinations. Each mode has one primary action, and switching modes changes only the central input panel.
 - **Review & Send** is the key contract review surface: all generated paperwork fields, source evidence, editable values, uncertainty, and signature handoff live together.
 - **Coordinate** is transaction management after documents exist or after the agent explicitly chooses to track the work.
 - **Settings** contains configuration, provider setup, contract library, Accord Guide governance, privacy/compliance, and Teach Accord preferences.
@@ -116,6 +120,8 @@ The current primary agent workflow is **Record -> Review & Send -> Coordinate ->
 Client Portal / Accord Guide is not a primary agent destination. It appears inside transaction and Coordinate contexts as **Client View** or **Client Experience**.
 
 Accord is transaction-centric, not contact-centric. Accord is not a CRM and should not become one. It may integrate with CRMs, but its context should be limited to facts that help create, execute, explain, or coordinate transaction documents.
+
+User-initiated capture may prepare paperwork for human review. Passive or external signals may recommend legal-document creation, but they must not initiate contract drafting or document creation without explicit agent action.
 
 The labels are still a working product language and may evolve, but any renaming must preserve the low-friction path from conversation to accurate executed documents.
 

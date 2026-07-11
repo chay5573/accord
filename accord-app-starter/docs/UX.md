@@ -10,6 +10,7 @@ Accord should feel like a calm command center during high-stakes work. The inter
 - Use progressive disclosure; show detail when the current decision needs it.
 - Hide advanced controls unless they are required for the user's present task.
 - Never ask users to organize information AI can infer later.
+- Silence is a feature: never explain what the interface already makes obvious.
 - Settings are for configuration, not workflow.
 - Features should be sections of existing experiences unless a separate page is clearly justified.
 - Apply the Red Pen Test and Friction Budget from `/docs/ProductPhilosophy.md` before adding a page, control, or field.
@@ -144,7 +145,9 @@ Agent-facing Coordinate views should show client activity: documents viewed, que
 
 ## UX polish baseline
 
-Record supports four modes with mode-specific submit behavior: Record Conversation, Paste Transcript -> Submit Transcript, Quick Voice Recap -> Record Recap then Submit Recap, and Upload Notes / Documents -> Submit Upload. Keep copy minimal; the core line is "Accord will organize everything afterward."
+Record is the simplest page in Accord. It uses one stable page shell and four input modes: Record Conversation, Paste Transcript, Quick Voice Recap, and Upload Notes / Documents. These are variations of one workflow, not separate destinations. Each mode has one obvious primary action, and supporting text should be removed when the control already communicates the action.
+
+User-initiated capture can move directly toward paperwork preparation for human review. Passive signals from inbox, calendar, e-signature, CRM, or other external systems may recommend legal-document creation, but they may not create or draft legal documents without explicit agent action.
 
 Review & Send should feel like paperwork review, not a dashboard. Field rows keep document name, section reference, generated value, confidence/status, and a **Source** link. Source links scroll to and highlight the transcript snippet. Per-field editing should be inline or subtle, not a loud button on every row.
 

@@ -217,3 +217,5 @@ Backlog grooming must estimate clicks removed, typing removed, inference gained,
 - [x] **Major friction remover** — Refactor Coordinate as a transaction coordinator command center with sorted to-dos, monthly calendar, statuses, signature follow-up, and layout customization mock.
 - [x] **Supporting infrastructure** — Add mock Storage & Files settings with Accord Cloud, OneDrive, and local export preferences plus provider-neutral local export contract.
 - [x] **Major friction remover** — Make needs-review fields, Source links, preference saving, Coordinate action links, and client document actions feel actionable in the mock workflow.
+- [x] **Critical friction remover** — Simplify Record into one quiet four-mode input surface with no decorative record dots/circles and automatic handoff to Review & Send.
+- [ ] **Future enhancement** — Complete final Accord brand/logo design as a separate design task; the current wordmark remains a refined placeholder.
