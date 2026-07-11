@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type RecordMode = 'live' | 'transcript' | 'voice' | 'upload';
 type MockFile = { name: string; size: number };
@@ -21,7 +21,8 @@ export function StartConversationFlow() {
   const [recapRecorded, setRecapRecorded] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [isPreparing, setIsPreparing] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<MockFile | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<MockFile[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!isPreparing) return;
@@ -44,6 +45,13 @@ export function StartConversationFlow() {
     setIsRecording(false);
     setIsPreparing(false);
   }
+
+  const selectedFileSummary =
+    selectedFiles.length === 0
+      ? null
+      : selectedFiles.length === 1
+        ? selectedFiles[0].name
+        : `${selectedFiles.length} files selected`;
 
   return (
     <div className="simple-capture record-page">
@@ -134,17 +142,24 @@ export function StartConversationFlow() {
 
           {mode === 'upload' && !isPreparing && (
             <>
-              <label className="record-upload-zone">
-                <span>Choose Files</span>
+              <div className="record-upload-zone">
                 <input
+                  ref={fileInputRef}
+                  className="record-file-input"
                   type="file"
+                  multiple
+                  aria-label="Choose files"
+                  aria-describedby={selectedFileSummary ? 'selected-upload-files' : undefined}
                   onChange={(event) => {
-                    const file = event.target.files?.[0];
-                    setSelectedFile(file ? { name: file.name, size: file.size } : null);
+                    const files = Array.from(event.target.files ?? []).map((file) => ({ name: file.name, size: file.size }));
+                    setSelectedFiles(files);
                   }}
                 />
-              </label>
-              {selectedFile && <span className="record-status">{selectedFile.name}</span>}
+                <button className="btn btn-secondary record-file-button" type="button" onClick={() => fileInputRef.current?.click()}>
+                  Choose Files
+                </button>
+              </div>
+              {selectedFileSummary && <span id="selected-upload-files" className="record-status">{selectedFileSummary}</span>}
               <button className="btn btn-primary btn-large capture-primary upload-submit" type="button" onClick={preparePaperwork}>
                 Submit Upload
               </button>
