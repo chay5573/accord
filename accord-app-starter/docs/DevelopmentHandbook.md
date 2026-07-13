@@ -82,6 +82,45 @@ Every implementation summary must state:
 
 If the work adds friction, document the required trust, compliance, or correctness reason and identify an offset elsewhere in the journey.
 
+## Product Freeze Levels
+
+Use product freeze levels to protect approved workflows from casual churn.
+
+### Level 1 – Exploratory
+
+Architecture and UX may change freely. Use this level when the product problem, workflow, information architecture, or interaction model is still being discovered.
+
+### Level 2 – Working
+
+The workflow is established. Only incremental UX improvements should be made, and changes should preserve the approved user journey unless a specific problem is identified.
+
+### Level 3 – Frozen
+
+The page has been approved. Changes should only occur if:
+
+- usability testing reveals friction,
+- a new feature requires it,
+- a defect is discovered,
+- or Calvin explicitly reopens the page.
+
+## Frozen Pages
+
+✓ Record (v1)
+
+Acceptance criteria:
+
+- One obvious purpose.
+- Four input methods.
+- Minimal explanatory text.
+- Automatic transition to Review & Send.
+- No transaction setup.
+- No CRM workflow.
+- One primary action per mode.
+- Calm interface.
+- Responsive.
+- Accessible.
+- Passes the Red Pen Test.
+
 ## Environments and releases
 
 Use separate local, preview, staging, and production projects with no shared credentials or customer data. Apply migrations through automation, run checks before promotion, and deploy risky workflow changes behind flags. Document rollback steps and never roll back a database by deleting customer state.
