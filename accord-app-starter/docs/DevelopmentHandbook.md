@@ -67,6 +67,8 @@ A change is complete when behavior and failure states are implemented; authoriza
 
 For contract-affecting changes, also require form-version traceability, representative rendering QA, and product/compliance sign-off.
 
+For Review & Send changes, confirm that the UI is reviewing exact paperwork records, not AI summaries. Needs Review, Full Paperwork Review, Paperwork Preview, transcript/source links, and future document-generation requests must share normalized records for the same field or provision.
+
 ## Product Philosophy Validation
 
 Every implementation must be checked against `/docs/ProductPhilosophy.md` and `/docs/IdealUserJourney.md`. Apply the Red Pen Test before calling a screen complete.

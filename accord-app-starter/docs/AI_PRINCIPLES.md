@@ -111,6 +111,12 @@ Accord must distinguish transcript-derived facts, externally verified facts, app
 
 Teach Accord preferences can shape suggestions, but they are not model changes and are not authoritative contract facts by themselves.
 
+## Exact paperwork review
+
+AI extraction may propose values, selections, checkbox states, and addendum provisions, but Review & Send must present the exact paperwork result rather than an AI summary. Every generated field should map to an official form field or provision, preserve source traceability, and remain editable before approval. Needs Review and Full Paperwork Review must share the same underlying field record. The complete transcript or applicable source detail must remain available, and Source links should highlight exact supporting content with surrounding context.
+
+No legal document may be sent while required fields are missing, conflicting, low-confidence, materially changed without review, or dependent on an unmapped source. Passive signals may recommend document generation but may not create legal paperwork without explicit user approval.
+
 ## Client Ask Accord boundary
 
 Client-facing Ask Accord is future/off-by-default and mock-only in the current prototype. It must use only approved client-visible documents, approved transaction facts, and approved education content.

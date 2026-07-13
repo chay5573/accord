@@ -123,6 +123,8 @@ Accord is transaction-centric, not contact-centric. Accord is not a CRM and shou
 
 User-initiated capture may prepare paperwork for human review. Passive or external signals may recommend legal-document creation, but they must not initiate contract drafting or document creation without explicit agent action.
 
+Review & Send represents the exact paperwork Accord intends to generate, not a summary of AI understanding. Every displayed value should be the value, checkbox, selection, addendum provision, or signature assignment that will appear on the document. Required unresolved fields block signature sending even when other readiness signals look strong.
+
 The labels are still a working product language and may evolve, but any renaming must preserve the low-friction path from conversation to accurate executed documents.
 
 ## Client View philosophy

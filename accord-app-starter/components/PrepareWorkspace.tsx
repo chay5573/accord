@@ -1,178 +1,301 @@
 'use client';
 
-import Link from 'next/link';
-import { useMemo, useState } from 'react';
-import { mockSignaturePacket } from '@/lib/eSignature';
+import { useState } from 'react';
+import {
+  type AddendumProvision,
+  type FieldReviewStatus,
+  type GeneratedFormField,
+  type ReviewDocument,
+  type ReviewPackage,
+  mockReviewPackages
+} from '@/lib/reviewPackages';
 
-type FieldStatus = 'ready' | 'needs review' | 'missing' | 'default applied';
-
-interface ReviewField {
-  id: string;
-  label: string;
-  value: string;
-  document: string;
-  section: string;
-  confidence: number | null;
-  status: FieldStatus;
-  evidenceId: string;
-}
-
-interface TranscriptSnippet {
-  id: string;
-  time: string;
-  speaker: string;
-  text: string;
-}
-
-const reviewFields: ReviewField[] = [
-  { id: 'field-settle', label: 'Settlement deadline', value: 'Missing', document: 'REPC', section: 'Section 24 · Settlement', confidence: null, status: 'missing', evidenceId: 'e-missing' },
-  { id: 'field-bba', label: 'Buyer broker compensation', value: 'Per signed buyer broker agreement', document: 'Buyer Broker Agreement', section: 'Compensation · Office default reference', confidence: 78, status: 'needs review', evidenceId: 'e-bba' },
-  { id: 'field-addendum', label: 'Personal property addendum', value: 'Washer, dryer, refrigerator requested', document: 'Addendum', section: 'Included personal property', confidence: 88, status: 'needs review', evidenceId: 'e-property' },
-  { id: 'field-dd', label: 'Due diligence deadline', value: '10 calendar days after acceptance', document: 'Buyer Due Diligence Checklist', section: 'Checklist · Investigation Period', confidence: 72, status: 'default applied', evidenceId: 'e-default' },
-  { id: 'field-title', label: 'Title company', value: 'Red Rock Title', document: 'REPC', section: 'Section 6 · Title Insurance', confidence: 82, status: 'default applied', evidenceId: 'e-default' },
-  { id: 'field-price', label: 'Purchase price', value: '$875,000', document: 'REPC', section: 'Section 2 · Purchase Price', confidence: 98, status: 'ready', evidenceId: 'e-price' },
-  { id: 'field-em', label: 'Earnest money', value: '$7,500 within 4 calendar days', document: 'REPC', section: 'Section 4 · Earnest Money', confidence: 96, status: 'ready', evidenceId: 'e-earnest' },
-  { id: 'field-finance', label: 'Financing type', value: 'Conventional loan', document: 'REPC', section: 'Section 3 · Financing', confidence: 94, status: 'ready', evidenceId: 'e-financing' },
-  { id: 'field-wire', label: 'Wire fraud acknowledgment', value: 'Include brokerage-required disclosure', document: 'Wire Fraud Disclosure', section: 'Full document', confidence: 100, status: 'default applied', evidenceId: 'e-default' },
-  { id: 'field-unrep', label: 'Unrepresented buyer disclosure', value: 'Not applicable · buyer is represented', document: 'Unrepresented Buyer Disclosure', section: 'Applicability', confidence: 91, status: 'ready', evidenceId: 'e-representation' }
-];
-
-const transcript: TranscriptSnippet[] = [
-  { id: 'e-price', time: '00:03:14', speaker: 'Agent', text: 'The Welkers want to offer eight hundred seventy-five thousand on Alderann.' },
-  { id: 'e-earnest', time: '00:04:02', speaker: 'Buyer', text: 'Let us do seventy-five hundred earnest money. We can get that wired quickly.' },
-  { id: 'e-financing', time: '00:04:48', speaker: 'Buyer', text: 'We are staying conventional. Our lender already has the updated approval letter.' },
-  { id: 'e-property', time: '00:07:21', speaker: 'Agent', text: 'I will ask for the refrigerator, washer, and dryer in the addendum.' },
-  { id: 'e-bba', time: '00:09:10', speaker: 'Agent', text: 'Your buyer broker paperwork controls our compensation; I will keep that aligned.' },
-  { id: 'e-representation', time: '00:11:42', speaker: 'Agent', text: 'You are represented by Red Rock Group, so the unrepresented buyer disclosure should not apply.' },
-  { id: 'e-default', time: 'Office rule', speaker: 'Accord', text: 'Office playbook suggests Red Rock Title, standard due diligence timing, and required wire fraud disclosure. Agent review still required.' },
-  { id: 'e-missing', time: 'Not found', speaker: 'Accord', text: 'No settlement deadline was found in the transcript. Accord will not fabricate this field.' }
-];
-
-const statusClass: Record<FieldStatus, string> = {
+const statusClass: Record<FieldReviewStatus, string> = {
   ready: 'good',
-  'needs review': 'warn',
   missing: 'danger',
-  'default applied': 'neutral'
+  low_confidence: 'warn',
+  conflicting: 'warn',
+  default_requires_confirmation: 'warn',
+  materially_changed: 'warn',
+  unmapped_source: 'warn'
 };
 
-const signatureSteps = ['Ready for signature', 'Sent', 'Waiting on signatures', 'Completed', 'Imported to Coordinate'];
+const statusLabel: Record<FieldReviewStatus, string> = {
+  ready: 'Ready',
+  missing: 'Missing',
+  low_confidence: 'Low confidence',
+  conflicting: 'Conflicting',
+  default_requires_confirmation: 'Confirm default',
+  materially_changed: 'Changed',
+  unmapped_source: 'Unmapped source'
+};
 
-function needsReview(field: ReviewField) {
-  return field.status === 'missing' || field.status === 'needs review' || (field.status === 'default applied' && field.confidence !== null && field.confidence < 85);
+function packageName(pkg: ReviewPackage) {
+  return `${pkg.clientFullLegalNames} · ${pkg.propertyAddress} · ${pkg.packageType}`;
+}
+
+function needsReview(field: GeneratedFormField) {
+  return field.reviewStatus !== 'ready';
+}
+
+function needsReviewProvision(provision: AddendumProvision) {
+  return provision.reviewStatus !== 'ready';
+}
+
+function fieldTone(status: FieldReviewStatus) {
+  if (status === 'missing') return 'missing';
+  if (status === 'ready') return 'ready';
+  return 'warning';
+}
+
+function sourceLabel(field: GeneratedFormField) {
+  if (field.sourceReferences.length === 0) return 'No source';
+  return field.sourceReferences.map((source) => source.label).join('; ');
+}
+
+function isDefined<T>(value: T | undefined): value is T {
+  return value !== undefined;
 }
 
 export function PrepareWorkspace() {
-  const [highlighted, setHighlighted] = useState<string | null>(null);
-  const [showDetails, setShowDetails] = useState(false);
-  const [signatureOpen, setSignatureOpen] = useState(false);
-  const [signatureStep, setSignatureStep] = useState(0);
+  const [activePackageId, setActivePackageId] = useState(mockReviewPackages[0].id);
+  const [expandedDocumentId, setExpandedDocumentId] = useState(mockReviewPackages[0].documents[0].id);
   const [transcriptOpen, setTranscriptOpen] = useState(true);
-  const [preferenceOpen, setPreferenceOpen] = useState(false);
+  const [highlightedSegments, setHighlightedSegments] = useState<string[]>([]);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [preferenceFieldId, setPreferenceFieldId] = useState<string | null>(null);
   const [preferenceSaved, setPreferenceSaved] = useState(false);
-  const attentionFields = useMemo(() => reviewFields.filter(needsReview), []);
-  const readyFields = useMemo(() => reviewFields.filter((field) => !needsReview(field)), []);
-  const blockersRemain = attentionFields.some((field) => field.status === 'missing' || field.status === 'needs review');
+  const [fieldValues, setFieldValues] = useState<Record<string, string>>(() =>
+    Object.fromEntries(mockReviewPackages.flatMap((pkg) => pkg.fields.map((field) => [field.id, field.exactGeneratedValue])))
+  );
 
-  function jumpToSource(evidenceId: string) {
-    setTranscriptOpen(true);
-    setHighlighted(evidenceId);
-    window.setTimeout(() => document.getElementById(evidenceId)?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 40);
+  const activePackage = mockReviewPackages.find((pkg) => pkg.id === activePackageId) ?? mockReviewPackages[0];
+  const activeFields = activePackage.fields;
+  const flaggedFields = activeFields.filter(needsReview);
+  const flaggedProvisions = activePackage.addendumProvisions.filter(needsReviewProvision);
+  const requiredUnresolved = flaggedFields.filter((field) => field.required && field.reviewStatus === 'missing').length + flaggedProvisions.filter((provision) => provision.reviewStatus === 'missing').length;
+  const recommendedUnresolved = flaggedFields.length + flaggedProvisions.length - requiredUnresolved;
+  const activePreferenceField = activeFields.find((field) => field.id === preferenceFieldId);
+
+  const fieldsById = new Map(activeFields.map((field) => [field.id, field]));
+  const provisionsById = new Map(activePackage.addendumProvisions.map((provision) => [provision.id, provision]));
+
+  function updateField(fieldId: string, value: string) {
+    setFieldValues((current) => ({ ...current, [fieldId]: value }));
   }
 
-  function renderField(field: ReviewField) {
-    const flagged = needsReview(field);
+  function jumpToSource(field: GeneratedFormField | AddendumProvision) {
+    const source = field.sourceReferences[0];
+    if (!source) return;
+
+    if (source.type === 'transcript') {
+      setTranscriptOpen(true);
+      setHighlightedSegments(source.segmentIds);
+      window.setTimeout(() => document.getElementById(source.segmentIds[0])?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 60);
+      return;
+    }
+
+    setTranscriptOpen(false);
+    setHighlightedSegments([]);
+    window.setTimeout(() => document.getElementById(`source-${source.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 60);
+  }
+
+  function renderField(field: GeneratedFormField, compact = false) {
+    const tone = fieldTone(field.reviewStatus);
     return (
-      <article className={`review-field-row ${flagged ? 'needs-review-row' : ''}`} key={field.id}>
-        <div>
-          <strong>{flagged && <span className="field-alert" aria-hidden="true">!</span>}{field.label}</strong>
-          <span>{field.document} · {field.section}</span>
+      <article className={`paperwork-review-row ${tone}`} key={`${compact ? 'needs' : 'full'}-${field.id}`}>
+        <div className="paperwork-field-main">
+          <strong>{field.definition.officialLabel}</strong>
+          <span>{field.definition.sectionNumber} · {field.mappedFormFieldId}</span>
+          {field.reviewReason && <small>{field.reviewReason}</small>}
         </div>
-        <label className="review-value-cell">
-          <span className="sr-only">{field.label}</span>
-          <input defaultValue={field.value} aria-label={`${field.label} generated value`} title="Click to edit mock value" />
+        <label className="paperwork-value-cell">
+          <span className="sr-only">{field.definition.officialLabel}</span>
+          <input value={fieldValues[field.id] ?? ''} onChange={(event) => updateField(field.id, event.target.value)} aria-label={`${field.definition.officialLabel} exact paperwork value`} />
+          {field.selection?.selectedOption && <small>Selected option: {field.selection.selectedOption}</small>}
+          {typeof field.selection?.checkboxState === 'boolean' && <small>Checkbox: {field.selection.checkboxState ? 'Checked' : 'Unchecked'}</small>}
         </label>
-        <span className={`status ${statusClass[field.status]}`}>{field.status}</span>
+        <span className={`status ${statusClass[field.reviewStatus]}`}>{statusLabel[field.reviewStatus]}</span>
         <span className="confidence-mini">{field.confidence === null ? 'No confidence' : `${field.confidence}%`}</span>
-        <button className="text-button" type="button" onClick={() => jumpToSource(field.evidenceId)}>Source</button>
-        {showDetails && <small className="field-detail">Editing a material value would require reapproval.</small>}
+        <button className="text-button" type="button" onClick={() => jumpToSource(field)}>Source</button>
+        {field.definition.preferenceEligible && (
+          <button className="text-button subtle-action" type="button" onClick={() => { setPreferenceFieldId(field.id); setPreferenceSaved(false); }}>
+            Use this next time
+          </button>
+        )}
+        {!compact && (
+          <div className="paperwork-meta">
+            <span>{field.documentVersion}</span>
+            <span>{field.jurisdiction}</span>
+            <span>{field.definition.inputType.replaceAll('_', ' ')}</span>
+            <span>{field.approvalState.replaceAll('_', ' ')}</span>
+            <span>Source: {sourceLabel(field)}</span>
+          </div>
+        )}
       </article>
     );
   }
 
-  return (
-    <div className="review-send-page">
-      <section className="card prepare-summary review-hero">
-        <div className="prepare-score"><strong>84%</strong><span>ready</span></div>
-        <div>
-          <span className="section-kicker">Review & Send</span>
-          <h2>Welker buyer offer package</h2>
-          <p>Review the fields, check sources, then send.</p>
+  function renderProvision(provision: AddendumProvision) {
+    const tone = fieldTone(provision.reviewStatus);
+    return (
+      <article className={`paperwork-review-row addendum-row ${tone}`} key={provision.id}>
+        <div className="paperwork-field-main">
+          <strong>{provision.documentTitle} · Item {provision.itemNumber}</strong>
+          <span>Addendum No. {provision.addendumNumber}</span>
         </div>
-        <span className="status warn">{attentionFields.length} need review</span>
-      </section>
-
-      <section className="card field-review-card">
-        <div className="section-heading">
-          <div><span className="section-kicker">Paperwork fields</span><h2>Needs Review</h2></div>
-          <button className="btn btn-secondary" type="button" onClick={() => setShowDetails((value) => !value)}>{showDetails ? 'Hide Details' : 'Show Details'}</button>
+        <label className="paperwork-value-cell">
+          <span className="sr-only">{provision.documentTitle} item {provision.itemNumber}</span>
+          <textarea value={fieldValues[provision.id] ?? provision.exactParagraphText} onChange={(event) => updateField(provision.id, event.target.value)} aria-label={`${provision.documentTitle} item ${provision.itemNumber} exact paragraph`} />
+        </label>
+        <span className={`status ${statusClass[provision.reviewStatus]}`}>{statusLabel[provision.reviewStatus]}</span>
+        <span className="confidence-mini">Provision</span>
+        <button className="text-button" type="button" onClick={() => jumpToSource(provision)}>Source</button>
+        <div className="paperwork-meta">
+          <span>Verbatim addendum provision</span>
+          <span>{provision.approvalState.replaceAll('_', ' ')}</span>
         </div>
-        <div className="review-field-list">{attentionFields.map(renderField)}</div>
-        <details className="ready-fields-details">
-          <summary>Ready fields ({readyFields.length})</summary>
-          <div className="review-field-list">{readyFields.map(renderField)}</div>
-        </details>
-      </section>
+      </article>
+    );
+  }
 
-      <button className="btn btn-secondary preference-button" type="button" onClick={() => { setPreferenceOpen(true); setPreferenceSaved(false); }}>
-        Save as Preference
-      </button>
-
-      {preferenceOpen && (
-        <div className="preference-drawer" role="dialog" aria-modal="true" aria-label="Save as Preference">
-          <div className="card">
-            <div className="section-heading"><div><span className="section-kicker">Save as Preference</span><h2>Teach Accord this preference</h2></div><button className="btn btn-quiet" type="button" onClick={() => setPreferenceOpen(false)}>Close</button></div>
-            <p>Save this as a personal, team, or brokerage default for future transactions.</p>
-            <div className="field-grid">
-              <label>Preference name<input defaultValue="Default title company" /></label>
-              <label>Detected value<input defaultValue="Red Rock Title" /></label>
-              <label>Scope<select defaultValue="personal"><option value="personal">Personal</option><option value="team">Team</option><option value="brokerage">Brokerage</option></select></label>
-              <label>Status<select defaultValue="suggested"><option value="suggested">Suggested</option><option value="approved">Approved</option></select></label>
+  function renderDocument(document: ReviewDocument, active = false) {
+    return (
+      <details className="paperwork-document" key={document.id} open={active || document.id === expandedDocumentId} onToggle={(event) => { if (event.currentTarget.open) setExpandedDocumentId(document.id); }}>
+        <summary>
+          <span><strong>{document.name}</strong><small>{document.documentVersion} · {document.jurisdiction}</small></span>
+          <span>{document.sections.reduce((count, section) => count + section.fieldIds.length + (section.addendumProvisionIds?.length ?? 0), 0)} items</span>
+        </summary>
+        {document.sections.map((section) => (
+          <section className="paperwork-section" key={section.id}>
+            <h3>Section {section.sectionNumber}: {section.title}</h3>
+            <div className="paperwork-review-list">
+              {section.fieldIds.map((fieldId) => fieldsById.get(fieldId)).filter(isDefined).map((field) => renderField(field))}
+              {(section.addendumProvisionIds ?? []).map((provisionId) => provisionsById.get(provisionId)).filter(isDefined).map((provision) => renderProvision(provision))}
             </div>
-            <div className="form-actions"><button className="btn btn-primary" type="button" onClick={() => setPreferenceSaved(true)}>Save Preference</button></div>
-            {preferenceSaved && <div className="notice compact success">Preference saved. Accord will suggest this next time.</div>}
-          </div>
-        </div>
-      )}
+          </section>
+        ))}
+      </details>
+    );
+  }
 
-      <section className="card signature-preview-card">
-        <button className="btn btn-secondary" type="button">Save Draft</button>
-        <button className="btn btn-primary btn-large" type="button" disabled={blockersRemain} title={blockersRemain ? 'Resolve needs-review items before sending.' : 'Send for signatures'} onClick={() => setSignatureOpen(true)}>Send for Signatures</button>
-        <Link className="btn btn-secondary" href="/coordinate">Move to Coordinate</Link>
+  return (
+    <div className="review-send-page exact-review-page">
+      <section className="package-list">
+        {mockReviewPackages.map((pkg) => {
+          const flaggedCount = pkg.fields.filter(needsReview).length + pkg.addendumProvisions.filter(needsReviewProvision).length;
+          const selected = pkg.id === activePackage.id;
+          return (
+            <button className={`package-row-card ${selected ? 'active' : ''}`} type="button" key={pkg.id} onClick={() => { setActivePackageId(pkg.id); setExpandedDocumentId(pkg.documents[0].id); setPreviewOpen(false); }}>
+              <span><strong>{packageName(pkg)}</strong><small>{pkg.lastUpdated}</small></span>
+              <span className={`status ${flaggedCount > 0 ? 'warn' : 'good'}`}>{pkg.readinessStatus}</span>
+              <small>{flaggedCount} need review</small>
+              <small>{pkg.documents.length} documents</small>
+            </button>
+          );
+        })}
       </section>
 
-      {signatureOpen && (
-        <section className="card signature-confirmation">
-          <div className="section-heading"><div><span className="section-kicker">Final confirmation</span><h2>Send signature packet</h2></div><span className="status warn">{signatureSteps[signatureStep]}</span></div>
-          <div className="prepare-grid">
-            <div className="card inset"><span className="section-kicker">Signers</span>{mockSignaturePacket.recipients.map((recipient) => <p key={recipient.id}><strong>{recipient.displayName}</strong><br /><small>{recipient.role} · {recipient.emailPreview}</small></p>)}</div>
-            <div className="card inset"><span className="section-kicker">Documents included</span>{mockSignaturePacket.documents.map((document) => <p key={document.id}><strong>{document.name}</strong><br /><small>{document.formVersion} · {document.signerFieldCount} signer fields</small></p>)}</div>
+      <section className="card exact-review-summary">
+        <div>
+          <h2>{packageName(activePackage)}</h2>
+          <p className="dev-warning">{activePackage.representativeSchemaWarning}</p>
+        </div>
+        <div className="readiness-facts">
+          <span><strong>{activePackage.documents.length}</strong><small>documents</small></span>
+          <span><strong>{requiredUnresolved}</strong><small>required missing</small></span>
+          <span><strong>{recommendedUnresolved}</strong><small>review items</small></span>
+          <span><strong>{activePackage.readiness.readinessForSignature.replaceAll('_', ' ')}</strong><small>signature readiness</small></span>
+        </div>
+        <button className="btn btn-secondary" type="button" onClick={() => setPreviewOpen((value) => !value)}>Preview Paperwork</button>
+      </section>
+
+      {previewOpen && (
+        <section className="card paperwork-preview-card">
+          <div className="section-heading"><div><span className="section-kicker">Mock preview</span><h2>Preview Paperwork</h2></div><button className="btn btn-quiet" type="button" onClick={() => setPreviewOpen(false)}>Return to review</button></div>
+          <div className="paperwork-preview-docs">
+            {activePackage.documents.map((document) => (
+              <article className="paperwork-page" key={document.id}>
+                <h3>{document.name}</h3>
+                <small>{document.documentVersion} · Not an official completed PDF</small>
+                {document.sections.map((section) => (
+                  <div className="preview-section" key={section.id}>
+                    <strong>Section {section.sectionNumber}: {section.title}</strong>
+                    {section.fieldIds.map((fieldId) => fieldsById.get(fieldId)).filter(isDefined).map((field) => (
+                      <p key={field.id}><span>{field.definition.officialLabel}</span><b>{fieldValues[field.id] || '__________'}</b>{field.selection?.checkboxState && <em>☑</em>}</p>
+                    ))}
+                    {(section.addendumProvisionIds ?? []).map((provisionId) => provisionsById.get(provisionId)).filter(isDefined).map((provision) => (
+                      <p key={provision.id}><span>{provision.itemNumber}.</span><b>{fieldValues[provision.id] ?? provision.exactParagraphText}</b></p>
+                    ))}
+                  </div>
+                ))}
+              </article>
+            ))}
           </div>
-          <div className="signature-flow">{signatureSteps.map((step, index) => <span className={index <= signatureStep ? 'active' : ''} key={step}>{step}</span>)}</div>
-          <div className="form-actions"><button className="btn btn-secondary" type="button" onClick={() => setSignatureOpen(false)}>Cancel</button><button className="btn btn-primary" type="button" onClick={() => setSignatureStep((value) => Math.min(value + 1, signatureSteps.length - 1))}>{signatureStep === signatureSteps.length - 1 ? 'Imported to Coordinate' : 'Advance mock status'}</button></div>
         </section>
       )}
 
-      <section className={`card transcript-card ${transcriptOpen ? '' : 'collapsed'}`}>
+      <section className="card field-review-card">
+        <div className="section-heading"><div><span className="section-kicker">Required attention</span><h2>Needs Review</h2></div><span className="status warn">{flaggedFields.length + flaggedProvisions.length} items</span></div>
+        <div className="paperwork-review-list">
+          {flaggedFields.map((field) => renderField(field, true))}
+          {flaggedProvisions.map(renderProvision)}
+        </div>
+      </section>
+
+      <section className="card field-review-card">
+        <div className="section-heading"><div><span className="section-kicker">Exact paperwork order</span><h2>Full Paperwork Review</h2></div><span className="status neutral">{activeFields.length + activePackage.addendumProvisions.length} total items</span></div>
+        {activePackage.documents.map((document, index) => renderDocument(document, index === 0))}
+      </section>
+
+      <section className="card action-stack-card">
+        <button className="btn btn-secondary" type="button">Save Draft</button>
+        <button className="btn btn-primary btn-large" type="button" disabled={requiredUnresolved > 0}>
+          Send for Signatures
+        </button>
+        {requiredUnresolved > 0 && <small>{requiredUnresolved} unresolved required item{requiredUnresolved === 1 ? '' : 's'}</small>}
+      </section>
+
+      <section className="card transcript-card">
         <div className="section-heading">
-          <div><span className="section-kicker">Transcript</span><h2>Sources</h2></div>
+          <div><span className="section-kicker">Complete transcript</span><h2>Conversation Source</h2></div>
           <button className="btn btn-secondary" type="button" onClick={() => setTranscriptOpen((value) => !value)}>{transcriptOpen ? 'Collapse' : 'Open'}</button>
         </div>
         {transcriptOpen && (
-          <div className="transcript-snippets">
-            {transcript.map((snippet) => <blockquote id={snippet.id} className={highlighted === snippet.id ? 'highlighted' : ''} key={snippet.id}><span>{snippet.time} · {snippet.speaker}</span>{snippet.text}</blockquote>)}
+          <div className="transcript-snippets complete-transcript">
+            {activePackage.transcriptSegments.map((segment) => (
+              <blockquote id={segment.id} className={highlightedSegments.includes(segment.id) ? 'highlighted' : ''} key={segment.id}>
+                <span>{segment.timestamp} · {segment.speaker} · {segment.id}</span>{segment.text}
+              </blockquote>
+            ))}
           </div>
         )}
+        <div className="source-detail-list">
+          {activePackage.sourceDetails.filter((source) => source.type !== 'transcript').map((source) => (
+            <article id={`source-${source.id}`} key={source.id}>
+              <strong>{source.label}</strong>
+              <span>{source.type.replaceAll('_', ' ')}</span>
+              <p>{source.exactQuote}</p>
+            </article>
+          ))}
+        </div>
       </section>
+
+      {activePreferenceField && (
+        <div className="preference-drawer" role="dialog" aria-modal="true" aria-label="Save as preference">
+          <div className="card">
+            <div className="section-heading"><div><span className="section-kicker">Save as preference</span><h2>{activePreferenceField.definition.officialLabel}</h2></div><button className="btn btn-quiet" type="button" onClick={() => setPreferenceFieldId(null)}>Close</button></div>
+            <p>Accord can suggest this value in future applicable transactions. It will not change the AI model.</p>
+            <div className="field-grid">
+              <label>Value<input value={fieldValues[activePreferenceField.id] ?? ''} readOnly /></label>
+              <label>Applies to<select defaultValue="personal"><option>Personal</option><option>Team</option><option>Brokerage</option></select></label>
+              <label>Use when<select defaultValue="type"><option value="all">All future applicable transactions</option><option value="type">Only transactions of this type</option></select></label>
+            </div>
+            <div className="form-actions"><button className="btn btn-secondary" type="button" onClick={() => setPreferenceFieldId(null)}>Cancel</button><button className="btn btn-primary" type="button" onClick={() => setPreferenceSaved(true)}>Approve and save</button></div>
+            {preferenceSaved && <div className="notice compact success">Preference saved for future suggestions.</div>}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

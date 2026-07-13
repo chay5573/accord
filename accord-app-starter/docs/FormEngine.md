@@ -32,6 +32,12 @@ Recommendations combine transaction facts, representation, Utah rules, form meta
 
 Mappings target canonical paths such as `transaction.purchase_price.amount`, not UI component names or raw transcript phrases. A mapping may define formatting, checkbox/radio values, multi-party repetition, date rules, conditional visibility, and overflow pages.
 
+Review & Send must display exact paperwork intent from the form engine model. It should not summarize generated clauses, included items, compensation references, deadlines, or addenda. Every text field, date, money value, name, address, legal description, initials field, radio selection, checkbox, yes/no selection, included/excluded item, financing choice, deadline, brokerage field, signature assignment, addendum reference, addendum paragraph, disclosure acknowledgement, and form-specific option needs a mappable field definition when it appears in production forms.
+
+Addendum provisions are separate ordered records. Show addendum number, document title, exact paragraph wording, numbered item order, source, approval state, and review status. Do not merge multiple provisions into a generalized summary.
+
+Official form-library ingestion, licensing, immutable template versions, and validation against the licensed forms remain production prerequisites. A representative mock schema must be labeled as incomplete and must not be described as complete official Utah form coverage.
+
 ## Generation gate
 
 Generation requires:

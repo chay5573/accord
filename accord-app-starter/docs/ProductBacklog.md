@@ -96,8 +96,10 @@ Backlog grooming must estimate clicks removed, typing removed, inference gained,
 
 - [ ] Confirm Utah form licensing and exact MVP form set.
 - [ ] Define immutable template versions and canonical field mappings.
+- [ ] Import and validate official licensed form schemas before representing Review & Send as complete official form coverage.
 - [x] Build mock recommended-package checklist with reasons.
 - [x] Represent agent approval and blocker gates before draft package generation in the mock Deal Desk Review.
+- [x] **Critical friction remover** — Refactor Review & Send around representative exact-paperwork records, Full Paperwork Review, itemized addenda, full transcript sources, and mock preview.
 - [ ] Add rendered fixture and visual regression tests.
 - [ ] Keep Contract Library administration in Settings.
 

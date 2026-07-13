@@ -149,7 +149,9 @@ Record is the simplest page in Accord. It uses one stable page shell and four in
 
 User-initiated capture can move directly toward paperwork preparation for human review. Passive signals from inbox, calendar, e-signature, CRM, or other external systems may recommend legal-document creation, but they may not create or draft legal documents without explicit agent action.
 
-Review & Send should feel like paperwork review, not a dashboard. Field rows keep document name, section reference, generated value, confidence/status, and a **Source** link. Source links scroll to and highlight the transcript snippet. Per-field editing should be inline or subtle, not a loud button on every row.
+Review & Send should feel like exact paperwork review, not a dashboard or AI summary. It must show complete package names, multiple review packages when present, Needs Review first, Full Paperwork Review in document/section/field order, exact generated values, exact checkbox/radio selections, itemized addendum provisions, and a Preview Paperwork action. Needs Review and Full Paperwork Review reference the same underlying records so edits update both surfaces immediately. Source links open the complete transcript or applicable source detail and highlight the exact supporting content.
+
+No legal document may be sent while required fields are unresolved. Package readiness should show document count, unresolved required items, unresolved recommended-review items, and signature readiness; percentages are secondary.
 
 Coordinate is the transaction coordinator command center. It uses a sorted to-do list, transaction-flow statuses, outbound packet/signature follow-up, a monthly calendar mock, prominent AI Timeline, and a lightweight Customize layout placeholder.
 

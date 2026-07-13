@@ -87,6 +87,12 @@ Application services enforce current package approval, tenant authorization, pre
 
 Activity synchronization extends the same interface with `listSignaturePackets()`, `syncSignatureEvents()`, `classifySignatureSignal()`, and `linkSignaturePacketToOpportunity()`. Provider events become attributable opportunity signals and AI Timeline events; they do not become contract facts. Completed packets create final-review tasks before external sharing.
 
+## Review package boundary
+
+Review & Send consumes a normalized review model. `ReviewPackage`, `ReviewDocument`, `FormSchema`, `FormSection`, `FormFieldDefinition`, `GeneratedFormField`, `FieldSelection`, `AddendumProvision`, `FieldSourceReference`, `FieldReviewStatus`, and `PackageReadiness` should feed Needs Review, Full Paperwork Review, Paperwork Preview, generated-document requests, and transcript/source links from the same underlying records. UI components must not keep independent duplicate values for the same form field or provision.
+
+Every generated document field must map to an official form field, option, checkbox, signature assignment, or provision before production. Representative mock schemas are acceptable during prototyping only when the UI visibly states that official licensed form ingestion, versioning, validation, and mapping remain incomplete.
+
 ## Opportunity and inbox boundaries
 
 `Opportunity` is the pre-transaction work container. It can begin from a conversation, recap, transcript, document, inbox signal, e-signature event, calendar event, CRM event, or reconstructed memory. It preserves capture inputs, signals, missing facts, reconstruction, draft readiness, and timeline events without requiring a transaction ID. Deal Desk becomes the canonical tracking layer after drafting or explicit save.
