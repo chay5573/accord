@@ -100,6 +100,7 @@ Backlog grooming must estimate clicks removed, typing removed, inference gained,
 - [x] Build mock recommended-package checklist with reasons.
 - [x] Represent agent approval and blocker gates before draft package generation in the mock Deal Desk Review.
 - [x] **Critical friction remover** — Refactor Review & Send around representative exact-paperwork records, Full Paperwork Review, itemized addenda, full transcript sources, and mock preview.
+- [x] **Critical friction remover** — Add mutually exclusive package states, field-level Save & Approve, risk-ordered attention, collapsible evidence, source return navigation, preview-to-review links, and stable document anchors.
 - [ ] Add rendered fixture and visual regression tests.
 - [ ] Keep Contract Library administration in Settings.
 

@@ -89,7 +89,11 @@ Activity synchronization extends the same interface with `listSignaturePackets()
 
 ## Review package boundary
 
-Review & Send consumes a normalized review model. `ReviewPackage`, `ReviewDocument`, `FormSchema`, `FormSection`, `FormFieldDefinition`, `GeneratedFormField`, `FieldSelection`, `AddendumProvision`, `FieldSourceReference`, `FieldReviewStatus`, and `PackageReadiness` should feed Needs Review, Full Paperwork Review, Paperwork Preview, generated-document requests, and transcript/source links from the same underlying records. UI components must not keep independent duplicate values for the same form field or provision.
+Review & Send consumes a normalized review model. `ReviewPackage`, `ReviewDocument`, `FormSchema`, `FormSection`, `FormFieldDefinition`, `GeneratedFormField`, `FieldSelection`, `AddendumProvision`, `FieldSourceReference`, `FieldReviewStatus`, and `PackageReadiness` should feed Needs Attention, Full Paperwork Review, Paperwork Preview, generated-document requests, and transcript/source links from the same underlying records. UI components must not keep independent duplicate values for the same form field or provision.
+
+Review interaction adds provider-neutral `PackageStatus`, `FieldApproval`, `FieldRevision`, and `ReviewNavigationState` concepts. Package statuses are mutually exclusive: `needs_attention`, `ready_to_approve`, `ready_to_send`, `draft_saved`, and `sent_for_signatures`. Field review states are `missing`, `conflicting`, `needs_approval`, `approved`, `edited_and_approved`, `rejected`, and `optional_review`. A field edit invalidates its prior approved state; Save & Approve records both the revision and the new approval snapshot.
+
+Needs Attention, Full Paperwork, Preview Paperwork, readiness calculations, and future generation requests resolve the same item identity. Navigation state may retain the package, originating review item, source segment, and prior scroll position, but it does not duplicate contract values. Document anchors must be stable unique IDs derived from package, document, and section identities.
 
 Every generated document field must map to an official form field, option, checkbox, signature assignment, or provision before production. Representative mock schemas are acceptable during prototyping only when the UI visibly states that official licensed form ingestion, versioning, validation, and mapping remain incomplete.
 

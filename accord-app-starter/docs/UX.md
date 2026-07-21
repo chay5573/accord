@@ -149,7 +149,18 @@ Record is the simplest page in Accord. It uses one stable page shell and four in
 
 User-initiated capture can move directly toward paperwork preparation for human review. Passive signals from inbox, calendar, e-signature, CRM, or other external systems may recommend legal-document creation, but they may not create or draft legal documents without explicit agent action.
 
-Review & Send should feel like exact paperwork review, not a dashboard or AI summary. It must show complete package names, multiple review packages when present, Needs Review first, Full Paperwork Review in document/section/field order, exact generated values, exact checkbox/radio selections, itemized addendum provisions, and a Preview Paperwork action. Needs Review and Full Paperwork Review reference the same underlying records so edits update both surfaces immediately. Source links open the complete transcript or applicable source detail and highlight the exact supporting content.
+Review & Send should feel like exact paperwork review, not a dashboard or AI summary. It must show complete package names, multiple review packages when present, Needs Attention first, Full Paperwork Review in document/section/field order, exact generated values, exact checkbox/radio selections, itemized addendum provisions, and a Preview Paperwork action. Needs Attention and Full Paperwork Review reference the same underlying records so edits update both surfaces immediately. Source links open the complete transcript or applicable source detail and highlight the exact supporting content.
+
+### Review & Send completion and navigation
+
+- Package status is mutually exclusive: **Needs Attention**, **Ready to Approve**, **Ready to Send**, **Draft Saved**, or **Sent for Signatures**. Do not use overlapping labels such as Needs Review, Ready for Review, or Draft Ready.
+- Selecting a package updates the active records and moves keyboard and visual focus directly to **Review**. The selected package remains visibly distinct.
+- Every unresolved review item has an explicit completion action. Missing or edited values use **Save & Approve**; unchanged generated values use **Approve**. Approval immediately updates Review, Full Paperwork, Preview Paperwork, package counts, and send readiness.
+- Needs Attention sorts missing required fields first, then conflicts, material low-confidence terms, required defaults, non-material low-confidence items, and optional recommendations. Transaction risk, form order, and ascending confidence break ties.
+- Needs Attention, Full Paperwork Review, Transcript, Included Documents, and Other Sources use accessible progressive disclosure. Needs Attention opens by default when work remains; the complete transcript remains collapsed until needed.
+- Transcript Source navigation opens the complete chronological transcript, highlights the exact supporting words when present, and provides **Back to Review Item** without losing expanded state. Non-transcript sources stay attached to their supported fields and identify the source type, supplied value, date, and approval state. Unexplained source cards are prohibited.
+- Preview Paperwork highlights only values that were edited, await approval, or remain unresolved. Each highlight returns to the matching review item.
+- Document links use stable package/document/section anchors. Opening a document focuses its beginning without changing the selected package or unexpectedly moving to the bottom of the page.
 
 No legal document may be sent while required fields are unresolved. Package readiness should show document count, unresolved required items, unresolved recommended-review items, and signature readiness; percentages are secondary.
 
