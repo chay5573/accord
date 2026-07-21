@@ -125,7 +125,7 @@ User-initiated capture may prepare paperwork for human review. Passive or extern
 
 Review & Send represents the exact paperwork Accord intends to generate, not a summary of AI understanding. Every displayed value should be the value, checkbox, selection, addendum provision, or signature assignment that will appear on the document. Required unresolved fields block signature sending even when other readiness signals look strong.
 
-Review should preserve place as rigor increases. Package selection moves directly to the next unresolved decision; approval updates every paperwork surface immediately; Source navigation returns to the exact field; and progressive disclosure keeps complete paperwork and evidence available without making the agent scan the entire page.
+Review should preserve place as rigor increases. Package selection moves directly to the next unresolved decision; typing never makes a row jump before approval; approval updates every paperwork surface immediately; Source navigation returns to the exact originating field and document context; and progressive disclosure keeps complete paperwork and evidence available without making the agent scan the entire page. Agents may review field-first or document-first, but both views must share one source of truth.
 
 The labels are still a working product language and may evolve, but any renaming must preserve the low-friction path from conversation to accurate executed documents.
 

@@ -46,6 +46,7 @@ export type FieldReviewStatus =
 export type ApprovalState = 'not_reviewed' | 'approved' | 'edited_and_approved' | 'rejected';
 export type TransactionRisk = 'critical' | 'high' | 'medium' | 'low';
 export type SourceType = 'transcript' | 'office_default' | 'prior_preference' | 'mls' | 'county_record' | 'email' | 'document_upload';
+export type ReviewOriginSurface = 'needs_attention' | 'all_fields' | 'paperwork';
 
 export interface FieldSourceReference {
   id: string;
@@ -79,6 +80,9 @@ export interface ReviewNavigationState {
   priorScrollPosition: number;
   packageId: string;
   sourceSegmentId: string;
+  originSurface: ReviewOriginSurface;
+  originDocumentId?: string;
+  originPageNumber?: number;
 }
 
 export interface FieldSelection {
@@ -136,6 +140,7 @@ export interface FormSection {
   id: string;
   sectionNumber: string;
   title: string;
+  pageNumber: number;
   fieldIds: string[];
   addendumProvisionIds?: string[];
 }
@@ -147,6 +152,7 @@ export interface ReviewDocument {
   jurisdiction: 'UT';
   formSchemaId: string;
   order: number;
+  pageCount: number;
   sections: FormSection[];
 }
 
@@ -178,17 +184,27 @@ export interface ReviewPackage {
   representativeSchemaWarning: string;
 }
 
-const welkerSources: FieldSourceReference[] = [
-  { id: 'src-price', type: 'transcript', label: 'Transcript 00:03:14', segmentIds: ['t-003'], exactQuote: 'offer eight hundred seventy-five thousand' },
-  { id: 'src-earnest', type: 'transcript', label: 'Transcript 00:04:02', segmentIds: ['t-004'], exactQuote: 'seventy-five hundred earnest money' },
-  { id: 'src-financing', type: 'transcript', label: 'Transcript 00:04:48', segmentIds: ['t-005'], exactQuote: 'We are staying conventional.' },
-  { id: 'src-included-items', type: 'transcript', label: 'Transcript 00:07:21', segmentIds: ['t-007'], exactQuote: 'refrigerator, washer, and dryer' },
-  { id: 'src-bba', type: 'document_upload', label: 'Buyer broker agreement', segmentIds: [], exactQuote: 'Buyer broker compensation governed by signed buyer broker agreement.', retrievalTime: 'Jul 18, 2026 at 9:12 AM' },
-  { id: 'src-title-default', type: 'office_default', label: 'Washington County office default', segmentIds: [], exactQuote: 'Red Rock Title is the office default title company for Washington County buyer offers.', retrievalTime: 'Approved Jun 4, 2026' },
-  { id: 'src-dd-default', type: 'prior_preference', label: 'Team due diligence preference', segmentIds: [], exactQuote: '10 calendar days after acceptance is the team default due diligence period.', retrievalTime: 'Approved May 18, 2026' },
-  { id: 'src-representation', type: 'transcript', label: 'Transcript 00:11:42', segmentIds: ['t-010'], exactQuote: 'You are represented by Red Rock Group' },
-  { id: 'src-missing-settlement', type: 'transcript', label: 'Transcript review', segmentIds: ['t-001', 't-011'], exactQuote: 'No settlement deadline was stated in the conversation.' }
-];
+const welkerSources = {
+  buyers: transcriptSource('src-buyers', '00:01:10', ['t-003'], 'Brenton and Emily Welker'),
+  property: transcriptSource('src-property', '00:01:42', ['t-004'], '2948 East Alderann Street in St. George'),
+  representation: transcriptSource('src-representation', '00:02:33', ['t-006'], 'Red Rock Group represents both of you as buyers'),
+  price: transcriptSource('src-price', '00:03:12', ['t-008'], 'purchase price of eight hundred seventy-five thousand dollars'),
+  earnest: transcriptSource('src-earnest', '00:04:06', ['t-010'], 'seven thousand five hundred dollars in earnest money'),
+  financing: transcriptSource('src-financing', '00:05:02', ['t-012'], 'conventional financing with twenty percent down'),
+  dueDiligence: transcriptSource('src-due-diligence', '00:06:24', ['t-015'], 'ten calendar days after acceptance for due diligence'),
+  settlement: transcriptSource('src-settlement', '00:08:11', ['t-019'], 'August fifteenth for settlement'),
+  possession: transcriptSource('src-possession', '00:09:04', ['t-021'], 'possession at recording'),
+  personalProperty: transcriptSource('src-personal-property', '00:10:22', ['t-023'], 'refrigerator, washer, and dryer'),
+  closingCosts: transcriptSource('src-closing-costs', '00:11:48', ['t-026'], 'seller to pay up to five thousand dollars toward closing costs'),
+  title: transcriptSource('src-title', '00:13:14', ['t-029'], 'Red Rock Title'),
+  addendumOne: transcriptSource('src-addendum-one', '00:14:37', ['t-032'], 'Seller agrees to leave the refrigerator, washer, and dryer at no additional cost to Buyer.'),
+  addendumTwo: transcriptSource('src-addendum-two', '00:15:19', ['t-034'], 'Settlement Deadline shall be August 15, 2026.'),
+  legalDescription: transcriptSource('src-legal-description', '00:16:03', ['t-035'], 'leave the legal description blank until we have an authoritative source'),
+  holderDefault: { id: 'src-holder-default', type: 'office_default' as const, label: 'Earnest money office default', segmentIds: [], exactQuote: 'Brokerage trust account is the office default earnest money holder.', retrievalTime: 'Approved Jun 4, 2026' },
+  wirePreference: { id: 'src-wire-preference', type: 'prior_preference' as const, label: 'Wire fraud disclosure preference', segmentIds: [], exactQuote: 'Include the brokerage wire fraud disclosure for buyer offers.', retrievalTime: 'Approved May 18, 2026' }
+};
+
+const welkerSourceList: FieldSourceReference[] = Object.values(welkerSources);
 
 export const mockReviewPackages: ReviewPackage[] = [
   {
@@ -200,146 +216,116 @@ export const mockReviewPackages: ReviewPackage[] = [
     lastUpdated: 'Updated 8 minutes ago',
     readiness: { readinessForSignature: 'not_ready', percent: 78 },
     representativeSchemaWarning: 'Representative mock schema only. Official Utah form-library ingestion, licensing, versioning, and field validation are required before production use.',
-    sourceDetails: welkerSources,
+    sourceDetails: welkerSourceList,
     transcriptSegments: [
-      { id: 't-001', timestamp: '00:00:12', speaker: 'Agent', text: 'Let us recap the Welker offer for Alderann Street.' },
-      { id: 't-002', timestamp: '00:01:08', speaker: 'Buyer', text: 'We both like the home and want the offer to stay competitive without stretching beyond our limit.' },
-      { id: 't-003', timestamp: '00:03:14', speaker: 'Agent', text: 'The Welkers want to offer eight hundred seventy-five thousand on Alderann.' },
-      { id: 't-004', timestamp: '00:04:02', speaker: 'Buyer', text: 'Let us do seventy-five hundred earnest money. We can get that wired quickly.' },
-      { id: 't-005', timestamp: '00:04:48', speaker: 'Buyer', text: 'We are staying conventional. Our lender already has the updated approval letter.' },
-      { id: 't-006', timestamp: '00:06:11', speaker: 'Agent', text: 'I will keep the financing section conventional and confirm the earnest money holder before sending.' },
-      { id: 't-007', timestamp: '00:07:21', speaker: 'Agent', text: 'I will ask for the refrigerator, washer, and dryer in the addendum.' },
-      { id: 't-008', timestamp: '00:08:37', speaker: 'Buyer', text: 'That works for us. We still need to decide the exact settlement date.' },
-      { id: 't-009', timestamp: '00:10:03', speaker: 'Agent', text: 'I will leave the settlement deadline open for review instead of guessing.' },
-      { id: 't-010', timestamp: '00:11:42', speaker: 'Agent', text: 'You are represented by Red Rock Group, so the unrepresented buyer disclosure should not apply.' },
-      { id: 't-011', timestamp: '00:13:02', speaker: 'Buyer', text: 'Everything else can follow the usual office defaults if you think it is appropriate.' }
+      segment(1, '00:00:00', 'Agent', 'Thanks for staying on for a few minutes. I want to confirm the offer terms before I prepare the paperwork.'),
+      segment(2, '00:00:31', 'Buyer · Brenton', 'Sounds good. Emily is here with me, and we are ready to go through everything.'),
+      segment(3, '00:01:10', 'Agent', 'I have the buyers as Brenton and Emily Welker. Are those the full legal names you want on the offer?'),
+      segment(4, '00:01:42', 'Buyer · Emily', 'Yes. The property is 2948 East Alderann Street in St. George, Utah.'),
+      segment(5, '00:02:08', 'Agent', 'Great. I will use that street address and wait for title or the county record before filling any legal description.'),
+      segment(6, '00:02:33', 'Agent', 'Red Rock Group represents both of you as buyers in this transaction. Is that still correct?'),
+      segment(7, '00:02:47', 'Buyer · Brenton', 'Yes, that is correct.'),
+      segment(8, '00:03:12', 'Agent', 'You would like a purchase price of eight hundred seventy-five thousand dollars. Correct?'),
+      segment(9, '00:03:28', 'Buyer · Emily', 'Correct. We do not want to go above that amount.'),
+      segment(10, '00:04:06', 'Buyer · Brenton', 'Let us put down seven thousand five hundred dollars in earnest money.'),
+      segment(11, '00:04:27', 'Agent', 'I have seven thousand five hundred. I will confirm the holder before approving that section.'),
+      segment(12, '00:05:02', 'Buyer · Brenton', 'We are using conventional financing with twenty percent down.'),
+      segment(13, '00:05:29', 'Agent', 'And your lender has already issued the updated approval letter?'),
+      segment(14, '00:05:41', 'Buyer · Emily', 'Yes. The lender emailed it this morning.'),
+      segment(15, '00:06:24', 'Agent', 'Let us use ten calendar days after acceptance for due diligence.'),
+      segment(16, '00:06:42', 'Buyer · Brenton', 'Ten days works. We want enough time for the inspection and sewer scope.'),
+      segment(17, '00:07:10', 'Agent', 'The financing and appraisal deadline will remain aligned with the lender schedule, and I will flag any date that is not confirmed.'),
+      segment(18, '00:07:39', 'Buyer · Emily', 'Okay. What are we using for settlement?'),
+      segment(19, '00:08:11', 'Agent', 'You asked for August fifteenth for settlement, subject to the title and lender calendars.'),
+      segment(20, '00:08:29', 'Buyer · Emily', 'Yes, August fifteenth is the date we discussed.'),
+      segment(21, '00:09:04', 'Agent', 'For possession, you want possession at recording rather than a later time. Correct?'),
+      segment(22, '00:09:18', 'Buyer · Brenton', 'Correct, possession at recording.'),
+      segment(23, '00:10:22', 'Agent', 'For included personal property, you want the refrigerator, washer, and dryer.'),
+      segment(24, '00:10:39', 'Buyer · Emily', 'Yes, all three, with no separate value assigned to them.'),
+      segment(25, '00:11:16', 'Agent', 'Let us also confirm whether you want to request seller-paid costs.'),
+      segment(26, '00:11:48', 'Buyer · Brenton', 'Please ask the seller to pay up to five thousand dollars toward closing costs.'),
+      segment(27, '00:12:08', 'Agent', 'I have up to five thousand dollars, applied only to allowable buyer closing costs.'),
+      segment(28, '00:12:44', 'Buyer · Emily', 'Which title company will the offer name?'),
+      segment(29, '00:13:14', 'Agent', 'You both agreed to use Red Rock Title after we reviewed the options.'),
+      segment(30, '00:13:29', 'Buyer · Emily', 'Yes, Red Rock Title is fine.'),
+      segment(31, '00:14:03', 'Agent', 'I am going to put the personal property and settlement confirmation into Addendum Number One.'),
+      segment(32, '00:14:37', 'Agent', 'The first paragraph will read: Seller agrees to leave the refrigerator, washer, and dryer at no additional cost to Buyer.'),
+      segment(33, '00:14:51', 'Buyer · Brenton', 'That language is right.'),
+      segment(34, '00:15:19', 'Agent', 'The second paragraph will read: Settlement Deadline shall be August 15, 2026.'),
+      segment(35, '00:16:03', 'Agent', 'I will leave the legal description blank until we have an authoritative source. I will not guess from the street address.'),
+      segment(36, '00:16:31', 'Buyer · Emily', 'Good. Please show us anything that still needs confirmation before sending.'),
+      segment(37, '00:16:57', 'Agent', 'I will prepare the editable package, highlight the remaining approvals, and send nothing until you and I have reviewed it.'),
+      segment(38, '00:17:18', 'Buyer · Brenton', 'Perfect. That covers everything from our side. Thank you.')
     ],
     documents: [
       {
-        id: 'doc-repc',
-        name: 'Utah REPC',
-        documentVersion: 'Representative Mock 2026.1',
-        jurisdiction: 'UT',
-        formSchemaId: 'schema-ut-repc-representative',
-        order: 1,
+        id: 'doc-repc', name: 'Utah REPC', documentVersion: 'Representative Mock 2026.1', jurisdiction: 'UT', formSchemaId: 'schema-ut-repc-representative', order: 1, pageCount: 6,
         sections: [
-          { id: 'repc-sec-1', sectionNumber: '1', title: 'Buyer and Property', fieldIds: ['field-buyers', 'field-property-address', 'field-legal-description'] },
-          { id: 'repc-sec-2', sectionNumber: '2', title: 'Purchase Price', fieldIds: ['field-purchase-price'] },
-          { id: 'repc-sec-3', sectionNumber: '3', title: 'Financing', fieldIds: ['field-financing-type'] },
-          { id: 'repc-sec-4', sectionNumber: '4', title: 'Earnest Money', fieldIds: ['field-earnest-amount', 'field-earnest-deadline', 'field-earnest-holder'] },
-          { id: 'repc-sec-6', sectionNumber: '6', title: 'Title Insurance', fieldIds: ['field-title-company'] },
-          { id: 'repc-sec-24', sectionNumber: '24', title: 'Settlement', fieldIds: ['field-settlement-deadline'] },
-          { id: 'repc-sec-sig', sectionNumber: 'Signature', title: 'Signer Assignments', fieldIds: ['field-buyer-signers'] }
+          section('repc-sec-1', '1', 'Buyer and Property', 1, ['field-buyers', 'field-property-address', 'field-legal-description']),
+          section('repc-sec-2', '2', 'Purchase Price', 1, ['field-purchase-price', 'field-seller-closing-costs']),
+          section('repc-sec-3', '3', 'Financing', 2, ['field-financing-type']),
+          section('repc-sec-4', '4', 'Earnest Money', 2, ['field-earnest-amount', 'field-earnest-deadline', 'field-earnest-holder']),
+          section('repc-sec-6', '6', 'Title Insurance', 3, ['field-title-company']),
+          section('repc-sec-8', '8', 'Due Diligence', 4, ['field-due-diligence-deadline']),
+          section('repc-sec-24', '24', 'Settlement and Possession', 5, ['field-settlement-deadline', 'field-possession']),
+          section('repc-sec-sig', 'Signature', 'Signer Assignments', 6, ['field-buyer-signers'])
         ]
       },
       {
-        id: 'doc-addendum-1',
-        name: 'Addendum No. 1',
-        documentVersion: 'Representative Mock 2026.1',
-        jurisdiction: 'UT',
-        formSchemaId: 'schema-ut-addendum-representative',
-        order: 2,
-        sections: [
-          { id: 'add-sec-1', sectionNumber: '1', title: 'Additional Terms', fieldIds: ['field-addendum-reference'], addendumProvisionIds: ['prov-1', 'prov-2'] }
-        ]
+        id: 'doc-addendum-1', name: 'Addendum No. 1', documentVersion: 'Representative Mock 2026.1', jurisdiction: 'UT', formSchemaId: 'schema-ut-addendum-representative', order: 2, pageCount: 1,
+        sections: [section('add-sec-1', '1', 'Additional Terms', 1, ['field-addendum-reference'], ['prov-1', 'prov-2'])]
       },
       {
-        id: 'doc-wire',
-        name: 'Wire Fraud Disclosure',
-        documentVersion: 'Representative Mock 2026.1',
-        jurisdiction: 'UT',
-        formSchemaId: 'schema-wire-disclosure-representative',
-        order: 3,
-        sections: [
-          { id: 'wire-sec-ack', sectionNumber: 'Acknowledgement', title: 'Disclosure Acknowledgement', fieldIds: ['field-wire-ack'] }
-        ]
+        id: 'doc-wire', name: 'Wire Fraud Disclosure', documentVersion: 'Representative Mock 2026.1', jurisdiction: 'UT', formSchemaId: 'schema-wire-disclosure-representative', order: 3, pageCount: 1,
+        sections: [section('wire-sec-ack', 'Acknowledgement', 'Disclosure Acknowledgement', 1, ['field-wire-ack'])]
       }
     ],
     addendumProvisions: [
-      {
-        id: 'prov-1',
-        addendumNumber: 1,
-        documentTitle: 'Addendum No. 1',
-        itemNumber: 1,
-        exactParagraphText: 'Seller agrees to leave the refrigerator, washer, and dryer at no additional cost to Buyer.',
-        sourceReferences: [welkerSources[3]],
-        approvalState: 'not_reviewed',
-        reviewStatus: 'needs_approval',
-        required: true,
-        confidence: 78,
-        transactionRisk: 'high',
-        material: true
-      },
-      {
-        id: 'prov-2',
-        addendumNumber: 1,
-        documentTitle: 'Addendum No. 1',
-        itemNumber: 2,
-        exactParagraphText: '',
-        sourceReferences: [welkerSources[8]],
-        approvalState: 'not_reviewed',
-        reviewStatus: 'missing',
-        required: true,
-        confidence: null,
-        transactionRisk: 'critical',
-        material: true
-      }
+      provision('prov-1', 1, 1, 'Seller agrees to leave the refrigerator, washer, and dryer at no additional cost to Buyer.', welkerSources.addendumOne, 'needs_approval', 91),
+      provision('prov-2', 1, 2, 'Settlement Deadline shall be August 15, 2026.', welkerSources.addendumTwo, 'approved', 97)
     ],
     fields: [
-      field('field-buyers', 'doc-repc', 'repc-sec-1', 'Buyer(s)', '1.1', 1, 'name', 'Brenton Welker; Emily Welker', undefined, 97, 'approved', 'ut-repc.buyer.names', 'Representative Mock 2026.1', true, [welkerSources[0]]),
-      field('field-property-address', 'doc-repc', 'repc-sec-1', 'Property Address', '1.2', 2, 'address', '2948 E Alderann Street, St. George, UT 84790', undefined, 94, 'approved', 'ut-repc.property.address', 'Representative Mock 2026.1', true, [welkerSources[0]]),
-      field('field-legal-description', 'doc-repc', 'repc-sec-1', 'Legal Description', '1.3', 3, 'legal_description', 'To be completed from title commitment or county record.', undefined, null, 'missing', 'ut-repc.property.legal_description', 'Representative Mock 2026.1', true, [welkerSources[8]], 'Legal description has not been sourced.'),
-      field('field-purchase-price', 'doc-repc', 'repc-sec-2', 'Purchase Price', '2.1', 1, 'money', '$875,000.00', undefined, 98, 'approved', 'ut-repc.purchase_price.total', 'Representative Mock 2026.1', true, [welkerSources[0]]),
-      field('field-financing-type', 'doc-repc', 'repc-sec-3', 'Financing Type', '3.1', 1, 'radio', 'Conventional loan', { selectedOption: 'Conventional' }, 94, 'approved', 'ut-repc.financing.type', 'Representative Mock 2026.1', true, [welkerSources[2]]),
-      field('field-earnest-amount', 'doc-repc', 'repc-sec-4', 'Earnest Money Amount', '4.1', 1, 'money', '$7,500.00', undefined, 96, 'approved', 'ut-repc.earnest_money.amount', 'Representative Mock 2026.1', true, [welkerSources[1]]),
-      field('field-earnest-deadline', 'doc-repc', 'repc-sec-4', 'Earnest Money Deadline', '4.2', 2, 'deadline', 'Within 4 calendar days after Acceptance', undefined, 87, 'approved', 'ut-repc.earnest_money.deadline', 'Representative Mock 2026.1', true, [welkerSources[1]]),
-      field('field-earnest-holder', 'doc-repc', 'repc-sec-4', 'Earnest Money Holder', '4.3', 3, 'selection', 'Brokerage trust account', { selectedOption: 'Brokerage trust account' }, 74, 'needs_approval', 'ut-repc.earnest_money.holder', 'Representative Mock 2026.1', true, [welkerSources[8]], 'Holder was inferred from office workflow, not stated by client.'),
-      field('field-title-company', 'doc-repc', 'repc-sec-6', 'Title Company', '6.1', 1, 'text', 'Red Rock Title', undefined, 82, 'needs_approval', 'ut-repc.title.company', 'Representative Mock 2026.1', true, [welkerSources[5]], 'Office default applied; agent confirmation required.', true),
-      field('field-settlement-deadline', 'doc-repc', 'repc-sec-24', 'Settlement Deadline', '24.1', 1, 'date', '', undefined, null, 'missing', 'ut-repc.settlement.deadline', 'Representative Mock 2026.1', true, [welkerSources[8]], 'Required date is missing.'),
-      field('field-buyer-signers', 'doc-repc', 'repc-sec-sig', 'Buyer Signers', 'Signature.1', 1, 'signature_assignment', 'Brenton Welker; Emily Welker', undefined, 97, 'approved', 'ut-repc.signature.buyers', 'Representative Mock 2026.1', true, [welkerSources[0]]),
-      field('field-addendum-reference', 'doc-addendum-1', 'add-sec-1', 'Addendum Reference', 'A1.0', 1, 'addendum_reference', 'Addendum No. 1 to Real Estate Purchase Contract', undefined, 92, 'approved', 'ut-addendum.reference', 'Representative Mock 2026.1', true, [welkerSources[3]]),
-      field('field-wire-ack', 'doc-wire', 'wire-sec-ack', 'Wire Fraud Disclosure Acknowledgement', 'WF.1', 1, 'disclosure_acknowledgement', 'Include brokerage-required wire fraud disclosure with buyer acknowledgement checkbox selected.', { checkboxState: true }, 100, 'needs_approval', 'wire-disclosure.acknowledgement.included', 'Representative Mock 2026.1', true, [welkerSources[6]], 'Brokerage-required disclosure selected by default.', true)
+      field('field-buyers', 'doc-repc', 'repc-sec-1', 'Buyer(s)', '1.1', 1, 'name', 'Brenton Welker; Emily Welker', undefined, 99, 'approved', true, welkerSources.buyers),
+      field('field-property-address', 'doc-repc', 'repc-sec-1', 'Property Address', '1.2', 2, 'address', '2948 E Alderann Street, St. George, UT 84790', undefined, 98, 'approved', true, welkerSources.property),
+      field('field-legal-description', 'doc-repc', 'repc-sec-1', 'Legal Description', '1.3', 3, 'legal_description', '', undefined, null, 'missing', true, welkerSources.legalDescription, 'Authoritative legal description has not been supplied.'),
+      field('field-purchase-price', 'doc-repc', 'repc-sec-2', 'Purchase Price', '2.1', 1, 'money', '$875,000.00', undefined, 99, 'approved', true, welkerSources.price),
+      field('field-seller-closing-costs', 'doc-repc', 'repc-sec-2', 'Seller-Paid Buyer Closing Costs', '2.2', 2, 'money', 'Up to $5,000.00', undefined, 88, 'needs_approval', true, welkerSources.closingCosts, 'Material seller concession requires approval.'),
+      field('field-financing-type', 'doc-repc', 'repc-sec-3', 'Financing Type', '3.1', 1, 'radio', 'Conventional loan', { selectedOption: 'Conventional' }, 98, 'approved', true, welkerSources.financing),
+      field('field-earnest-amount', 'doc-repc', 'repc-sec-4', 'Earnest Money Amount', '4.1', 1, 'money', '$7,500.00', undefined, 98, 'approved', true, welkerSources.earnest),
+      field('field-earnest-deadline', 'doc-repc', 'repc-sec-4', 'Earnest Money Deadline', '4.2', 2, 'deadline', 'Within 4 calendar days after Acceptance', undefined, 86, 'approved', true, welkerSources.earnest),
+      field('field-earnest-holder', 'doc-repc', 'repc-sec-4', 'Earnest Money Holder', '4.3', 3, 'selection', 'Brokerage trust account', { selectedOption: 'Brokerage trust account' }, 74, 'needs_approval', true, welkerSources.holderDefault, 'Office default applied; agent confirmation required.'),
+      field('field-title-company', 'doc-repc', 'repc-sec-6', 'Title Company', '6.1', 1, 'text', 'Red Rock Title', undefined, 96, 'approved', true, welkerSources.title, undefined, true),
+      field('field-due-diligence-deadline', 'doc-repc', 'repc-sec-8', 'Due Diligence Deadline', '8.1', 1, 'deadline', '10 calendar days after Acceptance', undefined, 90, 'needs_approval', true, welkerSources.dueDiligence, 'Confirm the relative deadline before approval.'),
+      field('field-settlement-deadline', 'doc-repc', 'repc-sec-24', 'Settlement Deadline', '24.1', 1, 'date', 'August 15, 2026', undefined, 97, 'approved', true, welkerSources.settlement),
+      field('field-possession', 'doc-repc', 'repc-sec-24', 'Possession', '24.2', 2, 'selection', 'At recording', { selectedOption: 'At recording' }, 91, 'needs_approval', true, welkerSources.possession),
+      field('field-buyer-signers', 'doc-repc', 'repc-sec-sig', 'Buyer Signers', 'Signature.1', 1, 'signature_assignment', 'Brenton Welker; Emily Welker', undefined, 99, 'approved', true, welkerSources.buyers),
+      field('field-addendum-reference', 'doc-addendum-1', 'add-sec-1', 'Addendum Reference', 'A1.0', 1, 'addendum_reference', 'Addendum No. 1 to Real Estate Purchase Contract', undefined, 98, 'approved', true, welkerSources.addendumOne),
+      field('field-wire-ack', 'doc-wire', 'wire-sec-ack', 'Wire Fraud Disclosure Acknowledgement', 'WF.1', 1, 'checkbox', 'Include disclosure', { checkboxState: true }, 100, 'needs_approval', true, welkerSources.wirePreference, 'Brokerage-required disclosure selected by preference.', true)
     ]
   },
-  {
-    id: 'pkg-smith-buyer',
-    clientFullLegalNames: 'John Smith',
-    propertyAddress: '123 Main Street',
-    packageType: 'Buyer Paperwork',
-    initialStatus: 'ready_to_approve',
-    lastUpdated: 'Updated 22 minutes ago',
-    readiness: { readinessForSignature: 'needs_review', percent: 91 },
-    representativeSchemaWarning: 'Representative mock schema only. Official form-library ingestion, licensing, versioning, and field validation are required before production use.',
-    sourceDetails: [],
-    transcriptSegments: [{ id: 'smith-t-1', timestamp: '00:01:04', speaker: 'Agent', text: 'John Smith needs standard buyer paperwork for 123 Main Street.' }],
-    documents: [
-      { id: 'smith-doc-agency', name: 'Buyer Paperwork', documentVersion: 'Representative Mock 2026.1', jurisdiction: 'UT', formSchemaId: 'schema-buyer-paperwork-representative', order: 1, sections: [{ id: 'smith-sec-1', sectionNumber: '1', title: 'Buyer Information', fieldIds: ['smith-field-client'] }] }
-    ],
-    addendumProvisions: [],
-    fields: [
-      field('smith-field-client', 'smith-doc-agency', 'smith-sec-1', 'Buyer Legal Name', '1.1', 1, 'name', 'John Smith', undefined, 98, 'needs_approval', 'buyer-paperwork.client.name', 'Representative Mock 2026.1', true, [{ id: 'smith-src-1', type: 'transcript', label: 'Transcript 00:01:04', segmentIds: ['smith-t-1'], exactQuote: 'John Smith' }])
-    ]
-  },
-  {
-    id: 'pkg-chen-listing',
-    clientFullLegalNames: 'Maya Chen',
-    propertyAddress: '346 E Homeside Road',
-    packageType: 'Listing Paperwork',
-    initialStatus: 'ready_to_send',
-    lastUpdated: 'Updated 1 hour ago',
-    readiness: { readinessForSignature: 'ready', percent: 100 },
-    representativeSchemaWarning: 'Representative mock schema only. Official form-library ingestion, licensing, versioning, and field validation are required before production use.',
-    sourceDetails: [],
-    transcriptSegments: [{ id: 'chen-t-1', timestamp: '00:02:14', speaker: 'Seller', text: 'Maya Chen is ready to prepare listing paperwork for 346 E Homeside Road.' }],
-    documents: [
-      { id: 'chen-doc-listing', name: 'Listing Paperwork', documentVersion: 'Representative Mock 2026.1', jurisdiction: 'UT', formSchemaId: 'schema-listing-paperwork-representative', order: 1, sections: [{ id: 'chen-sec-1', sectionNumber: '1', title: 'Seller Information', fieldIds: ['chen-field-client'] }] }
-    ],
-    addendumProvisions: [],
-    fields: [
-      field('chen-field-client', 'chen-doc-listing', 'chen-sec-1', 'Seller Legal Name', '1.1', 1, 'name', 'Maya Chen', undefined, 99, 'approved', 'listing-paperwork.seller.name', 'Representative Mock 2026.1', true, [{ id: 'chen-src-1', type: 'transcript', label: 'Transcript 00:02:14', segmentIds: ['chen-t-1'], exactQuote: 'Maya Chen' }])
-    ]
-  }
+  simplePackage('pkg-smith-buyer', 'John Smith', '123 Main Street', 'Buyer Paperwork', 'ready_to_approve', 'Updated 22 minutes ago', 'Buyer Legal Name', 'John Smith', 'smith'),
+  simplePackage('pkg-chen-listing', 'Maya Chen', '346 E Homeside Road', 'Listing Paperwork', 'ready_to_send', 'Updated 1 hour ago', 'Seller Legal Name', 'Maya Chen', 'chen', true)
 ];
+
+function transcriptSource(id: string, timestamp: string, segmentIds: string[], exactQuote: string): FieldSourceReference {
+  return { id, type: 'transcript', label: `Transcript ${timestamp}`, segmentIds, exactQuote };
+}
+
+function segment(index: number, timestamp: string, speaker: string, text: string): TranscriptSegment {
+  return { id: `t-${String(index).padStart(3, '0')}`, timestamp, speaker, text };
+}
+
+function section(id: string, sectionNumber: string, title: string, pageNumber: number, fieldIds: string[], addendumProvisionIds?: string[]): FormSection {
+  return { id, sectionNumber, title, pageNumber, fieldIds, addendumProvisionIds };
+}
+
+function provision(id: string, addendumNumber: number, itemNumber: number, exactParagraphText: string, source: FieldSourceReference, reviewStatus: FieldReviewStatus, confidence: number): AddendumProvision {
+  return {
+    id, addendumNumber, documentTitle: `Addendum No. ${addendumNumber}`, itemNumber, exactParagraphText,
+    sourceReferences: [source], approvalState: reviewStatus === 'approved' ? 'approved' : 'not_reviewed', reviewStatus,
+    required: true, confidence, transactionRisk: 'high', material: true
+  };
+}
 
 function field(
   id: string,
@@ -353,30 +339,51 @@ function field(
   selection: FieldSelection | undefined,
   confidence: number | null,
   reviewStatus: FieldReviewStatus,
-  mappedFormFieldId: string,
-  documentVersion: string,
   required: boolean,
-  sourceReferences: FieldSourceReference[],
+  sourceReference: FieldSourceReference,
   reviewReason?: string,
   preferenceEligible = false
 ): GeneratedFormField {
+  const options = inputType === 'radio'
+    ? ['Cash', 'Conventional', 'FHA', 'VA', 'Other']
+    : officialLabel === 'Earnest Money Holder'
+      ? ['Brokerage trust account', 'Title company', 'Other']
+      : officialLabel === 'Possession'
+        ? ['At recording', 'At settlement', 'Other']
+        : undefined;
   return {
-    id,
-    documentId,
-    sectionId,
-    definition: { id: mappedFormFieldId, officialLabel, sectionNumber, itemSequence, inputType, preferenceEligible },
-    exactGeneratedValue,
-    selection,
-    confidence,
-    reviewStatus,
-    reviewReason,
-    mappedFormFieldId,
-    documentVersion,
-    jurisdiction: 'UT',
-    approvalState: reviewStatus === 'approved' ? 'approved' : 'not_reviewed',
-    required,
-    transactionRisk: reviewStatus === 'missing' ? 'critical' : required ? 'medium' : 'low',
-    material: required,
-    sourceReferences
+    id, documentId, sectionId,
+    definition: { id: `ut-mock.${id}`, officialLabel, sectionNumber, itemSequence, inputType, options, preferenceEligible },
+    exactGeneratedValue, selection, confidence, reviewStatus, reviewReason,
+    mappedFormFieldId: `ut-mock.${id}`, documentVersion: 'Representative Mock 2026.1', jurisdiction: 'UT',
+    approvalState: reviewStatus === 'approved' ? 'approved' : 'not_reviewed', required,
+    transactionRisk: reviewStatus === 'missing' ? 'critical' : required ? 'medium' : 'low', material: required,
+    sourceReferences: [sourceReference]
+  };
+}
+
+function simplePackage(
+  id: string,
+  client: string,
+  property: string,
+  packageType: ReviewPackageType,
+  initialStatus: PackageStatus,
+  lastUpdated: string,
+  fieldLabel: string,
+  fieldValue: string,
+  prefix: string,
+  approved = false
+): ReviewPackage {
+  const source = transcriptSource(`${prefix}-src-1`, '00:01:04', [`${prefix}-t-1`], fieldValue);
+  const reviewStatus: FieldReviewStatus = approved ? 'approved' : 'needs_approval';
+  return {
+    id, clientFullLegalNames: client, propertyAddress: property, packageType, initialStatus, lastUpdated,
+    readiness: { readinessForSignature: approved ? 'ready' : 'needs_review', percent: approved ? 100 : 91 },
+    representativeSchemaWarning: 'Representative mock schema only. Official form-library ingestion, licensing, versioning, and field validation are required before production use.',
+    sourceDetails: [source],
+    transcriptSegments: [{ id: `${prefix}-t-1`, timestamp: '00:01:04', speaker: 'Agent', text: `${client} confirmed the paperwork for ${property}.` }],
+    documents: [{ id: `${prefix}-doc`, name: packageType, documentVersion: 'Representative Mock 2026.1', jurisdiction: 'UT', formSchemaId: `${prefix}-schema`, order: 1, pageCount: 1, sections: [section(`${prefix}-sec-1`, '1', 'Party Information', 1, [`${prefix}-field-client`])] }],
+    addendumProvisions: [],
+    fields: [field(`${prefix}-field-client`, `${prefix}-doc`, `${prefix}-sec-1`, fieldLabel, '1.1', 1, 'name', fieldValue, undefined, 98, reviewStatus, true, source)]
   };
 }

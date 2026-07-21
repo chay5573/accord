@@ -6,21 +6,25 @@ import {
   type FieldApproval,
   type FieldRevision,
   type FieldReviewStatus,
+  type FieldSelection,
   type FieldSourceReference,
   type GeneratedFormField,
   type PackageStatus,
   type ReviewDocument,
   type ReviewNavigationState,
+  type ReviewOriginSurface,
   type ReviewPackage,
   mockReviewPackages
 } from '@/lib/reviewPackages';
 
-type ReviewSection = 'needsAttention' | 'fullPaperwork' | 'transcript' | 'includedDocuments' | 'otherSources';
+type ReviewSection = 'needsAttention' | 'allFields' | 'paperwork' | 'transcript' | 'otherSources';
 
 interface RuntimeReviewItem {
   value: string;
   originalValue: string;
-  status: FieldReviewStatus;
+  selection?: FieldSelection;
+  originalSelection?: FieldSelection;
+  persistedStatus: FieldReviewStatus;
   dirty: boolean;
   approvals: FieldApproval[];
   revisions: FieldRevision[];
@@ -73,25 +77,36 @@ function itemId(item: ReviewItem) {
   return item.record.id;
 }
 
+function itemLabel(item: ReviewItem) {
+  return item.kind === 'field'
+    ? item.record.definition.officialLabel
+    : `${item.record.documentTitle} · Item ${item.record.itemNumber}`;
+}
+
 function isResolved(status: FieldReviewStatus) {
   return status === 'approved' || status === 'edited_and_approved';
 }
 
+function needsAttention(runtime: RuntimeReviewItem) {
+  return runtime.dirty || !isResolved(runtime.persistedStatus);
+}
+
 function isRequiredBlocker(item: ReviewItem, runtime: RuntimeReviewItem) {
-  return item.record.required && (!runtime.value.trim() || runtime.status === 'missing' || runtime.status === 'conflicting' || runtime.status === 'rejected');
+  return item.record.required && needsAttention(runtime);
 }
 
 function reviewRank(item: ReviewItem, runtime: RuntimeReviewItem) {
-  if (runtime.status === 'missing' && item.record.required) return 0;
-  if (runtime.status === 'conflicting') return 1;
-  if (item.record.material && runtime.status === 'needs_approval' && (item.record.confidence ?? 0) < 85) return 2;
+  const status = runtime.persistedStatus;
+  if (status === 'missing' && item.record.required) return 0;
+  if (status === 'conflicting') return 1;
+  if (item.record.material && status === 'needs_approval' && (item.record.confidence ?? 0) < 85) return 2;
   if (item.record.sourceReferences.some((source) => source.type === 'office_default' || source.type === 'prior_preference')) return 3;
-  if (!item.record.material && runtime.status === 'needs_approval' && (item.record.confidence ?? 100) < 85) return 4;
-  if (runtime.status === 'optional_review') return 5;
-  return 2;
+  if (!item.record.material && status === 'needs_approval' && (item.record.confidence ?? 100) < 85) return 4;
+  if (status === 'optional_review') return 5;
+  return item.record.material ? 2 : 4;
 }
 
-function stableId(...parts: string[]) {
+function stableId(...parts: Array<string | number>) {
   return parts.join('-').replace(/[^a-zA-Z0-9_-]/g, '-');
 }
 
@@ -107,29 +122,40 @@ function sourceTypeLabel(type: FieldSourceReference['type']) {
   }[type];
 }
 
+function cloneSelection(selection?: FieldSelection) {
+  return selection ? { ...selection } : undefined;
+}
+
+function selectionEqual(a?: FieldSelection, b?: FieldSelection) {
+  return JSON.stringify(a ?? {}) === JSON.stringify(b ?? {});
+}
+
+function runtimeSnapshot(runtime: RuntimeReviewItem, original = false) {
+  const value = original ? runtime.originalValue : runtime.value;
+  const selection = original ? runtime.originalSelection : runtime.selection;
+  const selectionText = selection?.selectedOption
+    ?? (typeof selection?.checkboxState === 'boolean' ? (selection.checkboxState ? 'Checked' : 'Unchecked') : selection?.yesNoValue);
+  return selectionText ? `${value} [${selectionText}]` : value;
+}
+
 function highlightedText(text: string, exactQuote: string) {
   const index = text.toLocaleLowerCase().indexOf(exactQuote.toLocaleLowerCase());
   if (!exactQuote || index < 0) return text;
   return <>{text.slice(0, index)}<mark>{text.slice(index, index + exactQuote.length)}</mark>{text.slice(index + exactQuote.length)}</>;
 }
 
-function itemLabel(item: ReviewItem) {
-  return item.kind === 'field'
-    ? item.record.definition.officialLabel
-    : `${item.record.documentTitle} · Item ${item.record.itemNumber}`;
-}
-
 export function PrepareWorkspace() {
   const [activePackageId, setActivePackageId] = useState(mockReviewPackages[0].id);
   const [runtimeItems, setRuntimeItems] = useState<Record<string, RuntimeReviewItem>>(() =>
     Object.fromEntries(mockReviewPackages.flatMap((pkg) => allPackageItems(pkg).map((item) => {
-      const initialValue = item.record.reviewStatus === 'missing'
-        ? ''
-        : item.kind === 'field' ? item.record.exactGeneratedValue : item.record.exactParagraphText;
+      const value = item.kind === 'field' ? item.record.exactGeneratedValue : item.record.exactParagraphText;
+      const selection = item.kind === 'field' ? cloneSelection(item.record.selection) : undefined;
       return [itemId(item), {
-        value: initialValue,
-        originalValue: initialValue,
-        status: item.record.reviewStatus,
+        value,
+        originalValue: value,
+        selection,
+        originalSelection: cloneSelection(selection),
+        persistedStatus: item.record.reviewStatus,
         dirty: false,
         approvals: [],
         revisions: []
@@ -137,20 +163,22 @@ export function PrepareWorkspace() {
     })))
   );
   const [sectionState, setSectionState] = useState<Record<string, Record<ReviewSection, boolean>>>(() =>
-    Object.fromEntries(mockReviewPackages.map((pkg) => [pkg.id, {
-      needsAttention: allPackageItems(pkg).some((item) => !isResolved(item.record.reviewStatus)),
-      fullPaperwork: false,
-      transcript: false,
-      includedDocuments: false,
-      otherSources: false
-    }]))
+    Object.fromEntries(mockReviewPackages.map((pkg) => {
+      const hasAttention = allPackageItems(pkg).some((item) => !isResolved(item.record.reviewStatus));
+      return [pkg.id, { needsAttention: hasAttention, allFields: false, paperwork: !hasAttention, transcript: false, otherSources: false }];
+    }))
   );
-  const [openDocuments, setOpenDocuments] = useState<Record<string, string[]>>(() =>
+  const [openFieldDocuments, setOpenFieldDocuments] = useState<Record<string, string[]>>(() =>
     Object.fromEntries(mockReviewPackages.map((pkg) => [pkg.id, [pkg.documents[0]?.id].filter(Boolean)]))
+  );
+  const [activePaperworkDocuments, setActivePaperworkDocuments] = useState<Record<string, string>>(() =>
+    Object.fromEntries(mockReviewPackages.map((pkg) => [pkg.id, pkg.documents[0]?.id ?? '']))
+  );
+  const [paperworkPages, setPaperworkPages] = useState<Record<string, number>>(() =>
+    Object.fromEntries(mockReviewPackages.flatMap((pkg) => pkg.documents.map((document) => [document.id, 1])))
   );
   const [savedPackages, setSavedPackages] = useState<string[]>([]);
   const [sentPackages, setSentPackages] = useState<string[]>([]);
-  const [previewOpen, setPreviewOpen] = useState(false);
   const [preferenceFieldId, setPreferenceFieldId] = useState<string | null>(null);
   const [preferenceSaved, setPreferenceSaved] = useState(false);
   const [highlightedSegments, setHighlightedSegments] = useState<string[]>([]);
@@ -165,22 +193,20 @@ export function PrepareWorkspace() {
   const provisionsById = useMemo(() => new Map(activePackage.addendumProvisions.map((provision) => [provision.id, provision])), [activePackage]);
   const currentSections = sectionState[activePackage.id];
   const activePreferenceField = activePackage.fields.find((field) => field.id === preferenceFieldId);
+  const activePaperworkDocument = activePackage.documents.find((document) => document.id === activePaperworkDocuments[activePackage.id]) ?? activePackage.documents[0];
+  const activePaperworkPage = paperworkPages[activePaperworkDocument.id] ?? 1;
 
-  const unresolvedItems = activeItems
-    .filter((item) => !isResolved(runtimeItems[itemId(item)].status))
+  const attentionItems = activeItems
+    .filter((item) => needsAttention(runtimeItems[itemId(item)]))
     .sort((a, b) => {
-      const aRuntime = runtimeItems[itemId(a)];
-      const bRuntime = runtimeItems[itemId(b)];
-      const groupDifference = reviewRank(a, aRuntime) - reviewRank(b, bRuntime);
-      if (groupDifference) return groupDifference;
+      const rankDifference = reviewRank(a, runtimeItems[itemId(a)]) - reviewRank(b, runtimeItems[itemId(b)]);
+      if (rankDifference) return rankDifference;
       const riskDifference = riskOrder[a.record.transactionRisk] - riskOrder[b.record.transactionRisk];
       if (riskDifference) return riskDifference;
-      const aDocument = a.kind === 'field' ? activePackage.documents.find((document) => document.id === a.record.documentId)?.order ?? 99 : a.record.addendumNumber;
-      const bDocument = b.kind === 'field' ? activePackage.documents.find((document) => document.id === b.record.documentId)?.order ?? 99 : b.record.addendumNumber;
-      if (aDocument !== bDocument) return aDocument - bDocument;
-      const aSequence = a.kind === 'field' ? a.record.definition.itemSequence : a.record.itemNumber;
-      const bSequence = b.kind === 'field' ? b.record.definition.itemSequence : b.record.itemNumber;
-      if (aSequence !== bSequence) return aSequence - bSequence;
+      const documentDifference = documentOrder(activePackage, a) - documentOrder(activePackage, b);
+      if (documentDifference) return documentDifference;
+      const fieldDifference = fieldOrder(activePackage, a) - fieldOrder(activePackage, b);
+      if (fieldDifference) return fieldDifference;
       return (a.record.confidence ?? -1) - (b.record.confidence ?? -1);
     });
 
@@ -190,20 +216,17 @@ export function PrepareWorkspace() {
     if (sentPackages.includes(pkg.id)) return 'sent_for_signatures';
     const items = allPackageItems(pkg);
     const hasRequiredBlocker = items.some((item) => isRequiredBlocker(item, runtimeItems[itemId(item)]));
-    const hasUnapproved = items.some((item) => !isResolved(runtimeItems[itemId(item)].status));
-    if (savedPackages.includes(pkg.id) && (hasRequiredBlocker || hasUnapproved)) return 'draft_saved';
+    const hasAttention = items.some((item) => needsAttention(runtimeItems[itemId(item)]));
+    if (savedPackages.includes(pkg.id) && (hasRequiredBlocker || hasAttention)) return 'draft_saved';
     if (hasRequiredBlocker) return 'needs_attention';
-    if (hasUnapproved) return 'ready_to_approve';
+    if (hasAttention) return 'ready_to_approve';
     return 'ready_to_send';
   }
 
   const activePackageStatus = getPackageStatus(activePackage);
 
-  function setSection(section: ReviewSection, open: boolean) {
-    setSectionState((current) => ({
-      ...current,
-      [activePackage.id]: { ...current[activePackage.id], [section]: open }
-    }));
+  function setSection(section: ReviewSection, open: boolean, packageId = activePackage.id) {
+    setSectionState((current) => ({ ...current, [packageId]: { ...current[packageId], [section]: open } }));
   }
 
   function scrollAndFocus(elementId: string, block: ScrollLogicalPosition = 'start') {
@@ -216,14 +239,10 @@ export function PrepareWorkspace() {
 
   function selectPackage(packageId: string) {
     setActivePackageId(packageId);
-    setPreviewOpen(false);
     setHighlightedSegments([]);
     setHighlightedQuote('');
     setNavigationState(null);
-    setSectionState((current) => ({
-      ...current,
-      [packageId]: { ...current[packageId], needsAttention: true }
-    }));
+    setSection('needsAttention', true, packageId);
     window.history.replaceState(null, '', `#review-${packageId}`);
     window.setTimeout(() => {
       reviewHeadingRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -231,28 +250,19 @@ export function PrepareWorkspace() {
     }, 80);
   }
 
-  function togglePreview() {
-    const nextOpen = !previewOpen;
-    setPreviewOpen(nextOpen);
-    window.history.replaceState(null, '', nextOpen ? '#paperwork-preview' : window.location.pathname);
-    if (nextOpen) scrollAndFocus('paperwork-preview');
-  }
-
-  function closePreview() {
-    setPreviewOpen(false);
-    window.history.replaceState(null, '', window.location.pathname);
-  }
-
   function updateItemValue(id: string, value: string) {
-    setRuntimeItems((current) => ({
-      ...current,
-      [id]: {
-        ...current[id],
-        value,
-        dirty: value !== current[id].originalValue,
-        status: value.trim() ? 'needs_approval' : 'missing'
-      }
-    }));
+    setRuntimeItems((current) => {
+      const item = current[id];
+      return { ...current, [id]: { ...item, value, dirty: value !== item.originalValue || !selectionEqual(item.selection, item.originalSelection) } };
+    });
+  }
+
+  function updateItemSelection(id: string, selection: FieldSelection, displayValue?: string) {
+    setRuntimeItems((current) => {
+      const item = current[id];
+      const value = displayValue ?? item.value;
+      return { ...current, [id]: { ...item, value, selection, dirty: value !== item.originalValue || !selectionEqual(selection, item.originalSelection) } };
+    });
   }
 
   function approveItem(id: string) {
@@ -261,8 +271,10 @@ export function PrepareWorkspace() {
       if (!item.value.trim()) return current;
       const edited = item.dirty || !item.originalValue.trim();
       const recordedAt = new Date().toISOString();
-      const revision: FieldRevision[] = edited && item.value !== item.originalValue
-        ? [...item.revisions, { id: `revision-${id}-${item.revisions.length + 1}`, itemId: id, previousValue: item.originalValue, revisedValue: item.value, actor: 'Calvin Hayward', revisedAt: recordedAt }]
+      const previousSnapshot = runtimeSnapshot(item, true);
+      const revisedSnapshot = runtimeSnapshot(item);
+      const revisions = edited && previousSnapshot !== revisedSnapshot
+        ? [...item.revisions, { id: `revision-${id}-${item.revisions.length + 1}`, itemId: id, previousValue: previousSnapshot, revisedValue: revisedSnapshot, actor: 'Calvin Hayward', revisedAt: recordedAt }]
         : item.revisions;
       const action = edited ? 'edited_and_approved' : 'approved';
       return {
@@ -270,38 +282,47 @@ export function PrepareWorkspace() {
         [id]: {
           ...item,
           originalValue: item.value,
+          originalSelection: cloneSelection(item.selection),
+          persistedStatus: action,
           dirty: false,
-          status: action,
-          revisions: revision,
-          approvals: [...item.approvals, { id: `approval-${id}-${item.approvals.length + 1}`, itemId: id, action, actor: 'Calvin Hayward', recordedAt, valueSnapshot: item.value }]
+          revisions,
+          approvals: [...item.approvals, { id: `approval-${id}-${item.approvals.length + 1}`, itemId: id, action, actor: 'Calvin Hayward', recordedAt, valueSnapshot: revisedSnapshot }]
         }
       };
     });
   }
 
   function approveAllReady() {
-    const safeIds = unresolvedItems
+    attentionItems
       .filter((item) => {
         const runtime = runtimeItems[itemId(item)];
-        return runtime.value.trim() && runtime.status !== 'conflicting' && runtime.status !== 'rejected';
+        return runtime.value.trim() && runtime.persistedStatus !== 'conflicting' && runtime.persistedStatus !== 'rejected';
       })
-      .map(itemId);
-    safeIds.forEach(approveItem);
+      .map(itemId)
+      .forEach(approveItem);
   }
 
-  function jumpToSource(item: ReviewItem) {
-    const source = item.record.sourceReferences[0];
+  function jumpToSource(
+    item: ReviewItem,
+    originId: string,
+    originSurface: ReviewOriginSurface,
+    source = item.record.sourceReferences[0],
+    documentId?: string,
+    pageNumber?: number
+  ) {
     if (!source) return;
-    const originId = stableId('review-item', activePackage.id, itemId(item));
     setNavigationState({
       sourceReviewItemId: originId,
       priorScrollPosition: window.scrollY,
       packageId: activePackage.id,
-      sourceSegmentId: source.segmentIds[0] ?? source.id
+      sourceSegmentId: source.segmentIds[0] ?? source.id,
+      originSurface,
+      originDocumentId: documentId,
+      originPageNumber: pageNumber
     });
     setReturnHighlightId(null);
+    setSection('transcript', true);
     if (source.type === 'transcript') {
-      setSection('transcript', true);
       setHighlightedSegments(source.segmentIds);
       setHighlightedQuote(source.exactQuote);
       scrollAndFocus(source.segmentIds[0], 'center');
@@ -313,55 +334,73 @@ export function PrepareWorkspace() {
 
   function returnToReviewItem() {
     if (!navigationState) return;
-    if (navigationState.packageId !== activePackage.id) setActivePackageId(navigationState.packageId);
-    setReturnHighlightId(navigationState.sourceReviewItemId);
-    const targetId = navigationState.sourceReviewItemId;
+    const { packageId, originSurface, originDocumentId, originPageNumber, sourceReviewItemId, priorScrollPosition } = navigationState;
+    if (packageId !== activePackage.id) setActivePackageId(packageId);
+    if (originSurface === 'needs_attention') setSection('needsAttention', true, packageId);
+    if (originSurface === 'all_fields') {
+      setSection('allFields', true, packageId);
+      if (originDocumentId) setOpenFieldDocuments((current) => ({ ...current, [packageId]: Array.from(new Set([...(current[packageId] ?? []), originDocumentId])) }));
+    }
+    if (originSurface === 'paperwork') {
+      setSection('paperwork', true, packageId);
+      if (originDocumentId) setActivePaperworkDocuments((current) => ({ ...current, [packageId]: originDocumentId }));
+      if (originDocumentId && originPageNumber) setPaperworkPages((current) => ({ ...current, [originDocumentId]: originPageNumber }));
+    }
+    setReturnHighlightId(sourceReviewItemId);
     window.setTimeout(() => {
-      const target = document.getElementById(targetId);
+      const target = document.getElementById(sourceReviewItemId);
       if (target) {
         target.scrollIntoView({ behavior: 'smooth', block: 'center' });
         target.focus({ preventScroll: true });
       } else {
-        window.scrollTo({ top: navigationState.priorScrollPosition, behavior: 'smooth' });
+        window.scrollTo({ top: priorScrollPosition, behavior: 'smooth' });
       }
       window.setTimeout(() => setReturnHighlightId(null), 1400);
-    }, 80);
+    }, 100);
   }
 
-  function jumpToReviewItem(id: string) {
-    setSection('needsAttention', true);
-    const reviewId = stableId('review-item', activePackage.id, id);
-    setReturnHighlightId(reviewId);
-    scrollAndFocus(reviewId, 'center');
-    window.setTimeout(() => setReturnHighlightId(null), 1400);
-  }
-
-  function openDocument(document: ReviewDocument) {
-    setSection('fullPaperwork', true);
-    setOpenDocuments((current) => ({
-      ...current,
-      [activePackage.id]: Array.from(new Set([...(current[activePackage.id] ?? []), document.id]))
-    }));
-    scrollAndFocus(stableId('document', activePackage.id, document.id));
-  }
-
-  function toggleDocument(documentId: string) {
-    setOpenDocuments((current) => {
+  function toggleFieldDocument(documentId: string) {
+    setOpenFieldDocuments((current) => {
       const currentIds = current[activePackage.id] ?? [];
-      return {
-        ...current,
-        [activePackage.id]: currentIds.includes(documentId)
-          ? currentIds.filter((id) => id !== documentId)
-          : [...currentIds, documentId]
-      };
+      return { ...current, [activePackage.id]: currentIds.includes(documentId) ? currentIds.filter((id) => id !== documentId) : [...currentIds, documentId] };
     });
   }
 
-  function renderSourceBadges(item: ReviewItem) {
+  function openPaperworkDocument(document: ReviewDocument) {
+    setSection('paperwork', true);
+    setActivePaperworkDocuments((current) => ({ ...current, [activePackage.id]: document.id }));
+    setPaperworkPages((current) => ({ ...current, [document.id]: current[document.id] ?? 1 }));
+    scrollAndFocus(stableId('paperwork-viewer', activePackage.id, document.id));
+  }
+
+  function renderEditor(item: ReviewItem, runtime: RuntimeReviewItem, className = '') {
+    if (item.kind === 'provision') {
+      return <textarea className={className} value={runtime.value} onChange={(event) => updateItemValue(item.record.id, event.target.value)} aria-label={`${itemLabel(item)} exact paragraph`} />;
+    }
+    const field = item.record;
+    if (field.definition.inputType === 'checkbox') {
+      return (
+        <label className={`inline-checkbox-editor ${className}`}>
+          <input type="checkbox" checked={runtime.selection?.checkboxState ?? false} onChange={(event) => updateItemSelection(field.id, { ...runtime.selection, checkboxState: event.target.checked })} />
+          <span>{runtime.value}</span>
+        </label>
+      );
+    }
+    if (field.definition.options && runtime.selection?.selectedOption) {
+      return (
+        <select className={className} value={runtime.selection.selectedOption} onChange={(event) => updateItemSelection(field.id, { ...runtime.selection, selectedOption: event.target.value }, event.target.value)} aria-label={`${itemLabel(item)} exact selection`}>
+          {field.definition.options.map((option) => <option key={option} value={option}>{option}</option>)}
+        </select>
+      );
+    }
+    return <input className={className} value={runtime.value} onChange={(event) => updateItemValue(field.id, event.target.value)} aria-label={`${itemLabel(item)} exact paperwork value`} />;
+  }
+
+  function renderSourceBadges(item: ReviewItem, originId: string, originSurface: ReviewOriginSurface, documentId?: string, pageNumber?: number) {
     return (
       <div className="field-source-badges" aria-label="Field sources">
         {item.record.sourceReferences.map((source) => (
-          <button type="button" className="source-badge" key={source.id} onClick={() => jumpToSource({ ...item, record: { ...item.record, sourceReferences: [source] } } as ReviewItem)}>
+          <button type="button" className="source-badge" key={source.id} onClick={() => jumpToSource(item, originId, originSurface, source, documentId, pageNumber)}>
             {sourceTypeLabel(source.type)} · {source.label}
           </button>
         ))}
@@ -369,46 +408,32 @@ export function PrepareWorkspace() {
     );
   }
 
-  function renderReviewItem(item: ReviewItem, fullPaperwork = false) {
+  function renderReviewItem(item: ReviewItem, surface: 'attention' | 'allFields') {
     const id = itemId(item);
     const runtime = runtimeItems[id];
-    const isMissing = runtime.status === 'missing' || !runtime.value.trim();
-    const tone = isMissing ? 'missing' : runtime.status === 'conflicting' || runtime.status === 'rejected' ? 'warning' : isResolved(runtime.status) ? 'ready' : 'warning';
-    const actionLabel = runtime.dirty || isMissing ? 'Save & Approve' : 'Approve';
-    const rowId = fullPaperwork ? stableId('paperwork-item', activePackage.id, id) : stableId('review-item', activePackage.id, id);
+    const unresolved = needsAttention(runtime);
+    const missing = runtime.persistedStatus === 'missing';
+    const tone = missing ? 'missing' : unresolved ? 'warning' : 'ready';
+    const rowId = stableId(surface === 'attention' ? 'review-item' : 'all-field-item', activePackage.id, id);
+    const originSurface: ReviewOriginSurface = surface === 'attention' ? 'needs_attention' : 'all_fields';
     const field = item.kind === 'field' ? item.record : null;
     return (
-      <article
-        id={rowId}
-        tabIndex={-1}
-        className={`paperwork-review-row ${tone} ${returnHighlightId === rowId ? 'return-highlight' : ''}`}
-        key={`${fullPaperwork ? 'full' : 'review'}-${id}`}
-      >
+      <article id={rowId} tabIndex={-1} className={`paperwork-review-row ${tone} ${returnHighlightId === rowId ? 'return-highlight' : ''}`} key={`${surface}-${id}`}>
         <div className="paperwork-field-main">
           <strong>{itemLabel(item)}</strong>
           <span>{item.kind === 'field' ? `${item.record.definition.sectionNumber} · ${item.record.mappedFormFieldId}` : `Addendum No. ${item.record.addendumNumber}`}</span>
           {field?.reviewReason && <small>{field.reviewReason}</small>}
         </div>
-        <label className="paperwork-value-cell">
-          <span className="sr-only">{itemLabel(item)} exact paperwork value</span>
-          {item.kind === 'provision'
-            ? <textarea value={runtime.value} onChange={(event) => updateItemValue(id, event.target.value)} aria-label={`${itemLabel(item)} exact paragraph`} />
-            : <input value={runtime.value} onChange={(event) => updateItemValue(id, event.target.value)} aria-label={`${itemLabel(item)} exact paperwork value`} />}
-          {field?.selection?.selectedOption && <small>Selected option: {field.selection.selectedOption}</small>}
-          {typeof field?.selection?.checkboxState === 'boolean' && <small>Checkbox: {field.selection.checkboxState ? 'Checked' : 'Unchecked'}</small>}
-        </label>
-        <span className={`status ${isMissing ? 'danger' : isResolved(runtime.status) ? 'good' : 'warn'}`}>{itemStatusLabel[runtime.status]}</span>
+        <div className="paperwork-value-cell">{renderEditor(item, runtime)}</div>
+        <span className={`status ${missing ? 'danger' : unresolved ? 'warn' : 'good'}`}>{runtime.dirty ? 'Edited · approval required' : itemStatusLabel[runtime.persistedStatus]}</span>
         <span className="confidence-mini">{item.record.confidence === null ? 'No confidence' : `${item.record.confidence}%`}</span>
-        {!fullPaperwork && !isResolved(runtime.status) && (
-          <button className="btn btn-review-action" type="button" disabled={!runtime.value.trim()} onClick={() => approveItem(id)}>{actionLabel}</button>
-        )}
-        {!fullPaperwork && <button className="text-button" type="button" onClick={() => jumpToSource(item)}>Source</button>}
-        {field?.definition.preferenceEligible && !fullPaperwork && (
+        {unresolved && <button className="btn btn-review-action" type="button" disabled={!runtime.value.trim()} onClick={() => approveItem(id)}>{runtime.dirty || missing ? 'Save & Approve' : 'Approve'}</button>}
+        <button className="text-button" type="button" onClick={() => jumpToSource(item, rowId, originSurface)}>Source</button>
+        {field?.definition.preferenceEligible && (
           <button className="text-button subtle-action" type="button" onClick={() => { setPreferenceFieldId(field.id); setPreferenceSaved(false); }}>Use this next time</button>
         )}
         <div className="paperwork-meta">
-          {renderSourceBadges(item)}
-          <span>{item.record.transactionRisk} risk</span>
+          {renderSourceBadges(item, rowId, originSurface)}
           <span>{item.record.required ? 'Required' : 'Optional'}</span>
           {runtime.revisions.length > 0 && <span>{runtime.revisions.length} revision{runtime.revisions.length === 1 ? '' : 's'} preserved</span>}
           {runtime.approvals.length > 0 && <span>{runtime.approvals.length} approval event{runtime.approvals.length === 1 ? '' : 's'} preserved</span>}
@@ -417,21 +442,21 @@ export function PrepareWorkspace() {
     );
   }
 
-  function renderDocument(document: ReviewDocument) {
-    const isOpen = (openDocuments[activePackage.id] ?? []).includes(document.id);
+  function renderAllFieldsDocument(document: ReviewDocument) {
+    const open = (openFieldDocuments[activePackage.id] ?? []).includes(document.id);
     return (
-      <article className="paperwork-document" id={stableId('document', activePackage.id, document.id)} tabIndex={-1} key={document.id}>
-        <button type="button" className="document-toggle" aria-expanded={isOpen} onClick={() => toggleDocument(document.id)}>
-          <span className={`chevron ${isOpen ? 'open' : ''}`} aria-hidden="true">›</span>
+      <article className="paperwork-document" key={document.id}>
+        <button type="button" className="document-toggle" aria-expanded={open} onClick={() => toggleFieldDocument(document.id)}>
+          <span className={`chevron ${open ? 'open' : ''}`} aria-hidden="true">›</span>
           <span><strong>{document.name}</strong><small>{document.documentVersion} · {document.jurisdiction}</small></span>
           <span>{document.sections.reduce((count, section) => count + section.fieldIds.length + (section.addendumProvisionIds?.length ?? 0), 0)} items</span>
         </button>
-        {isOpen && document.sections.map((section) => (
-          <section className="paperwork-section" id={stableId('section', activePackage.id, document.id, section.id)} key={section.id}>
+        {open && document.sections.map((section) => (
+          <section className="paperwork-section" id={stableId('all-fields-section', activePackage.id, document.id, section.id)} key={section.id}>
             <h3>Section {section.sectionNumber}: {section.title}</h3>
             <div className="paperwork-review-list">
-              {section.fieldIds.map((id) => fieldsById.get(id)).filter((record): record is GeneratedFormField => Boolean(record)).map((record) => renderReviewItem({ kind: 'field', record }, true))}
-              {(section.addendumProvisionIds ?? []).map((id) => provisionsById.get(id)).filter((record): record is AddendumProvision => Boolean(record)).map((record) => renderReviewItem({ kind: 'provision', record }, true))}
+              {section.fieldIds.map((id) => fieldsById.get(id)).filter((record): record is GeneratedFormField => Boolean(record)).map((record) => renderReviewItem({ kind: 'field', record }, 'allFields'))}
+              {(section.addendumProvisionIds ?? []).map((id) => provisionsById.get(id)).filter((record): record is AddendumProvision => Boolean(record)).map((record) => renderReviewItem({ kind: 'provision', record }, 'allFields'))}
             </div>
           </section>
         ))}
@@ -439,9 +464,30 @@ export function PrepareWorkspace() {
     );
   }
 
-  const nonTranscriptSources = activeItems.flatMap((item) => item.record.sourceReferences
-    .filter((source) => source.type !== 'transcript')
-    .map((source) => ({ source, item })));
+  function renderPaperworkField(item: ReviewItem, document: ReviewDocument, pageNumber: number) {
+    const id = itemId(item);
+    const runtime = runtimeItems[id];
+    const missing = item.record.required && (runtime.persistedStatus === 'missing' || !runtime.value.trim());
+    const approval = !missing && (!isResolved(runtime.persistedStatus) || runtime.dirty);
+    const edited = !missing && !approval && runtime.persistedStatus === 'edited_and_approved';
+    const fieldId = stableId('paperwork-field', activePackage.id, document.id, pageNumber, id);
+    return (
+      <div id={fieldId} tabIndex={-1} className={`document-field ${missing ? 'unresolved' : approval ? 'approval' : edited ? 'edited' : ''} ${returnHighlightId === fieldId ? 'return-highlight' : ''}`} key={id}>
+        <div className="document-field-heading"><span>{itemLabel(item)}</span><small>{runtime.dirty ? 'Edited · approval required' : itemStatusLabel[runtime.persistedStatus]}</small></div>
+        {renderEditor(item, runtime, 'document-inline-editor')}
+        <div className="document-field-actions">
+          {(runtime.dirty || !isResolved(runtime.persistedStatus)) && <button type="button" onClick={() => approveItem(id)} disabled={!runtime.value.trim()}>{runtime.dirty || missing ? 'Save & Approve' : 'Approve'}</button>}
+          <button type="button" onClick={() => jumpToSource(item, fieldId, 'paperwork', item.record.sourceReferences[0], document.id, pageNumber)}>Source</button>
+        </div>
+      </div>
+    );
+  }
+
+  const nonTranscriptSources = activeItems.flatMap((item) => item.record.sourceReferences.filter((source) => source.type !== 'transcript').map((source) => ({ source, item })));
+  const addendumNumbers = Array.from(new Set(activePackage.addendumProvisions.map((provision) => provision.addendumNumber))).sort((a, b) => a - b);
+  const readinessLabel = activePackageStatus === 'needs_attention' || activePackageStatus === 'draft_saved'
+    ? 'Not ready to send'
+    : packageStatusLabel[activePackageStatus];
 
   return (
     <div className="review-send-page exact-review-page">
@@ -449,15 +495,14 @@ export function PrepareWorkspace() {
         <h2 id="packages-heading" className="page-section-title">Packages</h2>
         <div className="package-list">
           {mockReviewPackages.map((pkg) => {
-            const packageItems = allPackageItems(pkg);
-            const unresolvedCount = packageItems.filter((item) => !isResolved(runtimeItems[itemId(item)].status)).length;
+            const count = allPackageItems(pkg).filter((item) => needsAttention(runtimeItems[itemId(item)])).length;
             const status = getPackageStatus(pkg);
             const selected = pkg.id === activePackage.id;
             return (
               <button className={`package-row-card ${selected ? 'active' : ''}`} aria-pressed={selected} type="button" key={pkg.id} onClick={() => selectPackage(pkg.id)}>
                 <span><strong>{packageName(pkg)}</strong><small>{pkg.lastUpdated}</small></span>
                 <span className={`status ${packageStatusTone[status]}`}>{packageStatusLabel[status]}</span>
-                <small>{unresolvedCount} unresolved</small>
+                <small>{count} unresolved</small>
                 <small>{pkg.documents.length} documents</small>
               </button>
             );
@@ -466,144 +511,105 @@ export function PrepareWorkspace() {
       </section>
 
       <section className="card exact-review-summary">
-        <div>
-          <h2>{packageName(activePackage)}</h2>
-          <p className="dev-warning">{activePackage.representativeSchemaWarning}</p>
+        <h2>{packageName(activePackage)}</h2>
+        <div className="package-summary-meta" aria-label="Package summary">
+          <span>{activePackage.documents.length} documents</span>
+          <span>{attentionItems.length} need attention</span>
+          <span className={packageStatusTone[activePackageStatus]}>{readinessLabel}</span>
+          <span>{activePackage.lastUpdated}</span>
+          {addendumNumbers.length > 0 && <span>Addendum {addendumNumbers.map((number) => `#${number}`).join(', ')}</span>}
         </div>
-        <div className="readiness-facts">
-          <span><strong>{activePackage.documents.length}</strong><small>documents</small></span>
-          <span><strong>{requiredBlockers.length}</strong><small>required blockers</small></span>
-          <span><strong>{unresolvedItems.length}</strong><small>review items</small></span>
-          <span><strong className={`status-text ${packageStatusTone[activePackageStatus]}`}>{packageStatusLabel[activePackageStatus]}</strong><small>package status</small></span>
-        </div>
-        <button className="btn btn-secondary" type="button" onClick={togglePreview}>Preview Paperwork</button>
-      </section>
-
-      <section className="card included-documents-card">
-        <button className="collapsible-heading" type="button" aria-expanded={currentSections.includedDocuments} onClick={() => setSection('includedDocuments', !currentSections.includedDocuments)}>
-          <span className={`chevron ${currentSections.includedDocuments ? 'open' : ''}`} aria-hidden="true">›</span>
-          <span>Included Documents</span>
-          <small>{activePackage.documents.length}</small>
-        </button>
-        {currentSections.includedDocuments && (
-          <div className="included-document-links">
-            {activePackage.documents.map((document) => <button type="button" key={document.id} onClick={() => openDocument(document)}>{document.name}<span>Open document</span></button>)}
-          </div>
-        )}
-      </section>
-
-      <section className={`card paperwork-preview-card ${previewOpen ? '' : 'is-collapsed'}`} id="paperwork-preview">
-          <div className="section-heading"><h2>Preview Paperwork</h2><button className="btn btn-quiet" type="button" onClick={closePreview}>Close preview</button></div>
-          <div className="preview-legend" aria-label="Preview highlight legend"><span className="edited">Edited</span><span className="generated">Awaiting approval</span><span className="unresolved">Unresolved</span></div>
-          <div className="paperwork-preview-docs">
-            {activePackage.documents.map((document) => (
-              <article className="paperwork-page" key={document.id}>
-                <button type="button" className="preview-document-name" onClick={() => openDocument(document)}>{document.name}</button>
-                <small>{document.documentVersion} · Not an official completed PDF</small>
-                {document.sections.map((section) => (
-                  <div className="preview-section" key={section.id}>
-                    <strong>Section {section.sectionNumber}: {section.title}</strong>
-                    {section.fieldIds.map((id) => fieldsById.get(id)).filter((record): record is GeneratedFormField => Boolean(record)).map((field) => {
-                      const runtime = runtimeItems[field.id];
-                      const className = !runtime.value.trim() || runtime.status === 'missing' || runtime.status === 'conflicting' ? 'unresolved' : runtime.status === 'edited_and_approved' ? 'edited' : runtime.status === 'needs_approval' ? 'generated' : '';
-                      return <button className={`preview-field ${className}`} type="button" key={field.id} onClick={() => jumpToReviewItem(field.id)}><span>{field.definition.officialLabel}</span><b>{runtime.value || '__________'}</b>{field.selection?.checkboxState && <em>☑</em>}</button>;
-                    })}
-                    {(section.addendumProvisionIds ?? []).map((id) => provisionsById.get(id)).filter((record): record is AddendumProvision => Boolean(record)).map((provision) => {
-                      const runtime = runtimeItems[provision.id];
-                      const className = !runtime.value.trim() || runtime.status === 'missing' ? 'unresolved' : runtime.status === 'edited_and_approved' ? 'edited' : runtime.status === 'needs_approval' ? 'generated' : '';
-                      return <button className={`preview-field ${className}`} type="button" key={provision.id} onClick={() => jumpToReviewItem(provision.id)}><span>{provision.itemNumber}.</span><b>{runtime.value || '__________'}</b></button>;
-                    })}
-                  </div>
-                ))}
-              </article>
-            ))}
-          </div>
+        <p className="dev-warning">{activePackage.representativeSchemaWarning}</p>
       </section>
 
       <section className="review-page-section" id={`review-${activePackage.id}`} aria-labelledby="review-heading">
         <h2 className="page-section-title" id="review-heading" ref={reviewHeadingRef} tabIndex={-1}>Review</h2>
+
         <div className="card collapsible-card">
           <button className="collapsible-heading" type="button" aria-expanded={currentSections.needsAttention} onClick={() => setSection('needsAttention', !currentSections.needsAttention)}>
-            <span className={`chevron ${currentSections.needsAttention ? 'open' : ''}`} aria-hidden="true">›</span>
-            <span>Needs Attention</span>
-            <small>{unresolvedItems.length}</small>
+            <span className={`chevron ${currentSections.needsAttention ? 'open' : ''}`} aria-hidden="true">›</span><span>Needs Attention</span><small>{attentionItems.length}</small>
           </button>
           {currentSections.needsAttention && (
             <div className="collapsible-content">
-              {unresolvedItems.length > 1 && <div className="review-bulk-action"><button className="btn btn-secondary" type="button" onClick={approveAllReady}>Approve all ready items</button></div>}
-              {unresolvedItems.length === 0
-                ? <div className="review-complete-state">All review items are approved.</div>
-                : <div className="paperwork-review-list">{unresolvedItems.map((item) => renderReviewItem(item))}</div>}
+              {attentionItems.length > 1 && <div className="review-bulk-action"><button className="btn btn-secondary" type="button" onClick={approveAllReady}>Approve all ready items</button></div>}
+              {attentionItems.length === 0 ? <div className="review-complete-state">All review items are approved.</div> : <div className="paperwork-review-list">{attentionItems.map((item) => renderReviewItem(item, 'attention'))}</div>}
             </div>
           )}
         </div>
-      </section>
 
-      <section className="review-page-section" aria-labelledby="full-paperwork-heading">
-        <h2 className="page-section-title" id="full-paperwork-heading">Full Paperwork</h2>
         <div className="card collapsible-card">
-          <button className="collapsible-heading" type="button" aria-expanded={currentSections.fullPaperwork} onClick={() => setSection('fullPaperwork', !currentSections.fullPaperwork)}>
-            <span className={`chevron ${currentSections.fullPaperwork ? 'open' : ''}`} aria-hidden="true">›</span>
-            <span>Full Paperwork Review</span>
-            <small>{activeItems.length} items</small>
+          <button className="collapsible-heading" type="button" aria-expanded={currentSections.allFields} onClick={() => setSection('allFields', !currentSections.allFields)}>
+            <span className={`chevron ${currentSections.allFields ? 'open' : ''}`} aria-hidden="true">›</span><span>All Fields Review</span><small>{activeItems.length} fields</small>
           </button>
-          {currentSections.fullPaperwork && <div className="collapsible-content">{activePackage.documents.map(renderDocument)}</div>}
+          {currentSections.allFields && <div className="collapsible-content">{activePackage.documents.map(renderAllFieldsDocument)}</div>}
         </div>
-      </section>
 
-      <section className="card action-stack-card">
-        <button className="btn btn-secondary" type="button" onClick={() => setSavedPackages((current) => Array.from(new Set([...current, activePackage.id])))}>Save Draft</button>
-        <button className="btn btn-primary btn-large" type="button" disabled={activePackageStatus !== 'ready_to_send'} onClick={() => setSentPackages((current) => Array.from(new Set([...current, activePackage.id])))}>
-          {activePackageStatus === 'sent_for_signatures' ? 'Sent for Signatures' : 'Send for Signatures'}
-        </button>
-        {requiredBlockers.length > 0 && <small>{requiredBlockers.length} unresolved required item{requiredBlockers.length === 1 ? '' : 's'}</small>}
-      </section>
+        <div className="card collapsible-card">
+          <button className="collapsible-heading" type="button" aria-expanded={currentSections.paperwork} onClick={() => setSection('paperwork', !currentSections.paperwork)}>
+            <span className={`chevron ${currentSections.paperwork ? 'open' : ''}`} aria-hidden="true">›</span><span>Paperwork</span><small>{activePackage.documents.length} documents</small>
+          </button>
+          {currentSections.paperwork && (
+            <div className="collapsible-content paperwork-workspace">
+              <nav className="paperwork-document-nav" aria-label="Package documents">
+                {activePackage.documents.map((document) => <button type="button" className={document.id === activePaperworkDocument.id ? 'active' : ''} aria-current={document.id === activePaperworkDocument.id ? 'page' : undefined} key={document.id} onClick={() => openPaperworkDocument(document)}><strong>{document.name}</strong><small>{document.pageCount} page{document.pageCount === 1 ? '' : 's'}</small></button>)}
+              </nav>
+              <div className="paperwork-viewer" id={stableId('paperwork-viewer', activePackage.id, activePaperworkDocument.id)} tabIndex={-1}>
+                <div className="paperwork-viewer-toolbar">
+                  <div><strong>{activePaperworkDocument.name}</strong><small>{activePaperworkDocument.documentVersion} · Mock document view</small></div>
+                  <div className="page-controls">
+                    <button type="button" disabled={activePaperworkPage <= 1} onClick={() => setPaperworkPages((current) => ({ ...current, [activePaperworkDocument.id]: Math.max(1, activePaperworkPage - 1) }))}>Previous</button>
+                    <span>Page {activePaperworkPage} of {activePaperworkDocument.pageCount}</span>
+                    <button type="button" disabled={activePaperworkPage >= activePaperworkDocument.pageCount} onClick={() => setPaperworkPages((current) => ({ ...current, [activePaperworkDocument.id]: Math.min(activePaperworkDocument.pageCount, activePaperworkPage + 1) }))}>Next</button>
+                  </div>
+                </div>
+                <div className="paperwork-legend" aria-label="Paperwork highlight legend"><span className="missing">Missing</span><span className="approval">Needs approval</span><span className="edited">User edited</span></div>
+                <article className="paperwork-rendered-page" id={stableId('document-page', activePackage.id, activePaperworkDocument.id, activePaperworkPage)}>
+                  <header><span>Accord representative form view</span><h3>{activePaperworkDocument.name}</h3><small>Page {activePaperworkPage}</small></header>
+                  {activePaperworkDocument.sections.filter((section) => section.pageNumber === activePaperworkPage).map((section) => (
+                    <section className="rendered-form-section" key={section.id}>
+                      <h4>Section {section.sectionNumber} · {section.title}</h4>
+                      {section.fieldIds.map((id) => fieldsById.get(id)).filter((record): record is GeneratedFormField => Boolean(record)).map((record) => renderPaperworkField({ kind: 'field', record }, activePaperworkDocument, activePaperworkPage))}
+                      {(section.addendumProvisionIds ?? []).map((id) => provisionsById.get(id)).filter((record): record is AddendumProvision => Boolean(record)).map((record) => renderPaperworkField({ kind: 'provision', record }, activePaperworkDocument, activePaperworkPage))}
+                    </section>
+                  ))}
+                </article>
+              </div>
+            </div>
+          )}
+        </div>
 
-      <section className="review-page-section" aria-labelledby="transcript-heading">
-        <h2 className="page-section-title" id="transcript-heading">Transcript</h2>
         <div className="card collapsible-card transcript-card">
           <button className="collapsible-heading" type="button" aria-expanded={currentSections.transcript} onClick={() => setSection('transcript', !currentSections.transcript)}>
-            <span className={`chevron ${currentSections.transcript ? 'open' : ''}`} aria-hidden="true">›</span>
-            <span>Complete Transcript</span>
-            <small>{activePackage.transcriptSegments.length} segments</small>
+            <span className={`chevron ${currentSections.transcript ? 'open' : ''}`} aria-hidden="true">›</span><span>Transcript</span><small>{activePackage.transcriptSegments.length} segments</small>
           </button>
           {currentSections.transcript && (
             <div className="collapsible-content transcript-snippets complete-transcript">
               {activePackage.transcriptSegments.map((segment) => (
                 <blockquote id={segment.id} tabIndex={-1} className={highlightedSegments.includes(segment.id) ? 'highlighted' : ''} key={segment.id}>
-                  <span>{segment.timestamp} · {segment.speaker}</span>
-                  {highlightedSegments.includes(segment.id) ? highlightedText(segment.text, highlightedQuote) : segment.text}
+                  <span>{segment.timestamp} · {segment.speaker}</span>{highlightedSegments.includes(segment.id) ? highlightedText(segment.text, highlightedQuote) : segment.text}
                 </blockquote>
               ))}
             </div>
           )}
+          {nonTranscriptSources.length > 0 && currentSections.transcript && (
+            <div className="other-sources-inline">
+              <button className="collapsible-heading" type="button" aria-expanded={currentSections.otherSources} onClick={() => setSection('otherSources', !currentSections.otherSources)}>
+                <span className={`chevron ${currentSections.otherSources ? 'open' : ''}`} aria-hidden="true">›</span><span>Other Sources</span><small>{nonTranscriptSources.length}</small>
+              </button>
+              {currentSections.otherSources && <div className="collapsible-content other-source-list">{nonTranscriptSources.map(({ source, item }) => <article id={stableId('other-source', activePackage.id, source.id)} tabIndex={-1} key={`${source.id}-${itemId(item)}`}><span className="status neutral">{sourceTypeLabel(source.type)}</span><div><strong>{source.label}</strong><small>Supports {itemLabel(item)} · supplied value: {runtimeItems[itemId(item)].value || 'No value'}</small></div><div><span>{source.retrievalTime ?? 'Date unavailable'}</span><small>{needsAttention(runtimeItems[itemId(item)]) ? 'Awaiting agent approval' : 'Approved'}</small></div></article>)}</div>}
+            </div>
+          )}
         </div>
 
-        {nonTranscriptSources.length > 0 && (
-          <div className="card collapsible-card other-sources-card">
-            <button className="collapsible-heading" type="button" aria-expanded={currentSections.otherSources} onClick={() => setSection('otherSources', !currentSections.otherSources)}>
-              <span className={`chevron ${currentSections.otherSources ? 'open' : ''}`} aria-hidden="true">›</span>
-              <span>Other Sources</span>
-              <small>{nonTranscriptSources.length}</small>
-            </button>
-            {currentSections.otherSources && (
-              <div className="collapsible-content other-source-list">
-                {nonTranscriptSources.map(({ source, item }) => (
-                  <article id={stableId('other-source', activePackage.id, source.id)} tabIndex={-1} key={`${source.id}-${itemId(item)}`}>
-                    <span className="status neutral">{sourceTypeLabel(source.type)}</span>
-                    <div><strong>{source.label}</strong><small>Supports {itemLabel(item)} · supplied value: {runtimeItems[itemId(item)].value || 'No value'}</small></div>
-                    <div><span>{source.retrievalTime ?? 'Date unavailable'}</span><small>{isResolved(runtimeItems[itemId(item)].status) ? 'Approved' : 'Awaiting agent approval'}</small></div>
-                  </article>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+        <section className="card action-stack-card" aria-label="Package actions">
+          <button className="btn btn-secondary" type="button" onClick={() => setSavedPackages((current) => Array.from(new Set([...current, activePackage.id])))}>Save Draft</button>
+          <button className="btn btn-primary btn-large" type="button" disabled={activePackageStatus !== 'ready_to_send'} onClick={() => setSentPackages((current) => Array.from(new Set([...current, activePackage.id])))}>{activePackageStatus === 'sent_for_signatures' ? 'Sent for Signatures' : 'Send for Signatures'}</button>
+          {requiredBlockers.length > 0 && <small>{requiredBlockers.length} unresolved required item{requiredBlockers.length === 1 ? '' : 's'}</small>}
+          {activePackageStatus === 'sent_for_signatures' && <small className="mock-coordinate-note">Coordinate transaction attached · mock</small>}
+        </section>
       </section>
 
-      {navigationState && (
-        <button type="button" className="back-to-review" onClick={returnToReviewItem}>Back to Review Item</button>
-      )}
+      {navigationState && <button type="button" className="back-to-review" onClick={returnToReviewItem}>Back to Review Item</button>}
 
       {activePreferenceField && (
         <div className="preference-drawer" role="dialog" aria-modal="true" aria-label="Save as preference">
@@ -622,4 +628,16 @@ export function PrepareWorkspace() {
       )}
     </div>
   );
+}
+
+function documentOrder(pkg: ReviewPackage, item: ReviewItem) {
+  const documentId = item.kind === 'field' ? item.record.documentId : pkg.documents.find((document) => document.name === item.record.documentTitle)?.id;
+  return pkg.documents.find((document) => document.id === documentId)?.order ?? 99;
+}
+
+function fieldOrder(pkg: ReviewPackage, item: ReviewItem) {
+  if (item.kind === 'provision') return item.record.itemNumber;
+  const document = pkg.documents.find((candidate) => candidate.id === item.record.documentId);
+  const sectionIndex = document?.sections.findIndex((section) => section.id === item.record.sectionId) ?? 99;
+  return sectionIndex * 100 + item.record.definition.itemSequence;
 }

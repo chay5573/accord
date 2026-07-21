@@ -99,8 +99,8 @@ Backlog grooming must estimate clicks removed, typing removed, inference gained,
 - [ ] Import and validate official licensed form schemas before representing Review & Send as complete official form coverage.
 - [x] Build mock recommended-package checklist with reasons.
 - [x] Represent agent approval and blocker gates before draft package generation in the mock Deal Desk Review.
-- [x] **Critical friction remover** — Refactor Review & Send around representative exact-paperwork records, Full Paperwork Review, itemized addenda, full transcript sources, and mock preview.
-- [x] **Critical friction remover** — Add mutually exclusive package states, field-level Save & Approve, risk-ordered attention, collapsible evidence, source return navigation, preview-to-review links, and stable document anchors.
+- [x] **Critical friction remover** — Refactor Review & Send around representative exact-paperwork records, All Fields Review, itemized addenda, complete transcript sources, and editable rendered paperwork.
+- [x] **Critical friction remover** — Add mutually exclusive package states, field-level Save & Approve, stable risk-ordered attention during editing, collapsible evidence, exact source return navigation, shared field/document editing, and stable document anchors.
 - [ ] Add rendered fixture and visual regression tests.
 - [ ] Keep Contract Library administration in Settings.
 
