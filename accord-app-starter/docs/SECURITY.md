@@ -41,6 +41,12 @@ Contracts, transcripts, recordings, identity documents, bank statements, wire in
 
 Use synthetic data in local development and automated tests. Production-data access must be explicitly authorized, time-bounded, audited, and limited to the minimum necessary.
 
+### Uploaded paperwork review
+
+Future uploaded paperwork must use tenant-isolated, non-public storage with encryption in transit and at rest. Intake must validate allowed file types and size, perform malware scanning and safe-rendering checks, and reject unsafe or ambiguous content before analysis. Access follows least privilege and every upload, view, analysis, issue decision, correction preparation, export, retention action, and deletion is audited.
+
+Uploaded documents and derived findings follow workspace retention, legal-hold, and secure-deletion policy. No public document URLs are permitted. Provider credentials remain server-side, and uploaded paperwork cannot be used for model training without separate explicit authorization under Transaction Memory policy.
+
 ## Transaction Memory
 
 - Raw training cases and derived patterns are tenant-scoped and must never be exposed across unrelated teams or brokerages.

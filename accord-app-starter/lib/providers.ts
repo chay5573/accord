@@ -1,6 +1,7 @@
 import type { AccordGuideContentItem, AccordGuideVideo, AgentReviewQueueItem, ClientAIAnswer, ClientPortalAccess, ClientQuestion, ClientVisibleDocument, ClientVisibleFact, ContractSectionExplanation, EducationContentItem, PersonalizedAnswer, TransactionStage } from './clientEducation';
 import type { CompletedSignedDocument, ESignatureConnection, ESignatureProviderType, SignatureAuditEntry, SignatureEvent, SignaturePacket, SignatureStatus } from './eSignature';
 import type { InboxAttachment, InboxAuditEntry, InboxConnection, InboxMessageSignal, InboxProviderType, MessageClassification, MonitoredMailboxScope } from './inbox';
+import type { DocumentFieldComparison, DocumentLocation, DocumentReviewIssue, DocumentReviewJob, UploadedDocument, UploadedPaperworkPackage } from './documentReview';
 import type { TeachAccordRule, TeachAccordRuleScope, TeachAccordRuleStatus } from './teachAccord';
 import type { FieldProvenance, LearnedPattern, SensitiveDataFinding, TransactionCase, TransactionMemoryAuditEntry } from './transactionMemory';
 
@@ -90,6 +91,17 @@ export interface AiExtractionProvider {
 export interface PdfGenerationProvider {
   provider: ProviderName | 'pdf-lib' | 'custom';
   generatePackage(input: { transactionId: string; formTemplateIds: string[] }): Promise<StorageObject[]>;
+}
+
+export interface DocumentReviewProvider {
+  provider: ProviderName | 'document_review';
+  uploadDocuments(input: { workspaceId: string; transactionId?: string; requestedByUserId: string; files: Array<File | Blob> }): Promise<UploadedPaperworkPackage>;
+  startDocumentReview(input: { packageId: string; requestedByUserId: string }): Promise<DocumentReviewJob>;
+  compareAgainstTransaction(input: { jobId: string; transactionId: string; requestedByUserId: string }): Promise<DocumentFieldComparison[]>;
+  listIssues(input: { jobId: string; requestedByUserId: string }): Promise<DocumentReviewIssue[]>;
+  resolveIssue(input: { issueId: string; resolution: 'dismissed' | 'resolved'; requestedByUserId: string; note?: string }): Promise<DocumentReviewIssue>;
+  prepareCorrection(input: { issueId: string; requestedByUserId: string }): Promise<{ issue: DocumentReviewIssue; proposedDocument: UploadedDocument | null }>;
+  getDocumentLocation(input: { issueId: string; requestedByUserId: string }): Promise<DocumentLocation>;
 }
 
 export interface VerifiedLookupRequest {

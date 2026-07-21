@@ -76,6 +76,23 @@ Accord Guide is a future/off-by-default mock layer. It personalizes education on
 
 The first simplification sprint reduced the primary information architecture to Capture, Prepare, Manage / Deal Desk, Client Portal, and Settings. Capture no longer asks destination, transaction, or conversation-type questions. Prepare consolidates draft review behind progressive disclosure. Manage leads with one urgent action and collapses new activity and secondary modules.
 
+## Next major milestone — Real Form Ingestion and Validation
+
+Status: **Planned — not started and not authorized by the current mock-only task**
+
+1. Import official blank forms with licensing or usage authorization.
+2. Record form name, version, jurisdiction, effective date, provenance, and checksum.
+3. Map every field, checkbox, radio option, initials block, signature block, free-text area, and addendum area.
+4. Create immutable, versioned `FormSchema` and mapping records.
+5. Link Review & Send records to exact official form coordinates and IDs.
+6. Render realistic completed forms from approved snapshots.
+7. Compare Accord output with an approved completed real-transaction fixture.
+8. Record each mismatch and refine mappings and deterministic rules until output matches the approved transaction.
+
+The required validation harness is **blank official form + conversation/transcript + approved completed transaction = expected Accord output**. It must track field accuracy, checkbox accuracy, form-selection accuracy, addendum wording accuracy, omitted-field rate, false-positive form rate, and source-link accuracy by form version.
+
+The current representative schemas and Upload Paperwork for Review mock cannot establish production accuracy. Official forms, authorization, complete mappings, secure intake, and governed transaction fixtures are dependencies before live form or document-analysis claims.
+
 ### Phase 2 constraints
 
 - Use mock/synthetic data only.
@@ -128,3 +145,4 @@ Sprint acceptance criteria must use the Friction Budget from `/docs/ProductPhilo
 - [x] Product Freeze Level 3 applied to Record (v1). Future work should focus on Review & Send. Record should remain unchanged unless usability testing reveals friction, a new feature requires it, a defect is discovered, or Calvin explicitly reopens the page.
 - [x] Focused Review & Send redesign: multiple representative review packages, exact-paperwork field records, Needs Attention first, All Fields Review in document order, itemized addendum wording, complete transcript/source links, editable paperwork, and signature send blocked by unresolved required items.
 - [x] Review & Send interaction refinement: mutually exclusive package status, explicit item approval, stable red-first sorting while typing, collapsible major sections, complete transcript source-and-return navigation, shared field/document editing, document-aware return context, clarified non-transcript provenance, and stable document anchors.
+- [x] Focused Review & Send correction: responsive Needs Attention controls, compact percentage confidence, stronger package metadata, full-width final actions, and mock Upload Paperwork for Review with provider-neutral issue triage.

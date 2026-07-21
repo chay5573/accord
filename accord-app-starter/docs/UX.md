@@ -163,6 +163,12 @@ Review & Send should feel like exact paperwork review, not a dashboard or AI sum
 - Source navigation preserves the originating surface, document, page, and field so **Back to Review Item** returns to the exact prior context.
 - Stored transcripts are shown as the complete chronological record available to Accord, not as a curated subset of evidence snippets.
 - Document links use stable package/document/section anchors. Opening a document focuses its beginning without changing the selected package or unexpectedly moving to the bottom of the page.
+- Needs Attention rows reserve flexible space for the field editor and group status, confidence, approval, and Source controls in a responsive control area. Badges wrap to their content, confidence uses a compact percentage, and secondary controls stack cleanly without overlap.
+- The final Save Draft and Send for Signatures area spans the Review width. Send remains disabled while required blockers exist, with only a concise unresolved count.
+
+### Uploaded paperwork review
+
+Review & Send may offer an optional **Upload Paperwork for Review** section for documents prepared outside Accord. The mock flow selects files, starts a clearly labeled mock review, and shows concise attributable issue suggestions with severity, document location, suggested action, and explicit Dismiss, Mark resolved, or Prepare correction actions. It must state that no legal-form validation or document modification is occurring. Production upload, storage, parsing, comparison, correction, and rendering remain provider-backed future work.
 
 No legal document may be sent while required fields are unresolved. Package readiness should show document count, unresolved required items, unresolved recommended-review items, and signature readiness; percentages are secondary.
 

@@ -67,7 +67,9 @@ A change is complete when behavior and failure states are implemented; authoriza
 
 For contract-affecting changes, also require form-version traceability, representative rendering QA, and product/compliance sign-off.
 
-For Review & Send changes, confirm that the UI is reviewing exact paperwork records, not AI summaries. Needs Review, Full Paperwork Review, Paperwork Preview, transcript/source links, and future document-generation requests must share normalized records for the same field or provision.
+For Review & Send changes, confirm that the UI is reviewing exact paperwork records, not AI summaries. Needs Attention, All Fields Review, editable Paperwork, transcript/source links, and future document-generation requests must share normalized records for the same field or provision.
+
+Uploaded-paperwork review changes must keep file intake, analysis, comparison, and correction behind provider-neutral services. Mock findings must be labeled synthetic, and no workflow may silently modify an uploaded file or approved transaction fact. Production form claims require authorized official forms, immutable versions, complete mappings, and known-answer validation fixtures.
 
 ## Product Philosophy Validation
 

@@ -97,6 +97,14 @@ Needs Attention, All Fields Review, Paperwork, readiness calculations, and futur
 
 Every generated document field must map to an official form field, option, checkbox, signature assignment, or provision before production. Representative mock schemas are acceptable during prototyping only when the UI visibly states that official licensed form ingestion, versioning, validation, and mapping remain incomplete.
 
+## Uploaded paperwork review boundary
+
+`DocumentReviewProvider` separates confidential file intake and document analysis from Review & Send UI. Its provider-neutral operations include `uploadDocuments()`, `startDocumentReview()`, `compareAgainstTransaction()`, `listIssues()`, `resolveIssue()`, `prepareCorrection()`, and `getDocumentLocation()`.
+
+The normalized model uses `UploadedPaperworkPackage`, `UploadedDocument`, `DocumentReviewJob`, `DocumentReviewIssue`, `DocumentIssueSeverity`, `DocumentFieldComparison`, and stable document locations. Application services must enforce tenant authorization, file safety, retention, audit, approved-transaction comparison scope, and human decisions. Provider output is a review suggestion and cannot alter an uploaded file, approved transaction fact, contract field, or document package silently. The current implementation is synthetic UI state only; no file is uploaded, parsed, stored, or analyzed by a provider.
+
+Production comparison depends on official, authorized, versioned form schemas with complete coordinate and option mapping. A provider may identify likely discrepancies, but Accord must not claim legal-form completeness or compliance based on representative mock schemas or model output alone.
+
 ## Opportunity and inbox boundaries
 
 `Opportunity` is the pre-transaction work container. It can begin from a conversation, recap, transcript, document, inbox signal, e-signature event, calendar event, CRM event, or reconstructed memory. It preserves capture inputs, signals, missing facts, reconstruction, draft readiness, and timeline events without requiring a transaction ID. Deal Desk becomes the canonical tracking layer after drafting or explicit save.

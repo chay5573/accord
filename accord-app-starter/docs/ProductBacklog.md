@@ -104,6 +104,20 @@ Backlog grooming must estimate clicks removed, typing removed, inference gained,
 - [ ] Add rendered fixture and visual regression tests.
 - [ ] Keep Contract Library administration in Settings.
 
+## Real Form Ingestion and Validation
+
+- [ ] **Supporting infrastructure** — Obtain official blank form files with documented licensing or usage authorization.
+- [ ] **Supporting infrastructure** — Identify and preserve form name, version, jurisdiction, effective date, provenance, and checksum.
+- [ ] **Critical friction remover** — Map every fillable field, checkbox, radio option, initials block, signature block, free-text area, and addendum area.
+- [ ] **Supporting infrastructure** — Create immutable, versioned `FormSchema` records and mapping revisions.
+- [ ] **Critical friction remover** — Link Review & Send records to exact official form coordinates and field IDs.
+- [ ] **Critical friction remover** — Render realistic completed forms from approved snapshots.
+- [ ] **Supporting infrastructure** — Build known-answer fixtures that combine a blank official form, conversation/transcript, and approved completed transaction into expected Accord output.
+- [ ] **Supporting infrastructure** — Record every mismatch and refine mappings and deterministic rules until the rendered output matches the approved transaction.
+- [ ] **Supporting infrastructure** — Track field accuracy, checkbox accuracy, form-selection accuracy, addendum wording accuracy, omitted-field rate, false-positive form rate, and source-link accuracy by form version.
+- [x] **Major friction remover** — Add mock Upload Paperwork for Review issue triage and provider-neutral document-review contracts without live upload, analysis, or silent document modification.
+- [ ] **Supporting infrastructure** — Implement secure uploaded-paperwork intake and `DocumentReviewProvider` only after form, security, privacy, retention, and audit prerequisites are approved.
+
 ## Files & Storage
 
 - [ ] Define logical document model, versions, classifications, and permissions.

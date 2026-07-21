@@ -58,6 +58,12 @@ Transaction Memory requires separate human approval before a completed transacti
 
 No raw training case or derived pattern may cross team or brokerage boundaries without explicit lawful authority. Audit import, view, redaction, approval, export, removal, and deletion. Removing a case must stop future retrieval and learning eligibility and trigger review of dependent patterns. Archive retention alone does not authorize training use.
 
+## Uploaded paperwork review
+
+Paperwork submitted for future document review remains a confidential transaction record. Production intake requires tenant-isolated storage, encryption in transit and at rest, malware and file-type validation, least-privilege access, non-public file access, audit logs, and enforceable retention and deletion controls. Upload authorization is not authorization for model training; training use requires separate explicit approval under Transaction Memory policy.
+
+Document-review findings are suggestions, not legal conclusions or approved contract facts. Accord must preserve the source document and location, distinguish observed values from approved transaction data, and require human action to dismiss, resolve, or prepare a correction. It must never silently change an uploaded document or approved transaction value.
+
 ## OneDrive
 
 OneDrive connection requires informed administrator or user authorization and minimum OAuth scopes. Show what is synchronized, its last status, and how disconnect/deletion behaves. Accord Cloud remains canonical unless a future policy explicitly changes this.

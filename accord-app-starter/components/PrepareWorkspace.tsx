@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
+import { UploadedPaperworkReview } from '@/components/UploadedPaperworkReview';
 import {
   type AddendumProvision,
   type FieldApproval,
@@ -425,10 +426,12 @@ export function PrepareWorkspace() {
           {field?.reviewReason && <small>{field.reviewReason}</small>}
         </div>
         <div className="paperwork-value-cell">{renderEditor(item, runtime)}</div>
-        <span className={`status ${missing ? 'danger' : unresolved ? 'warn' : 'good'}`}>{runtime.dirty ? 'Edited · approval required' : itemStatusLabel[runtime.persistedStatus]}</span>
-        <span className="confidence-mini">{item.record.confidence === null ? 'No confidence' : `${item.record.confidence}%`}</span>
-        {unresolved && <button className="btn btn-review-action" type="button" disabled={!runtime.value.trim()} onClick={() => approveItem(id)}>{runtime.dirty || missing ? 'Save & Approve' : 'Approve'}</button>}
-        <button className="text-button" type="button" onClick={() => jumpToSource(item, rowId, originSurface)}>Source</button>
+        <div className="paperwork-review-controls">
+          <span className={`status ${missing ? 'danger' : unresolved ? 'warn' : 'good'}`}>{runtime.dirty ? 'Edited · approval required' : itemStatusLabel[runtime.persistedStatus]}</span>
+          <span className="confidence-mini" aria-label={`Confidence ${item.record.confidence ?? 0} percent`}>{item.record.confidence === null ? '0%' : `${item.record.confidence}%`}</span>
+          {unresolved && <button className="btn btn-review-action" type="button" disabled={!runtime.value.trim()} onClick={() => approveItem(id)}>{runtime.dirty || missing ? 'Save & Approve' : 'Approve'}</button>}
+          <button className="text-button" type="button" onClick={() => jumpToSource(item, rowId, originSurface)}>Source</button>
+        </div>
         {field?.definition.preferenceEligible && (
           <button className="text-button subtle-action" type="button" onClick={() => { setPreferenceFieldId(field.id); setPreferenceSaved(false); }}>Use this next time</button>
         )}
@@ -519,8 +522,15 @@ export function PrepareWorkspace() {
           <span>{activePackage.lastUpdated}</span>
           {addendumNumbers.length > 0 && <span>Addendum {addendumNumbers.map((number) => `#${number}`).join(', ')}</span>}
         </div>
-        <p className="dev-warning">{activePackage.representativeSchemaWarning}</p>
+        {process.env.NODE_ENV !== 'production' && (
+          <details className="dev-only-notice">
+            <summary>Development schema note</summary>
+            <p>{activePackage.representativeSchemaWarning}</p>
+          </details>
+        )}
       </section>
+
+      <UploadedPaperworkReview />
 
       <section className="review-page-section" id={`review-${activePackage.id}`} aria-labelledby="review-heading">
         <h2 className="page-section-title" id="review-heading" ref={reviewHeadingRef} tabIndex={-1}>Review</h2>

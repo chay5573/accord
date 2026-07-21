@@ -44,6 +44,23 @@ Addendum provisions are separate ordered records. Show addendum number, document
 
 Official form-library ingestion, licensing, immutable template versions, and validation against the licensed forms remain production prerequisites. A representative mock schema must be labeled as incomplete and must not be described as complete official Utah form coverage.
 
+## Real form ingestion and validation
+
+The current Review & Send mock is not sufficient for production accuracy validation. Production requires official blank forms obtained with licensing or usage authorization, immutable version tracking, complete field and option mapping, realistic rendering, and comparison against approved completed transactions. Accord must not claim form completeness until every field, checkbox, radio selection, initials block, signature assignment, free-text area, and addendum area is mapped.
+
+The validation harness is:
+
+```text
+Blank official form
++ conversation/transcript
++ approved completed transaction
+= expected Accord output
+```
+
+For every form version, measure field accuracy, checkbox accuracy, form-selection accuracy, addendum wording accuracy, omitted-field rate, false-positive form rate, and source-link accuracy. Record every mismatch against the exact form version and mapping revision. Refine deterministic mappings, conditions, and source rules until rendered output matches the approved transaction fixture.
+
+Uploaded paperwork review is a separate comparison workflow. It may flag likely missing fields, unchecked requirements, inconsistent names or dates, signature/initial gaps, addendum mismatches, approved-value differences, or missing documents. Findings remain suggestions; dismissal, resolution, and correction preparation require explicit human actions, and the source document is never silently modified.
+
 ## Generation gate
 
 Generation requires:
