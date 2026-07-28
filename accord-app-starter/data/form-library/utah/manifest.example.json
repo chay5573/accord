@@ -1,0 +1,21 @@
+{
+  "forms": [
+    {
+      "form_id": "example-form-id",
+      "official_name": "Example Form (Non-Authoritative Placeholder)",
+      "short_name": "EXAMPLE",
+      "jurisdiction": "Utah",
+      "effective_date": "YYYY-MM-DD",
+      "version": "example",
+      "filename": "example.pdf",
+      "status": "active",
+      "source": "authorized-source-required",
+      "licensing_status": "unverified",
+      "fillable_pdf_status": "unknown",
+      "page_count": 0,
+      "mapping_status": "not_started",
+      "reviewed_by": null,
+      "reviewed_at": null
+    }
+  ]
+}

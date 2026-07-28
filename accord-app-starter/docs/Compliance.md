@@ -58,6 +58,14 @@ Transaction Memory requires separate human approval before a completed transacti
 
 No raw training case or derived pattern may cross team or brokerage boundaries without explicit lawful authority. Audit import, view, redaction, approval, export, removal, and deletion. Removing a case must stop future retrieval and learning eligibility and trigger review of dependent patterns. Archive retention alone does not authorize training use.
 
+## Form and validation data governance
+
+`private-data/` is a local-only, Git-ignored staging area. Real or redacted transcripts, completed paperwork, signatures, emails, MLS sheets, and other sensitive validation material must not be committed. Use the minimum necessary information, prefer redacted working copies, and preserve originals unless Calvin explicitly authorizes a change.
+
+Future validation processing must enforce tenant isolation, encryption, least-privilege access, audit logging, retention, and secure deletion. A transaction's presence in a validation case does not authorize model training; real transaction files require separate, explicit training authorization.
+
+Blank-form licensing, usage, processing, and repository-distribution rights must be confirmed before production use. Treat unresolved licensing or legal questions as blockers and do not guess. See `/docs/FormIngestion.md` and `/docs/ValidationDataset.md`.
+
 ## Uploaded paperwork review
 
 Paperwork submitted for future document review remains a confidential transaction record. Production intake requires tenant-isolated storage, encryption in transit and at rest, malware and file-type validation, least-privilege access, non-public file access, audit logs, and enforceable retention and deletion controls. Upload authorization is not authorization for model training; training use requires separate explicit approval under Transaction Memory policy.

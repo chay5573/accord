@@ -106,6 +106,9 @@ Backlog grooming must estimate clicks removed, typing removed, inference gained,
 
 ## Real Form Ingestion and Validation
 
+**Status:** Not started — waiting for Calvin to add the first blank form set and validation case.
+
+- [x] **Supporting infrastructure** — Create the protected form-library, synthetic-fixture, and local-only validation-case folder structure and operating documentation.
 - [ ] **Supporting infrastructure** — Obtain official blank form files with documented licensing or usage authorization.
 - [ ] **Supporting infrastructure** — Identify and preserve form name, version, jurisdiction, effective date, provenance, and checksum.
 - [ ] **Critical friction remover** — Map every fillable field, checkbox, radio option, initials block, signature block, free-text area, and addendum area.
@@ -117,6 +120,8 @@ Backlog grooming must estimate clicks removed, typing removed, inference gained,
 - [ ] **Supporting infrastructure** — Track field accuracy, checkbox accuracy, form-selection accuracy, addendum wording accuracy, omitted-field rate, false-positive form rate, and source-link accuracy by form version.
 - [x] **Major friction remover** — Add mock Upload Paperwork for Review issue triage and provider-neutral document-review contracts without live upload, analysis, or silent document modification.
 - [ ] **Supporting infrastructure** — Implement secure uploaded-paperwork intake and `DocumentReviewProvider` only after form, security, privacy, retention, and audit prerequisites are approved.
+
+**Required stop point:** After the folder structure is complete, Codex must wait for Calvin to add files and approve the inventory step. Do not inspect, ingest, map, extract, or analyze those files before approval.
 
 ## Files & Storage
 

@@ -6,3 +6,19 @@ node_modules/
 .env.*.local
 *.log
 *.tsbuildinfo
+
+# Local-only validation cases and completed transaction examples.
+# The safety README is the only intentionally trackable file in this tree.
+private-data/**
+!private-data/README.md
+
+# Sensitive or derived local form-processing artifacts.
+form-processing-scratch/
+**/.form-processing/
+**/ocr-output/
+**/extracted-output/
+**/private-validation-reports/
+*.ocr.json
+*.ocr.txt
+*.private-validation.json
+*.private-validation.html

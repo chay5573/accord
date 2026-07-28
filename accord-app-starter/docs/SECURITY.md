@@ -41,6 +41,16 @@ Contracts, transcripts, recordings, identity documents, bank statements, wire in
 
 Use synthetic data in local development and automated tests. Production-data access must be explicitly authorized, time-bounded, audited, and limited to the minimum necessary.
 
+### Local form validation data
+
+- `private-data/` is a local-only, Git-ignored staging area. Sensitive validation cases, transcripts, completed forms, signatures, emails, MLS sheets, and client data must not enter Git.
+- Prefer redacted working copies and never alter originals without Calvin's explicit authorization.
+- Real transaction material cannot be used for model training without separate, explicit authorization under Transaction Memory policy.
+- Future processing requires tenant isolation, encryption in transit and at rest, least-privilege access, audit logs, enforceable retention, and secure deletion.
+- Confirm blank-form licensing and usage rights before production use or repository distribution. Record unresolved legal or licensing questions instead of inferring permission.
+
+See `/docs/FormIngestion.md`, `/docs/ValidationDataset.md`, and `/private-data/README.md`.
+
 ### Uploaded paperwork review
 
 Future uploaded paperwork must use tenant-isolated, non-public storage with encryption in transit and at rest. Intake must validate allowed file types and size, perform malware scanning and safe-rendering checks, and reject unsafe or ambiguous content before analysis. Access follows least privilege and every upload, view, analysis, issue decision, correction preparation, export, retention action, and deletion is audited.

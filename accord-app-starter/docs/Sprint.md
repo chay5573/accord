@@ -78,7 +78,9 @@ The first simplification sprint reduced the primary information architecture to 
 
 ## Next major milestone — Real Form Ingestion and Validation
 
-Status: **Planned — not started and not authorized by the current mock-only task**
+Status: **Not started — waiting for Calvin to add the first blank form set and validation case.**
+
+The protected folder structure and operating documentation are complete. This milestone has reached its required stop point: Codex must wait for Calvin to add files and approve the inventory step before inspecting, ingesting, mapping, extracting, modifying, or analyzing any form or transaction file.
 
 1. Import official blank forms with licensing or usage authorization.
 2. Record form name, version, jurisdiction, effective date, provenance, and checksum.
