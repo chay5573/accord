@@ -55,15 +55,14 @@ export function UploadedPaperworkReview() {
   const viewedIssue = issues.find((issue) => issue.id === viewedIssueId);
 
   return (
-    <details className="card paperwork-upload-card">
-      <summary>
-        <span><strong>Upload Paperwork for Review</strong><small>Check outside paperwork against approved transaction facts · mock</small></span>
-        <span className="status neutral">Optional</span>
-      </summary>
+    <section className="card paperwork-upload-card" aria-labelledby="paperwork-upload-heading">
+      <div className="paperwork-upload-heading">
+        <div><h2 id="paperwork-upload-heading">Upload Paperwork for Review</h2><small>Check outside paperwork against approved transaction facts · mock</small></div>
+      </div>
       <div className="paperwork-upload-content">
         <p className="mock-boundary">Prototype issue triage only. Accord is not validating legal-form completeness and will not alter uploaded files.</p>
         <div
-          className="paperwork-drop-zone"
+          className="paperwork-upload-controls"
           onDragOver={(event) => event.preventDefault()}
           onDrop={(event) => {
             event.preventDefault();
@@ -75,19 +74,20 @@ export function UploadedPaperworkReview() {
             className="sr-only"
             id="paperwork-review-upload"
             type="file"
+            aria-label="Choose paperwork files"
             accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
             multiple
             onChange={(event) => selectFiles(Array.from(event.target.files ?? []))}
           />
-          <button className="btn btn-secondary" type="button" onClick={() => inputRef.current?.click()}>Choose files</button>
-          <span>PDF, DOC, or DOCX · drag and drop supported</span>
+          <button className="btn btn-secondary" type="button" onClick={() => inputRef.current?.click()}>Choose Files</button>
+          <span className="paperwork-file-feedback" aria-live="polite">{files.length === 0 ? 'No files selected' : files.length === 1 ? files[0].name : `${files.length} files selected`}</span>
         </div>
+        <small className="paperwork-file-hint">PDF, DOC, or DOCX · multiple files and drag-and-drop supported</small>
 
         {files.length > 0 && (
-          <div className="selected-paperwork-files" aria-live="polite">
-            <strong>{files.length === 1 ? files[0].name : `${files.length} files selected`}</strong>
+          <div className="selected-paperwork-files">
             <ul>{files.map((file) => <li key={`${file.name}-${file.size}`}><span>{file.name}</span><small>{formatFileSize(file.size)}</small></li>)}</ul>
-            <button className="btn btn-secondary" type="button" disabled={reviewState === 'reviewing'} onClick={startMockReview}>{reviewState === 'reviewing' ? 'Reviewing paperwork…' : 'Start mock review'}</button>
+            <button className="btn btn-secondary" type="button" disabled={reviewState === 'reviewing'} onClick={startMockReview}>{reviewState === 'reviewing' ? 'Reviewing paperwork…' : 'Review Uploaded Paperwork'}</button>
           </div>
         )}
 
@@ -123,6 +123,6 @@ export function UploadedPaperworkReview() {
           </section>
         )}
       </div>
-    </details>
+    </section>
   );
 }

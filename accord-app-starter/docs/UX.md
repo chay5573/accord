@@ -168,7 +168,7 @@ Review & Send should feel like exact paperwork review, not a dashboard or AI sum
 
 ### Uploaded paperwork review
 
-Review & Send may offer an optional **Upload Paperwork for Review** section for documents prepared outside Accord. The mock flow selects files, starts a clearly labeled mock review, and shows concise attributable issue suggestions with severity, document location, suggested action, and explicit Dismiss, Mark resolved, or Prepare correction actions. It must state that no legal-form validation or document modification is occurring. Production upload, storage, parsing, comparison, correction, and rendering remain provider-backed future work.
+Review & Send keeps **Upload Paperwork for Review** visible as a secondary workflow for documents prepared outside Accord; it is not collapsible and does not use an “Optional” status control. A custom **Choose Files** button activates an accessible hidden multi-file input and shows concise selection feedback. The mock flow then starts a clearly labeled review and shows attributable issue suggestions with severity, document location, suggested action, and explicit Dismiss, Mark resolved, or Prepare correction actions. It must state that no legal-form validation or document modification is occurring. Production upload, storage, parsing, comparison, correction, and rendering remain provider-backed future work.
 
 No legal document may be sent while required fields are unresolved. Package readiness should show document count, unresolved required items, unresolved recommended-review items, and signature readiness; percentages are secondary.
 

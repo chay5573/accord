@@ -700,6 +700,7 @@ textarea { min-height: 125px; resize: vertical; line-height: 1.5; }
 .package-row-card > span:first-child { display:grid; gap:3px; min-width:0; }
 .package-row-card strong { color:var(--navy); font-size:11px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .package-row-card small { color:var(--muted); font-size:8px; }
+.package-review-divider { width:100%; height:0; margin:10px 0 8px; border:0; border-top:1px solid var(--line-dark); }
 .exact-review-summary { display:grid; gap:8px; }
 .exact-review-summary h2 { margin:0; font-size:21px; }
 .package-summary-meta { display:flex; flex-wrap:wrap; gap:0; color:#526174; font-size:10px; font-weight:650; line-height:1.5; }
@@ -769,21 +770,20 @@ textarea { min-height: 125px; resize: vertical; line-height: 1.5; }
 .paperwork-section h3 { margin:8px 0 10px; color:var(--navy); font-size:12px; }
 .action-stack-card { width:100%; display:grid; gap:10px; justify-items:stretch; max-width:none; margin:0; }
 .action-stack-card small { color:var(--danger); font-size:9px; text-align:center; }
-.paperwork-upload-card { padding:0; overflow:hidden; }
-.paperwork-upload-card > summary { min-height:62px; display:flex; align-items:center; justify-content:space-between; gap:18px; padding:16px 20px; color:var(--navy); cursor:pointer; list-style:none; }
-.paperwork-upload-card > summary::-webkit-details-marker { display:none; }
-.paperwork-upload-card > summary > span:first-child { display:grid; gap:3px; }
-.paperwork-upload-card > summary strong { font-size:12px; }
-.paperwork-upload-card > summary small { color:var(--muted); font-size:9px; }
-.paperwork-upload-content { display:grid; gap:14px; padding:18px 20px 20px; border-top:1px solid var(--line); }
+.paperwork-upload-card { display:grid; gap:14px; }
+.paperwork-upload-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; }
+.paperwork-upload-heading h2 { margin:0 0 4px; font-size:16px; }
+.paperwork-upload-heading small { color:var(--muted); font-size:9px; }
+.paperwork-upload-content { display:grid; gap:12px; }
 .paperwork-upload-content .mock-boundary { font-size:10px; }
-.paperwork-drop-zone { min-height:112px; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:8px; padding:20px; border:1px dashed var(--line-dark); border-radius:11px; background:#f9fbfc; text-align:center; }
-.paperwork-drop-zone > span { color:var(--muted); font-size:9px; }
+.paperwork-upload-controls { min-width:0; display:flex; align-items:center; flex-wrap:wrap; gap:10px; padding:14px; border:1px dashed var(--line-dark); border-radius:11px; background:#f9fbfc; }
+.paperwork-upload-controls .btn { flex:0 0 auto; }
+.paperwork-file-feedback { min-width:0; color:var(--ink); font-size:10px; overflow-wrap:anywhere; }
+.paperwork-file-hint { margin-top:-5px; color:var(--muted); font-size:8px; }
 .selected-paperwork-files { display:grid; gap:10px; padding:14px; border:1px solid var(--line); border-radius:10px; background:white; }
-.selected-paperwork-files > strong { color:var(--navy); font-size:11px; }
 .selected-paperwork-files ul { display:grid; gap:6px; margin:0; padding:0; list-style:none; }
 .selected-paperwork-files li { display:flex; justify-content:space-between; gap:12px; padding-top:6px; border-top:1px solid var(--line); font-size:9px; }
-.selected-paperwork-files li span { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.selected-paperwork-files li span { min-width:0; overflow-wrap:anywhere; }
 .selected-paperwork-files li small { color:var(--muted); white-space:nowrap; }
 .selected-paperwork-files > .btn { justify-self:start; }
 .mock-document-review { display:grid; gap:12px; }
@@ -1084,7 +1084,8 @@ input[type="checkbox"], input[type="radio"] { width:16px; height:16px; min-width
   .paperwork-review-row { grid-template-columns:1fr; }
   .paperwork-review-controls { grid-column:1; justify-content:flex-start; }
   .paperwork-review-controls .status { max-width:none; }
-  .paperwork-upload-card > summary, .mock-review-heading { align-items:flex-start; flex-direction:column; }
+  .mock-review-heading { align-items:flex-start; flex-direction:column; }
+  .paperwork-upload-controls { align-items:flex-start; flex-direction:column; }
   .document-review-issues article { grid-template-columns:1fr; }
   .document-review-actions { justify-content:flex-start; }
   .preview-field { grid-template-columns:1fr; }

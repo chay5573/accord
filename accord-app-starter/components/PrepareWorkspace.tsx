@@ -513,6 +513,8 @@ export function PrepareWorkspace() {
         </div>
       </section>
 
+      <hr className="package-review-divider" />
+
       <section className="card exact-review-summary">
         <h2>{packageName(activePackage)}</h2>
         <div className="package-summary-meta" aria-label="Package summary">
